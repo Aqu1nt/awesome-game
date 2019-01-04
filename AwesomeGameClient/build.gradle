@@ -1,0 +1,37 @@
+plugins {
+    id 'kotlin-platform-js' version '1.2.71'
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js"
+    expectedBy project(":AwesomeGameCommon")
+    testCompile "org.jetbrains.kotlin:kotlin-test-js"
+}
+
+compileKotlin2Js {
+    kotlinOptions.outputFile = "${projectDir}/js/game-client.js"
+    kotlinOptions.moduleKind = "plain"
+    kotlinOptions.sourceMap = true
+}
+
+task assembleWeb(type: Sync) {
+    configurations.compile.each { File file ->
+        from(zipTree(file.absolutePath), {
+            includeEmptyDirs = false
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") ||
+                        !path.startsWith("META-INF/"))
+            }
+        })
+    }
+    from compileKotlin2Js.destinationDir
+    into "${projectDir}/js"
+
+    dependsOn classes
+}
+
+assemble.dependsOn assembleWeb

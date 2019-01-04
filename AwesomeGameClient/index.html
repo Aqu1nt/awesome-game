@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="game-canvas"></canvas>
+
+<script src="js/kotlin.js"></script>
+<script src="js/game-client.js"></script>
+<script>
+    const client = new window[ 'game-client' ].ch.awesome.game.GameClient();
+    client.startGame();
+</script>
+</body>
+</html>
