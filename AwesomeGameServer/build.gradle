@@ -43,6 +43,9 @@ dependencies {
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        languageVersion = "1.2"
+    }
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"

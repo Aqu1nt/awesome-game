@@ -5,13 +5,16 @@
         * {
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
     </style>
 </head>
-<body>
+<img>
 
 <canvas id="game-canvas"></canvas>
 
+<img id="texture_crate" src="res/crate.png" hidden>
+<script src="lib/gl-matrix.js"></script>
 <script src="js/kotlin.js"></script>
 <script src="js/game-client.js"></script>
 <script>
