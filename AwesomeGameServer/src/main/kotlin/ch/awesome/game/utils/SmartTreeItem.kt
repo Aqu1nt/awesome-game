@@ -2,7 +2,7 @@ package ch.awesome.game.utils
 
 import java.util.*
 
-open class SmartTreeItem(override val id: String = UUID.randomUUID().toString()): SmartChangeTarget {
+open class SmartTreeItem(val id: String = UUID.randomUUID().toString()) {
 
     private var parent: SmartTreeItem? = null
     private var changes: MutableSet<SmartChange> = mutableSetOf()
@@ -12,7 +12,7 @@ open class SmartTreeItem(override val id: String = UUID.randomUUID().toString())
         synchronized(children) {
             child.parent = this
             children.add(child)
-            changes.add(SmartChange(this, child, SmartChangeType.CHILDREN_ADD))
+            changes.add(SmartChange(id, child, SmartChangeType.CHILDREN_ADD))
         }
     }
 
@@ -20,7 +20,7 @@ open class SmartTreeItem(override val id: String = UUID.randomUUID().toString())
         synchronized(children) {
             child.parent = null
             children.remove(child)
-            changes.add(SmartChange(this, child, SmartChangeType.CHILDREN_REMOVE))
+            changes.add(SmartChange(id, child, SmartChangeType.CHILDREN_REMOVE))
         }
     }
 
@@ -33,7 +33,7 @@ open class SmartTreeItem(override val id: String = UUID.randomUUID().toString())
                         "n" to smartProperty.name,
                         "v" to smartProperty.value
                 )
-                changes.add(SmartChange(smartProperty.thisRef as SmartChangeTarget, changeValue, SmartChangeType.PROPERTY_CHANGE))
+                changes.add(SmartChange(id, changeValue, SmartChangeType.PROPERTY_CHANGE))
             }
 
             this.changes.clear()

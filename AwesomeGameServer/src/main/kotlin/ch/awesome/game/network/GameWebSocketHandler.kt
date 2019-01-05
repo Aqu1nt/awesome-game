@@ -1,15 +1,20 @@
 package ch.awesome.game.network
 
+import ch.awesome.game.network.events.StateChangesNetworkEvent
 import ch.awesome.game.objects.Armor
 import ch.awesome.game.objects.Player
 import ch.awesome.game.objects.World
 import ch.awesome.game.utils.Vector3f
-import ch.awesome.game.utils.toJSON
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.web.socket.*
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 class GameWebSocketHandler: WebSocketHandler {
+
+    companion object {
+        private val objectMapper = jacksonObjectMapper()
+    }
 
     override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -62,7 +67,9 @@ class GameWebSocketHandler: WebSocketHandler {
 
             thread {
                 repeat(((1000f * 60f) * 15f).toInt()) {
-                    println(String(world.fetchAndResetChanges().toJSON()))
+                    val changes = world.fetchAndResetChanges()
+                    val networkEvent = StateChangesNetworkEvent(changes)
+                    session.sendMessage(TextMessage(objectMapper.writeValueAsBytes(networkEvent)))
                     sleep((1000f / 60f).toLong())
                 }
             }

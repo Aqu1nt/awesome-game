@@ -1,5 +1,10 @@
 package ch.awesome.game.networking
 
+import ch.awesome.game.network.INetworkEvent
+import ch.awesome.game.network.NetworkEventType
+import ch.awesome.game.network.events.IStateChangesNetworkEvent
+import ch.awesome.game.state.GameState
+import ch.awesome.game.utils.ISmartChange
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 
@@ -14,7 +19,24 @@ object NetworkClient {
         webSocket = WebSocket("ws://localhost:8080/game")
         activeWebSocket.onmessage = { event ->
             val msgEvent = event as MessageEvent
-            println(msgEvent.data)
+            val networkEvent = JSON.parse<INetworkEvent<*>>(msgEvent.data as String)
+            handleNetworkEvent(networkEvent)
+        }
+    }
+
+    private fun handleNetworkEvent(event: INetworkEvent<*>) {
+        when (NetworkEventType.valueOf(event.type.toString())) {
+            NetworkEventType.STATE         -> {
+
+            }
+            NetworkEventType.STATE_CHANGES -> {
+                val stateChangeEvent = event.unsafeCast<IStateChangesNetworkEvent>()
+                val changes = stateChangeEvent.payload.unsafeCast<Array<ISmartChange>>().toList()
+                GameState.applyChanges(changes)
+            }
+            else                                -> {
+                throw IllegalStateException("Unknown network event type ${event.type}!")
+            }
         }
     }
 }
