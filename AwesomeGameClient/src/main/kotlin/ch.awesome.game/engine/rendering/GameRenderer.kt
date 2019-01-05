@@ -190,7 +190,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
 
         Matrix4f.identity(modelMatrix)
         Matrix4f.identity(viewMatrix)
-        GLMatrix.mat4.lookAt(viewMatrix.floatArray, arrayOf(0.0f, 4.0f, -6.0f), arrayOf(0.0f, 0.0f, 0.0f), arrayOf(0.0f, 1.0f, 0.0f))
+        GLMatrix.mat4.lookAt(viewMatrix.floatArray, arrayOf(0.0f, 15.0f, -20.0f), arrayOf(0.0f, 0.0f, 0.0f), arrayOf(0.0f, 1.0f, 0.0f))
         Matrix4f.projectionMatrix(projectionMatrix, 70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
 
         GLMatrix.mat4.identity(identity)
@@ -204,17 +204,21 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix.floatArray)
     }
 
-    fun render() {
+    fun clear() {
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
+    }
+
+    fun render(x: Float, y: Float, z: Float) {
 
         angle = window.performance.now().toFloat() / 1000.0f / 6.0f * 2.0f * PI.toFloat()
-        GLMatrix.mat4.rotate(modelMatrix.floatArray, identity, angle, arrayOf(0.0f, 1.0f, 0.0f))
+        //GLMatrix.mat4.rotate(modelMatrix.floatArray, identity, angle, arrayOf(0.0f, 1.0f, 0.0f))
+        Matrix4f.identity(modelMatrix)
+        GLMatrix.mat4.translate(modelMatrix.floatArray, modelMatrix.floatArray, arrayOf(x, y, z))
         //Matrix4f.translate(modelMatrix, 0.2f, 0.0f, 0.0f)
         gl.uniformMatrix4fv(modelMatrixLocation, false, modelMatrix.floatArray)
 
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture)
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)
-
         gl.drawElements(WebGLRenderingContext.TRIANGLES, indices.size, WebGLRenderingContext.UNSIGNED_SHORT, 0)
     }
 }

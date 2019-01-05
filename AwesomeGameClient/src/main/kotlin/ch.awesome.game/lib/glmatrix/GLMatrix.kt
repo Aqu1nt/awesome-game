@@ -15,4 +15,5 @@ abstract external class GLMatrix4 {
     fun lookAt(matrix: Float32Array, position: Array<Float>, target: Array<Float>, eye: Array<Float>)
     fun perspective(matrix: Float32Array, fov: Float, aspectRatio: Float, nearPlane: Float, farPlane: Float)
     fun rotate(matrix: Float32Array, with: Float32Array, angle: Float, axis: Array<Float>)
+    fun translate(matrix: Float32Array, with: Float32Array, position: Array<Float>)
 }

@@ -12,5 +12,7 @@ class Player(state: dynamic): GameNode(state), Renderable {
 
     override fun render(renderer: GameRenderer) {
         console.log("RENDERING", this)
+        renderer.render(position.x as Float, position.y as Float, position.z as Float)
+        console.log(position)
     }
 }
