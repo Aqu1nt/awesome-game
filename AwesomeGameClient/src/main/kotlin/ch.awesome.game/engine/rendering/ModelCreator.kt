@@ -34,13 +34,13 @@ object ModelCreator {
         gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, Uint16Array(indices), WebGLRenderingContext.STATIC_DRAW)
     }
 
-    fun loadTexture(gl: WebGL2RenderingContext, image: TextureImage): WebGLTexture {
+    fun loadTexture(gl: WebGL2RenderingContext, image: TextureImageType): WebGLTexture {
         val texture = gl.createTexture() as WebGLTexture
 
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture)
 
         gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA,
-                      WebGLRenderingContext.UNSIGNED_BYTE, TexuteImageLoader.getTextureImage(image))
+                      WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(image))
 
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE)
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE)

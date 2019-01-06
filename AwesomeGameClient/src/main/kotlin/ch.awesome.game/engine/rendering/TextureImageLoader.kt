@@ -7,24 +7,25 @@ import org.w3c.dom.ImageData
 import kotlin.browser.document
 import kotlin.js.Promise
 
-enum class TextureImage(val fileName: String) {
+enum class TextureImageType(val fileName: String) {
     CRATE("crate.png"),
-    GRASS("grass.png")
+    GRASS("grass.png"),
+    BOULDER("boulder.png")
 }
 
-object TexuteImageLoader {
+object TextureImageLoader {
 
-    private val textures = mutableMapOf<TextureImage, ImageData>()
+    private val textures = mutableMapOf<TextureImageType, ImageData>()
 
     fun loadAllTextureImages(): Promise<Array<out Unit>> {
-        return Promise.all(TextureImage.values().map { textureImage ->
+        return Promise.all(TextureImageType.values().map { textureImage ->
             load(textureImage.fileName).then { data ->
                 textures[textureImage] = data
             }
         }.toTypedArray())
     }
 
-    fun getTextureImage(textureImage: TextureImage): ImageData {
+    fun getTextureImage(textureImage: TextureImageType): ImageData {
         return textures[textureImage] ?: throw IllegalStateException("Did not find texture $textureImage!")
     }
 

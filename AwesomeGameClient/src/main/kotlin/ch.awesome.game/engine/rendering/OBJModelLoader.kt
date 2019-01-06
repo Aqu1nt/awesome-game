@@ -8,7 +8,26 @@ import org.w3c.files.File
 import kotlin.browser.window
 import kotlin.js.Promise
 
+enum class ModelType(val fileName: String) {
+    BOULDER("boulder.obj")
+}
+
 object OBJModelLoader {
+
+    private val models = mutableMapOf<ModelType, Model>()
+
+    fun loadAllModels(gl: WebGL2RenderingContext): Promise<Array<out Unit>> {
+        return Promise.all(ModelType.values().map { model ->
+            OBJModelLoader.load(gl, model.fileName).then { data ->
+                models[model] = data
+                console.log(model, data)
+            }
+        }.toTypedArray())
+    }
+
+    fun getModel(model: ModelType): Model {
+        return models[model] ?: throw IllegalStateException("Did not find model $model!")
+    }
 
     fun load(gl: WebGL2RenderingContext, fileName: String): Promise<Model> {
         return Promise { resolve, reject ->
@@ -54,14 +73,30 @@ object OBJModelLoader {
                 val vertex1 = linesplit[1].split("/")
                 val vertex2 = linesplit[2].split("/")
                 val vertex3 = linesplit[3].split("/")
+
+                createVertex(vertex1, textureCoords, normals, indices, textureCoordsArray, normalsArray)
+                createVertex(vertex2, textureCoords, normals, indices, textureCoordsArray, normalsArray)
+                createVertex(vertex3, textureCoords, normals, indices, textureCoordsArray, normalsArray)
             }
+        }
+
+        var vertexPointer = 0;
+        for(vertex in vertices) {
+            vertexArray[vertexPointer ++] = vertex.x
+            vertexArray[vertexPointer ++] = vertex.y
+            vertexArray[vertexPointer ++] = vertex.z
+        }
+
+        var indexPointer = 0
+        for(index in indices) {
+            indicesArray[indexPointer ++] = index
         }
 
         return ModelCreator.loadModel(gl, vertexArray, textureCoordsArray, indicesArray)
     }
 
-    fun createVertex(vertexData: Array<String>, textureCoords: ArrayList<Vector2f>, normals: ArrayList<Vector3f>,
-                     indices: ArrayList<Int>, textureCoordsArray: Array<Float>, normalsArray: Array<Float>) {
+    private fun createVertex(vertexData: List<String>, textureCoords: ArrayList<Vector2f>, normals: ArrayList<Vector3f>,
+                             indices: ArrayList<Int>, textureCoordsArray: Array<Float>, normalsArray: Array<Float>) {
         val index = vertexData[0].toInt() - 1
         indices.add(index)
         val textureCoord = textureCoords.get(vertexData[1].toInt() - 1)
