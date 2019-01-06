@@ -1,6 +1,7 @@
 package ch.awesome.game
 
 import ch.awesome.game.engine.rendering.GameRenderer
+import ch.awesome.game.engine.rendering.TexuteImageLoader
 import ch.awesome.game.networking.NetworkClient
 import ch.awesome.game.state.GameState
 import ch.awesome.game.state.interfaces.Renderable
@@ -23,22 +24,24 @@ class GameClient {
     private val networkClient = NetworkClient(state)
 
     fun startGame() {
-        networkClient.connect()
+        TexuteImageLoader.loadAllTextureImages().then {
+            networkClient.connect()
 
-        val canvas = document.getElementById("game-canvas") as HTMLCanvasElement?
-        if (canvas != null) {
-            renderer = GameRenderer(canvas)
+            val canvas = document.getElementById("game-canvas") as HTMLCanvasElement?
+            if (canvas != null) {
+                renderer = GameRenderer(canvas)
 
-            var loop: (Double) -> Unit = {}
-            loop = {
-                renderer.clear();
-                state.render(renderer)
+                var loop: (Double) -> Unit = {}
+                loop = {
+                    renderer.clear();
+                    state.render(renderer)
+                    window.requestAnimationFrame (loop)
+                }
                 window.requestAnimationFrame (loop)
             }
-            window.requestAnimationFrame (loop)
-        }
-        else {
-            throw IllegalStateException("Game canvas not found!")
+            else {
+                throw IllegalStateException("Game canvas not found!")
+            }
         }
     }
 }

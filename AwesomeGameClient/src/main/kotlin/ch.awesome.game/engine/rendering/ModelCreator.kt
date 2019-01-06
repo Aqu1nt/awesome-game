@@ -5,10 +5,8 @@ import org.khronos.webgl.Float32Array
 import org.khronos.webgl.Uint16Array
 import org.khronos.webgl.WebGLRenderingContext
 import org.khronos.webgl.WebGLTexture
-import org.w3c.dom.HTMLImageElement
-import kotlin.browser.document
 
-object ModelCreating {
+object ModelCreator {
 
     fun loadModel(gl: WebGL2RenderingContext, vertices: Array<Float>, textureCoords: Array<Float>, indices: Array<Int>): Model {
         val vao = gl.createVertexArray()
@@ -36,13 +34,13 @@ object ModelCreating {
         gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, Uint16Array(indices), WebGLRenderingContext.STATIC_DRAW)
     }
 
-    fun loadTexture(gl: WebGL2RenderingContext, image: String): WebGLTexture {
+    fun loadTexture(gl: WebGL2RenderingContext, image: TextureImage): WebGLTexture {
         val texture = gl.createTexture() as WebGLTexture
 
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture)
 
         gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA,
-                      WebGLRenderingContext.UNSIGNED_BYTE, document.getElementById(image) as HTMLImageElement)
+                      WebGLRenderingContext.UNSIGNED_BYTE, TexuteImageLoader.getTextureImage(image))
 
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE)
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE)

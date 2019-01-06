@@ -1,7 +1,8 @@
 package ch.awesome.game.objects
 
 import ch.awesome.game.engine.rendering.GameRenderer
-import ch.awesome.game.engine.rendering.ModelCreating
+import ch.awesome.game.engine.rendering.ModelCreator
+import ch.awesome.game.engine.rendering.TextureImage
 import ch.awesome.game.engine.rendering.TexturedModel
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
 import ch.awesome.game.state.GameNode
@@ -84,21 +85,20 @@ class Player(state: dynamic): GameNode(state), Renderable {
                 22, 20, 23
         )
 
-        val rawModel = ModelCreating.loadModel(gl, vertices, textureCoords, indices)
-        val texture = ModelCreating.loadTexture(gl,"texture_crate")
+        val rawModel = ModelCreator.loadModel(gl, vertices, textureCoords, indices)
+        val texture = ModelCreator.loadTexture(gl, TextureImage.CRATE)
         model = TexturedModel(rawModel, texture)
 
         val grassVertices = arrayOf(-1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0).map { it.toFloat() }.toTypedArray()
         val grassTextureCoords = arrayOf(0,0, 0,1, 1,1, 1,0).map { it.toFloat() }.toTypedArray()
         val grassIndices = arrayOf(0, 1, 2, 0, 2, 3)
 
-        val grassModel = ModelCreating.loadModel(gl, grassVertices, grassTextureCoords, grassIndices)
-        val grassTexture = ModelCreating.loadTexture(gl,"texture_grass")
+        val grassModel = ModelCreator.loadModel(gl, grassVertices, grassTextureCoords, grassIndices)
+        val grassTexture = ModelCreator.loadTexture(gl,TextureImage.GRASS)
         grass = TexturedModel(grassModel, grassTexture)
     }
 
     override fun render(renderer: GameRenderer) {
-        console.log("RENDERING", model)
         renderer.render(model, position.x as Float, position.y as Float, position.z as Float)
 
         for (y in -10..10) {
