@@ -20,13 +20,13 @@ class Player(state: dynamic): GameNode(state), Renderable {
         val texture = ModelCreator.loadTexture(gl, TextureImageType.BOULDER)
         model = TexturedModel(OBJModelLoader.getModel(ModelType.BOULDER), texture)
 
-        val grassVertices = arrayOf(-1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0).map { it.toFloat() }.toTypedArray()
-        val grassTextureCoords = arrayOf(0,0, 0,1, 1,1, 1,0).map { it.toFloat() }.toTypedArray()
-        val grassIndices = arrayOf(0, 1, 2, 0, 2, 3)
-
-        val grassModel = ModelCreator.loadModel(gl, grassVertices, grassTextureCoords, grassIndices)
-        val grassTexture = ModelCreator.loadTexture(gl,TextureImageType.GRASS)
-        grass = TexturedModel(grassModel, grassTexture)
+//        val grassVertices = arrayOf(-1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0).map { it.toFloat() }.toTypedArray()
+//        val grassTextureCoords = arrayOf(0,0, 0,1, 1,1, 1,0).map { it.toFloat() }.toTypedArray()
+//        val grassIndices = arrayOf(0, 1, 2, 0, 2, 3)
+//
+//        val grassModel = ModelCreator.loadModel(gl, grassVertices, grassTextureCoords, grassIndices)
+//        val grassTexture = ModelCreator.loadTexture(gl,TextureImageType.GRASS)
+//        grass = TexturedModel(grassModel, grassTexture)
     }
 
     override fun render(renderer: GameRenderer) {

@@ -8,12 +8,14 @@ import org.khronos.webgl.WebGLTexture
 
 object ModelCreator {
 
-    fun loadModel(gl: WebGL2RenderingContext, vertices: Array<Float>, textureCoords: Array<Float>, indices: Array<Int>): Model {
+    fun loadModel(gl: WebGL2RenderingContext, vertices: Array<Float>, textureCoords: Array<Float>, normals: Array<Float>,
+                  indices: Array<Int>): Model {
         val vao = gl.createVertexArray()
         gl.bindVertexArray(vao)
 
         storeDataInVBO(gl, 0, 3, vertices)
         storeDataInVBO(gl, 1, 2, textureCoords)
+        storeDataInVBO(gl, 2, 3, normals)
         storeDataInIndicesBuffer(gl, indices.map { it.toShort() }.toTypedArray())
 
         return Model(vao, indices.size)

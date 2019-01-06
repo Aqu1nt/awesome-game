@@ -92,17 +92,17 @@ object OBJModelLoader {
             indicesArray[indexPointer ++] = index
         }
 
-        return ModelCreator.loadModel(gl, vertexArray, textureCoordsArray, indicesArray)
+        return ModelCreator.loadModel(gl, vertexArray, textureCoordsArray, normalsArray, indicesArray)
     }
 
     private fun createVertex(vertexData: List<String>, textureCoords: ArrayList<Vector2f>, normals: ArrayList<Vector3f>,
                              indices: ArrayList<Int>, textureCoordsArray: Array<Float>, normalsArray: Array<Float>) {
         val index = vertexData[0].toInt() - 1
         indices.add(index)
-        val textureCoord = textureCoords.get(vertexData[1].toInt() - 1)
+        val textureCoord = textureCoords[vertexData[1].toInt() - 1]
         textureCoordsArray[index * 2] = textureCoord.x
         textureCoordsArray[index * 2 + 1] = textureCoord.y
-        val normal = normals.get(vertexData[2].toInt() - 1)
+        val normal = normals[vertexData[2].toInt() - 1]
         normalsArray[index * 3] = normal.x
         normalsArray[index * 3 + 1] = normal.y
         normalsArray[index * 3 + 2] = normal.z

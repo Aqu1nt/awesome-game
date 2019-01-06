@@ -17,4 +17,8 @@ data class Vector2f (val x: Float, val y: Float) {
     operator fun div(other: Vector2f): Vector2f {
         return Vector2f(x / other.x, y / other.y)
     }
+
+    fun toFloatArray(): Array<Float> {
+        return arrayOf(x, y)
+    }
 }

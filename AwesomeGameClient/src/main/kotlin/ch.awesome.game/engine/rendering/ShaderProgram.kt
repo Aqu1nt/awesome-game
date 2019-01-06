@@ -33,6 +33,7 @@ class ShaderProgram(private val gl: WebGL2RenderingContext, private val vertexSh
 
         gl.bindAttribLocation(program, 0, "position")
         gl.bindAttribLocation(program, 1, "textureCoords")
+        gl.bindAttribLocation(program, 2, "normal")
 
         gl.linkProgram(program)
         if (gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS) == false) {
