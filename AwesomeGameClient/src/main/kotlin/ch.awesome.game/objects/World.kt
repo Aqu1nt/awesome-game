@@ -7,6 +7,5 @@ import ch.awesome.game.state.interfaces.Renderable
 class World: GameNode(id = "WORLD"), Renderable {
 
     override fun render(renderer: GameRenderer) {
-        console.log(children.size)
     }
 }

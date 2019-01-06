@@ -1,9 +1,6 @@
 package ch.awesome.game.objects
 
-import ch.awesome.game.engine.rendering.GameRenderer
-import ch.awesome.game.engine.rendering.ModelCreator
-import ch.awesome.game.engine.rendering.TextureImage
-import ch.awesome.game.engine.rendering.TexturedModel
+import ch.awesome.game.engine.rendering.*
 import ch.awesome.game.lib.utils.Vector3f
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
 import ch.awesome.game.state.GameNode
@@ -97,6 +94,8 @@ class Player(state: dynamic): GameNode(state), Renderable {
         val grassModel = ModelCreator.loadModel(gl, grassVertices, grassTextureCoords, grassIndices)
         val grassTexture = ModelCreator.loadTexture(gl,TextureImage.GRASS)
         grass = TexturedModel(grassModel, grassTexture)
+
+        OBJModelLoader.load(gl, "boulder.obj")
     }
 
     override fun render(renderer: GameRenderer) {
