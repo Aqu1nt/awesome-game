@@ -33,7 +33,7 @@ class GameClient {
 
                 var loop: (Double) -> Unit = {}
                 loop = {
-                    renderer.clear();
+                    renderer.clear()
                     state.render(renderer)
                     window.requestAnimationFrame (loop)
                 }

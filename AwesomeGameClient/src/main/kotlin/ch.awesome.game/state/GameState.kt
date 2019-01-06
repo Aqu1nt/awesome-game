@@ -1,6 +1,7 @@
 package ch.awesome.game.state
 
 import ch.awesome.game.engine.rendering.GameRenderer
+import ch.awesome.game.network.events.IGameStateNode
 import ch.awesome.game.objects.World
 import ch.awesome.game.state.interfaces.Renderable
 import ch.awesome.game.utils.ISmartChange
@@ -11,13 +12,34 @@ class GameState(
         private val afterNodeDestroy: (GameNode) -> Unit = {}
 ): Renderable {
 
-    private val world = World()
+    private val factory = GameNodeFactory()
+    private var world: World = World()
 
     override fun render(renderer: GameRenderer) {
+        world.render(renderer)
         for (gameNode in GameNode.allGameNodes()) {
             if (gameNode is Renderable) {
                 gameNode.render(renderer)
             }
+        }
+    }
+
+    fun replaceState(state: IGameStateNode) {
+        world = factory.createNode(state.data.asDynamic().type as String, state.data) as World
+        afterNodeCreate(world)
+
+        fun addStateToNode(parent: GameNode, childState: IGameStateNode) {
+            val gameNode = factory.createNode(childState.data.asDynamic().type as String, childState.data)
+            parent.addChild(gameNode)
+            afterNodeCreate(gameNode)
+
+            for (child in childState.children) {
+                addStateToNode(gameNode, child)
+            }
+        }
+
+        for (childState in state.children) {
+            addStateToNode(world, childState)
         }
     }
 
@@ -29,9 +51,11 @@ class GameState(
                                ?: throw IllegalStateException("Cannot add child to non-existing node ${change.id}")
                     val initialState = change.value.asDynamic()
                     val type = initialState.type as String
-                    val gameNode = GameNodeFactory.createNode(type, initialState)
-                    node.addChild(gameNode)
-                    afterNodeCreate(gameNode)
+                    val gameNode = factory.createNode(type, initialState)
+                    if (node.find(gameNode.id) == null) {
+                        node.addChild(gameNode)
+                        afterNodeCreate(gameNode)
+                    }
                 }
                 SmartChangeType.CHILDREN_REMOVE -> {
                     val node = world.find(change.id)

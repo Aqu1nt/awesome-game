@@ -3,6 +3,7 @@ package ch.awesome.game.utils
 import java.util.*
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
+import kotlin.reflect.jvm.isAccessible
 
 /**
  * Constant returned when no smart properties are available
@@ -96,6 +97,7 @@ fun Any.resetSmartProperties() {
 fun <T : Any> T.withSmartProperties(): T {
     this::class.members.forEach { member ->
         if (member is KMutableProperty<*>) {
+            member.isAccessible = true
             member.getter.call(this)
         }
     }

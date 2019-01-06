@@ -4,6 +4,7 @@ import ch.awesome.game.engine.rendering.GameRenderer
 import ch.awesome.game.engine.rendering.ModelCreator
 import ch.awesome.game.engine.rendering.TextureImage
 import ch.awesome.game.engine.rendering.TexturedModel
+import ch.awesome.game.lib.utils.Vector3f
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
 import ch.awesome.game.state.GameNode
 import ch.awesome.game.state.StateProperty
@@ -13,7 +14,7 @@ class Player(state: dynamic): GameNode(state), Renderable {
 
     private var age by StateProperty<Int>()
     private var name by StateProperty<String>()
-    private var position by StateProperty<dynamic>()
+    private var position by StateProperty<Vector3f>()
 
     lateinit var model: TexturedModel
     lateinit var grass: TexturedModel
@@ -99,12 +100,12 @@ class Player(state: dynamic): GameNode(state), Renderable {
     }
 
     override fun render(renderer: GameRenderer) {
-        renderer.render(model, position.x as Float, position.y as Float, position.z as Float)
+        renderer.render(model, position.x, position.y, position.z)
 
-        for (y in -10..10) {
-            for (x in -10..10) {
-                renderer.render(grass, x * 2.0f, -2.0f, y * 2.0f)
-            }
-        }
+//        for (y in -10..10) {
+//            for (x in -10..10) {
+//                renderer.render(grass, x * 2.0f, -2.0f, y * 2.0f)
+//            }
+//        }
     }
 }

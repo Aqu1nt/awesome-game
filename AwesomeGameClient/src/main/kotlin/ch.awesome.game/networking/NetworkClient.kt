@@ -3,6 +3,7 @@ package ch.awesome.game.networking
 import ch.awesome.game.network.INetworkEvent
 import ch.awesome.game.network.NetworkEventType
 import ch.awesome.game.network.events.IStateChangesNetworkEvent
+import ch.awesome.game.network.events.IStateNetworkEvent
 import ch.awesome.game.state.GameState
 import ch.awesome.game.utils.ISmartChange
 import org.w3c.dom.MessageEvent
@@ -27,7 +28,8 @@ class NetworkClient(private val state: GameState) {
     private fun handleNetworkEvent(event: INetworkEvent<*>) {
         when (NetworkEventType.valueOf(event.type.toString())) {
             NetworkEventType.STATE         -> {
-
+                val stateEvent = event.unsafeCast<IStateNetworkEvent>()
+                state.replaceState(stateEvent.payload)
             }
             NetworkEventType.STATE_CHANGES -> {
                 val stateChangeEvent = event.unsafeCast<IStateChangesNetworkEvent>()

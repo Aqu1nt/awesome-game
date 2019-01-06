@@ -4,9 +4,9 @@ import java.util.*
 
 open class SmartTreeItem(val id: String = UUID.randomUUID().toString()) {
 
-    private var parent: SmartTreeItem? = null
-    private var changes: MutableSet<SmartChange> = mutableSetOf()
-    private var children: MutableSet<SmartTreeItem> = mutableSetOf()
+    protected var parent: SmartTreeItem? = null
+    protected var changes: MutableList<SmartChange> = mutableListOf()
+    protected var children: MutableList<SmartTreeItem> = mutableListOf()
 
     fun addChild(child: SmartTreeItem) {
         synchronized(children) {
@@ -22,6 +22,10 @@ open class SmartTreeItem(val id: String = UUID.randomUUID().toString()) {
             children.remove(child)
             changes.add(SmartChange(id, child, SmartChangeType.CHILDREN_REMOVE))
         }
+    }
+
+    fun children(): List<SmartTreeItem> {
+        return children
     }
 
     fun fetchAndResetChanges(changes: MutableList<SmartChange> = mutableListOf()): List<SmartChange> {

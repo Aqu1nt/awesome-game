@@ -8,4 +8,4 @@ import ch.awesome.game.utils.SmartChange
 interface IStateChangesNetworkEvent: INetworkEvent<List<SmartChange>>
 
 class StateChangesNetworkEvent(changes: List<SmartChange>)
-    : NetworkEvent<List<SmartChange>>(NetworkEventType.STATE_CHANGES, changes)
+    : NetworkEvent<List<SmartChange>>(NetworkEventType.STATE_CHANGES, changes), IStateChangesNetworkEvent

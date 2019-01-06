@@ -6,7 +6,7 @@ import ch.awesome.game.objects.World
 
 typealias GameNodeCreator = (state: dynamic) -> GameNode
 
-object GameNodeFactory {
+class GameNodeFactory {
 
     private val creators: Map<String, GameNodeCreator> = mapOf(
             "World" to { _: dynamic -> World() },

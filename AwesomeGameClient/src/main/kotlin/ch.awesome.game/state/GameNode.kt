@@ -10,7 +10,7 @@ open class GameNode(val state: dynamic = null, val id: String = state.id as Stri
         }
     }
 
-    private val children = mutableListOf<GameNode>()
+    protected val children = mutableListOf<GameNode>()
 
     var parent: GameNode? = null
         private set

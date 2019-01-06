@@ -1,82 +1,55 @@
 package ch.awesome.game.network
 
-import ch.awesome.game.network.events.StateChangesNetworkEvent
-import ch.awesome.game.objects.Armor
+import ch.awesome.game.instance.GAME
+import ch.awesome.game.network.events.StateNetworkEvent
 import ch.awesome.game.objects.Player
-import ch.awesome.game.objects.World
-import ch.awesome.game.utils.Vector3f
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.web.socket.*
-import java.lang.Thread.sleep
-import kotlin.concurrent.thread
+import java.util.concurrent.Executors
 
-class GameWebSocketHandler: WebSocketHandler {
+class GameWebSocketHandler : WebSocketHandler {
+
+    private val sendExecutor = Executors.newSingleThreadExecutor()
+    private var session: WebSocketSession? = null
+    private var player: Player? = null
 
     companion object {
         private val objectMapper = jacksonObjectMapper()
     }
 
-    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        fun println(string: String) {
-            session.sendMessage(TextMessage(string))
-        }
-
-        thread {
-            val world = World()
-
-            val armor1 = Armor()
-            val armor2 = Armor()
-            val armor3 = Armor()
-
-            val player = Player().apply {
-                addChild(armor1)
-                addChild(armor2)
-                addChild(armor3)
-            }
-
-            player.age = 5
-            player.name = "Emil"
-            armor1.name = "armor 1!"
-            armor3.name = "Armor 3"
-
-            world.addChild(player)
-
-            thread {
-                Thread.sleep(2500)
-                player.position += Vector3f(10f, -5f, 3f)
-                Thread.sleep(2500)
-                player.position += Vector3f(10f, -5f, 3f)
-                player.removeChild(armor1)
-                Thread.sleep(2500)
-                player.position += Vector3f(10f, -5f, 3f)
-                Thread.sleep(2500)
-                world.removeChild(player)
-            }
-
-            thread {
-                repeat(((1000f * 60f) * 15f).toInt()) {
-                    val changes = world.fetchAndResetChanges()
-                    val networkEvent = StateChangesNetworkEvent(changes)
-                    session.sendMessage(TextMessage(objectMapper.writeValueAsBytes(networkEvent)))
-                    sleep((1000f / 60f).toLong())
-                }
-            }
+        this.session = session
+        GAME.join().thenAccept { player ->
+            this.player = player
+            player.webSocketHandler = this
+            sendEvent(StateNetworkEvent(GAME.world.state()))
         }
     }
 
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+        player?.let { GAME.leave(it) }
+        sendExecutor.shutdown()
+    }
+
+    override fun afterConnectionClosed(session: WebSocketSession, closeStatus: CloseStatus) {
+        player?.let { GAME.leave(it) }
+        sendExecutor.shutdown()
+    }
+
     override fun supportsPartialMessages(): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return false
+    }
+
+    fun sendEvent(event: NetworkEvent<*>) {
+        sendExecutor.submit {
+            val networkEventString = objectMapper.writeValueAsString(event)
+            if (session?.isOpen == true) {
+                session?.sendMessage(TextMessage(networkEventString))
+            }
+        }
     }
 }
