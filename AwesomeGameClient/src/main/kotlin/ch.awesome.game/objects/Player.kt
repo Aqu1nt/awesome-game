@@ -12,6 +12,7 @@ class Player(state: dynamic): GameNode(state), Renderable {
     private var age by StateProperty<Int>()
     private var name by StateProperty<String>()
     private var position by StateProperty<Vector3f>()
+    private var direction by StateProperty<Vector3f>()
 
     lateinit var model: TexturedModel
     lateinit var grass: TexturedModel

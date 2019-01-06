@@ -2,11 +2,10 @@ package ch.awesome.game.engine.rendering
 
 import ch.awesome.game.lib.glmatrix.GLMatrix
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
-import ch.awesome.game.lib.webgl2.WebGLVertexArrayObject
-import org.khronos.webgl.*
+import org.khronos.webgl.WebGLRenderingContext
+import org.khronos.webgl.WebGLUniformLocation
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
-import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -132,7 +131,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         gl.uniform3f(lightPosLocation, light.position.x, light.position.y, light.position.z)
         gl.uniform3f(lightColorLocation, light.color.x, light.color.y, light.color.z)
 
-        val angle = window.performance.now().toFloat() / 50.0f
+        val angle = 0f
         val dirX = sin(Matrix4f.toRadians(angle))
         val dirZ = cos(Matrix4f.toRadians(angle))
         val posX = dirX * 30.0f

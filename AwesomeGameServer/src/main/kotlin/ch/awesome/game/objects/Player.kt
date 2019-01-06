@@ -11,7 +11,8 @@ class Player(initName: String? = null, initAge: Int? = null): BaseObject() {
 
     var name: String? by SmartProperty(initName)
     var age: Int? by SmartProperty(initAge)
-    var position: Vector3f by SmartProperty(Vector3f(Math.random().toFloat() * 3, Math.random().toFloat() * 3, Math.random().toFloat() * 3))
+    var position: Vector3f by SmartProperty(Vector3f())
+    var direction: Vector3f by SmartProperty(Vector3f())
 
     @JsonIgnore
     var webSocketHandler: GameWebSocketHandler? = null
@@ -20,5 +21,10 @@ class Player(initName: String? = null, initAge: Int? = null): BaseObject() {
 
     fun sendEvent(event: NetworkEvent<*>) {
         webSocketHandler?.sendEvent(event)
+    }
+
+    override fun update(tpf: Float) {
+        position += Vector3f(direction.x * tpf * 10f, direction.y * tpf * 10f, direction.z * tpf * 10f)
+        super.update(tpf)
     }
 }

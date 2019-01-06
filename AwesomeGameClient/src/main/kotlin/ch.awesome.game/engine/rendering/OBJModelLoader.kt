@@ -3,8 +3,6 @@ package ch.awesome.game.engine.rendering
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
 import ch.awesome.game.utils.Vector2f
 import ch.awesome.game.utils.Vector3f
-import org.w3c.fetch.Request
-import org.w3c.files.File
 import kotlin.browser.window
 import kotlin.js.Promise
 
@@ -20,7 +18,6 @@ object OBJModelLoader {
         return Promise.all(ModelType.values().map { model ->
             OBJModelLoader.load(gl, model.fileName).then { data ->
                 models[model] = data
-                console.log(model, data)
             }
         }.toTypedArray())
     }

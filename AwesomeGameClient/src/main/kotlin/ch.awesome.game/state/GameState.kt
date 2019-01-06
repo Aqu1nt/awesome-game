@@ -2,6 +2,7 @@ package ch.awesome.game.state
 
 import ch.awesome.game.engine.rendering.GameRenderer
 import ch.awesome.game.network.events.IGameStateNode
+import ch.awesome.game.objects.Player
 import ch.awesome.game.objects.World
 import ch.awesome.game.state.interfaces.Renderable
 import ch.awesome.game.utils.ISmartChange
@@ -11,6 +12,9 @@ class GameState(
         private val afterNodeCreate: (GameNode) -> Unit = {},
         private val afterNodeDestroy: (GameNode) -> Unit = {}
 ): Renderable {
+
+    var playerId: String? = null
+    val player: Player? get() = playerId?.let { playerId -> world.find(playerId) as Player? }
 
     private val factory = GameNodeFactory()
     private var world: World = World()

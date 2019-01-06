@@ -2,7 +2,9 @@ package ch.awesome.game.network
 
 enum class NetworkEventType {
     STATE,
-    STATE_CHANGES
+    STATE_CHANGES,
+    PLAYER_JOINED_GAME,
+    PLAYER_DIRECTION_CHANGE
 }
 
 interface INetworkEvent<T> {

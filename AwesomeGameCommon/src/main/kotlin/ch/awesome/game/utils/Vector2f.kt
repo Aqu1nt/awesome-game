@@ -1,6 +1,6 @@
 package ch.awesome.game.utils
 
-data class Vector2f (val x: Float, val y: Float) {
+data class Vector2f (val x: Float = 0f, val y: Float = 0f) {
 
     operator fun plus(other: Vector2f): Vector2f {
         return Vector2f(x + other.x, y + other.y)
