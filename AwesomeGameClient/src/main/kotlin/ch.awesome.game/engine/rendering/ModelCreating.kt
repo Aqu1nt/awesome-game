@@ -1,21 +1,39 @@
 package ch.awesome.game.engine.rendering
 
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
-import ch.awesome.game.lib.webgl2.WebGLVertexArrayObject
+import org.khronos.webgl.Float32Array
+import org.khronos.webgl.Uint16Array
 import org.khronos.webgl.WebGLRenderingContext
 import org.khronos.webgl.WebGLTexture
 import org.w3c.dom.HTMLImageElement
 import kotlin.browser.document
 
-object ModelLoading {
+object ModelCreating {
 
-    fun loadModel(gl: WebGL2RenderingContext, vertices: Array<Float>, textureCoords: Array<Float>, indices: Array<Int>) {
+    fun loadModel(gl: WebGL2RenderingContext, vertices: Array<Float>, textureCoords: Array<Float>, indices: Array<Int>): Model {
         val vao = gl.createVertexArray()
         gl.bindVertexArray(vao)
+
+        storeDataInVBO(gl, 0, 3, vertices)
+        storeDataInVBO(gl, 1, 2, textureCoords)
+        storeDataInIndicesBuffer(gl, indices.map { it.toShort() }.toTypedArray())
+
+        return Model(vao, indices.size)
     }
 
-    fun storeData(gl: WebGL2RenderingContext, attribute: Int, coordSize: Int, data: Array<Float>) {
+    private fun storeDataInVBO(gl: WebGL2RenderingContext, attribute: Int, coordSize: Int, data: Array<Float>) {
+        val vbo = gl.createBuffer()
+        gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vbo)
+        gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, Float32Array(data), WebGLRenderingContext.STATIC_DRAW)
+        gl.vertexAttribPointer(attribute, coordSize, WebGLRenderingContext.FLOAT, false,
+                         coordSize * Float32Array.BYTES_PER_ELEMENT, 0)
+        gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null)
+    }
 
+    private fun storeDataInIndicesBuffer(gl: WebGL2RenderingContext, indices: Array<Short>) {
+        val vbo = gl.createBuffer()
+        gl.bindBuffer(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, vbo)
+        gl.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, Uint16Array(indices), WebGLRenderingContext.STATIC_DRAW)
     }
 
     fun loadTexture(gl: WebGL2RenderingContext, image: String): WebGLTexture {

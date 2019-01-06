@@ -8,7 +8,7 @@ import ch.awesome.game.utils.ISmartChange
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 
-object NetworkClient {
+class NetworkClient(private val state: GameState) {
 
     private var webSocket: WebSocket? = null
 
@@ -32,7 +32,7 @@ object NetworkClient {
             NetworkEventType.STATE_CHANGES -> {
                 val stateChangeEvent = event.unsafeCast<IStateChangesNetworkEvent>()
                 val changes = stateChangeEvent.payload.unsafeCast<Array<ISmartChange>>().toList()
-                GameState.applyChanges(changes)
+                state.applyChanges(changes)
             }
             else                                -> {
                 throw IllegalStateException("Unknown network event type ${event.type}!")

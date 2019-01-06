@@ -30,6 +30,10 @@ class ShaderProgram(private val gl: WebGL2RenderingContext, private val vertexSh
         program = gl.createProgram()
         gl.attachShader(program, vertexShader)
         gl.attachShader(program, fragmentShader)
+
+        gl.bindAttribLocation(program, 0, "position")
+        gl.bindAttribLocation(program, 1, "textureCoords")
+
         gl.linkProgram(program)
         if (gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS) == false) {
             throw IllegalStateException("Couldn't link shader program: " + gl.getProgramInfoLog(program))

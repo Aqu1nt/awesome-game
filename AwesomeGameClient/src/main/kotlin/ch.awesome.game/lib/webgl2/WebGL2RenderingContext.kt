@@ -7,5 +7,5 @@ abstract external class WebGL2RenderingContext: WebGLRenderingContext {
     fun createVertexArray(): WebGLVertexArrayObject
     fun deleteVertexArray(vao: WebGLVertexArrayObject)
     fun isVertexArray(vao: WebGLVertexArrayObject): Boolean
-    fun bindVertexArray(vao: WebGLVertexArrayObject)
+    fun bindVertexArray(vao: WebGLVertexArrayObject?)
 }

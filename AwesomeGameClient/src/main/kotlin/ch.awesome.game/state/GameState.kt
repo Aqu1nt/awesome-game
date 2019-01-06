@@ -6,7 +6,10 @@ import ch.awesome.game.state.interfaces.Renderable
 import ch.awesome.game.utils.ISmartChange
 import ch.awesome.game.utils.SmartChangeType
 
-object GameState: Renderable {
+class GameState(
+        private val afterNodeCreate: (GameNode) -> Unit = {},
+        private val afterNodeDestroy: (GameNode) -> Unit = {}
+): Renderable {
 
     private val world = World()
 
@@ -28,6 +31,7 @@ object GameState: Renderable {
                     val type = initialState.type as String
                     val gameNode = GameNodeFactory.createNode(type, initialState)
                     node.addChild(gameNode)
+                    afterNodeCreate(gameNode)
                 }
                 SmartChangeType.CHILDREN_REMOVE -> {
                     val node = world.find(change.id)
@@ -35,6 +39,7 @@ object GameState: Renderable {
                     val childToRemove = node.find(change.value.asDynamic().id as String)
                                         ?: throw IllegalStateException("Cannot remove non-existing child ${change.value.asDynamic().id}")
                     node.removeChild(childToRemove)
+                    afterNodeDestroy(childToRemove)
                 }
                 SmartChangeType.PROPERTY_CHANGE -> {
                     val node = world.find(change.id)
