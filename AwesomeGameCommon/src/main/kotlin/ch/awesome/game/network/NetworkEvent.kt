@@ -4,7 +4,8 @@ enum class NetworkEventType {
     STATE,
     STATE_CHANGES,
     PLAYER_JOINED_GAME,
-    PLAYER_DIRECTION_CHANGE
+    PLAYER_DIRECTION_CHANGE,
+    PING
 }
 
 interface INetworkEvent<T> {

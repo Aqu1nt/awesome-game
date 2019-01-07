@@ -1,6 +1,12 @@
 package ch.awesome.game.utils
 
-data class Vector2f (val x: Float = 0f, val y: Float = 0f) {
+interface IVector2f {
+    var x: Float
+    var y: Float
+}
+
+data class Vector2f (override var x: Float = 0f,
+                     override var y: Float = 0f): IVector2f {
 
     operator fun plus(other: Vector2f): Vector2f {
         return Vector2f(x + other.x, y + other.y)

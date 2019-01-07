@@ -13,6 +13,7 @@ import kotlinx.serialization.ImplicitReflectionSerializer
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.document
 import kotlin.browser.window
+import kotlin.js.Date
 
 class GameClient {
 
@@ -26,11 +27,13 @@ class GameClient {
         }
     )
 
+    @ImplicitReflectionSerializer
     private val networkClient = NetworkClient(state)
 
     @ImplicitReflectionSerializer
     private val playerControl = PlayerControl(state, networkClient)
 
+    @ImplicitReflectionSerializer
     fun startGame() {
         TextureImageLoader.loadAllTextureImages().then {
             val canvas = document.getElementById("game-canvas") as HTMLCanvasElement?
@@ -39,10 +42,16 @@ class GameClient {
 
                 OBJModelLoader.loadAllModels(renderer.gl).then {
                     var loop: (Double) -> Unit = {}
+                    var lastUpdate = Date.now()
                     loop = {
+                        val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
+                        state.update(tpf.toFloat())
+
                         renderer.prepare(Light(Vector3f(10.0f, 5.0f, 10.0f), Vector3f(1.0f, 0.9f, 0.4f)))
                         state.render(renderer)
                         renderer.end()
+
+                        lastUpdate = Date.now()
                         window.requestAnimationFrame (loop)
                     }
                     window.requestAnimationFrame (loop)

@@ -28,6 +28,10 @@ class GameState(
         }
     }
 
+    fun update(tpf: Float) {
+        world.update(tpf)
+    }
+
     fun replaceState(state: IGameStateNode) {
         world = factory.createNode(state.data.asDynamic().type as String, state.data) as World
         afterNodeCreate(world)

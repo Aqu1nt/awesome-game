@@ -11,7 +11,7 @@ val GAME = StandardGame().apply {
 class StandardGame: Updateable {
 
     val world = World()
-    val loop = GameLoop(mutableListOf(this), 60)
+    val loop = GameLoop(mutableListOf(this), 100)
 
     fun join(): CompletableFuture<Player> {
         val player = Player()

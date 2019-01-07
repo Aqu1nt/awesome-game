@@ -8,7 +8,16 @@ import ch.awesome.game.utils.SmartTreeItem
 import ch.awesome.game.utils.withSmartProperties
 
 class World: BaseObject("WORLD") {
-    init { withSmartProperties() }
+
+    companion object {
+        const val SEND_CHANGES_INTERVAL = 50L
+    }
+
+    private var lastSendChangesTimestamp = 0L
+
+    init {
+        withSmartProperties()
+    }
 
     fun state(): IGameStateNode {
         fun convertItem(item: SmartTreeItem): IGameStateNode {
@@ -24,14 +33,17 @@ class World: BaseObject("WORLD") {
         super.afterUpdate()
 
         // Send state
-        val changes = GAME.world.fetchAndResetChanges()
-        if (changes.isNotEmpty()) {
-            val networkEvent = StateChangesNetworkEvent(changes)
-            for (child in children()) {
-                if (child is Player) {
-                    child.sendEvent(networkEvent)
+        if (System.currentTimeMillis() > lastSendChangesTimestamp + SEND_CHANGES_INTERVAL) {
+            val changes = GAME.world.fetchAndResetChanges()
+            if (changes.isNotEmpty()) {
+                val networkEvent = StateChangesNetworkEvent(changes)
+                for (child in children()) {
+                    if (child is Player) {
+                        child.sendEvent(networkEvent)
+                    }
                 }
             }
+            lastSendChangesTimestamp = System.currentTimeMillis()
         }
     }
 }

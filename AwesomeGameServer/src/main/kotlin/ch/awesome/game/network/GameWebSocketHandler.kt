@@ -1,10 +1,7 @@
 package ch.awesome.game.network
 
 import ch.awesome.game.instance.GAME
-import ch.awesome.game.network.events.PlayerDirectionChangeNetworkEvent
-import ch.awesome.game.network.events.PlayerJoinedGameInfo
-import ch.awesome.game.network.events.PlayerJoinedGameNetworkEvent
-import ch.awesome.game.network.events.StateNetworkEvent
+import ch.awesome.game.network.events.*
 import ch.awesome.game.objects.Player
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -32,12 +29,16 @@ class GameWebSocketHandler : TextWebSocketHandler() {
             NetworkEventType.PLAYER_DIRECTION_CHANGE -> {
                 val playerDirectionChangeEvent = objectMapper.convertValue(event, PlayerDirectionChangeNetworkEvent::class.java)
                 player?.let { player ->
-                    player.direction = player.direction.copy(
+                    player.velocity = player.velocity.copy(
                             x = playerDirectionChangeEvent.payload!!.x,
                             y = playerDirectionChangeEvent.payload!!.y,
                             z = playerDirectionChangeEvent.payload!!.z
                     )
                 }
+            }
+            NetworkEventType.PING                    -> {
+                val pingNetworkEvent = objectMapper.convertValue(event, PingNetworkEvent::class.java)
+                sendEvent(pingNetworkEvent)
             }
         }
     }
@@ -72,7 +73,7 @@ class GameWebSocketHandler : TextWebSocketHandler() {
         return false
     }
 
-    fun sendEvent(event: NetworkEvent<*>) {
+    fun sendEvent(event: INetworkEvent<*>) {
         sendExecutor.submit {
             val networkEventString = objectMapper.writeValueAsString(event)
             if (session?.isOpen == true) {

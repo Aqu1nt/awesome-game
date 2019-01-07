@@ -1,6 +1,9 @@
 package ch.awesome.game.state
 
-open class GameNode(val state: dynamic = null, val id: String = state.id as String) {
+import ch.awesome.game.objects.IBaseObject
+
+open class GameNode(val state: dynamic = null,
+                    override val id: String = state.id as String) : IBaseObject {
 
     companion object {
         private val allNodes = mutableMapOf<String, GameNode>()
@@ -16,7 +19,7 @@ open class GameNode(val state: dynamic = null, val id: String = state.id as Stri
         private set
 
     fun fireEvent(event: String) {
-        
+
     }
 
     fun addChild(child: GameNode) {
@@ -46,5 +49,11 @@ open class GameNode(val state: dynamic = null, val id: String = state.id as Stri
             }
         }
         return null
+    }
+
+    open fun update(tpf: Float) {
+        for (child in children) {
+            child.update(tpf)
+        }
     }
 }

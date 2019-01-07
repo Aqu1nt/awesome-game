@@ -4,30 +4,49 @@ import ch.awesome.game.network.INetworkEvent
 import ch.awesome.game.network.NetworkEventType
 import ch.awesome.game.network.events.IStateChangesNetworkEvent
 import ch.awesome.game.network.events.IStateNetworkEvent
+import ch.awesome.game.network.events.PingNetworkEvent
 import ch.awesome.game.network.events.PlayerJoinedGameNetworkEvent
 import ch.awesome.game.state.GameState
 import ch.awesome.game.utils.ISmartChange
+import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.serializer
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
+import kotlin.browser.window
+import kotlin.js.Date
 
+@ImplicitReflectionSerializer
 class NetworkClient(private val state: GameState) {
+
+    var pingToServer: Float = 0f
 
     private var webSocket: WebSocket? = null
 
     private val activeWebSocket: WebSocket
         get() = webSocket ?: throw IllegalStateException("There is no active WebSocket at the moment")
 
+    private var pingInterval: Int? = null
+
     fun connect() {
-        webSocket = WebSocket("ws://localhost:8080/game")
+        webSocket?.close()
+        webSocket = WebSocket("ws://${window.location.hostname}:8080/game")
+
+        activeWebSocket.onopen = {
+            sendPing()
+        }
+
         activeWebSocket.onmessage = { event ->
             val msgEvent = event as MessageEvent
             val networkEvent = JSON.parse<INetworkEvent<*>>(msgEvent.data as String)
             handleNetworkEvent(networkEvent)
         }
+
+        pingInterval?.let { pingInterval -> window.clearInterval(pingInterval) }
+        pingInterval = window.setInterval(this::sendPing, 1_000)
     }
 
-    fun <T: INetworkEvent<*>>sendEvent(event: T, encoder: KSerializer<T>) {
+    fun <T : INetworkEvent<*>> sendEvent(event: T, encoder: KSerializer<T>) {
         activeWebSocket.send(kotlinx.serialization.json.JSON.stringify(encoder, event))
     }
 
@@ -46,9 +65,17 @@ class NetworkClient(private val state: GameState) {
                 val playerJoinedEvent = event.unsafeCast<PlayerJoinedGameNetworkEvent>()
                 state.playerId = playerJoinedEvent.payload.playerId
             }
+            NetworkEventType.PING               -> {
+                val pingEvent = event.unsafeCast<PingNetworkEvent>()
+                pingToServer = (Date.now() - (pingEvent.payload.unsafeCast<Number?>()?.toDouble() ?: Date.now())).toFloat()
+            }
             else                                -> {
                 throw IllegalStateException("Unknown network event type ${event.type}!")
             }
         }
+    }
+
+    private fun sendPing() {
+        sendEvent(PingNetworkEvent().apply { payload = Date.now().toLong() }, PingNetworkEvent::class.serializer())
     }
 }

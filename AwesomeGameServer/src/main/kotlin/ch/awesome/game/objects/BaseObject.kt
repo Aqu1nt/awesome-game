@@ -5,7 +5,7 @@ import ch.awesome.game.utils.SmartTreeItem
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
-open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(id), Updateable {
+open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(id), Updateable, IBaseObject {
 
     @JsonProperty("type")
     fun getType(): String {
