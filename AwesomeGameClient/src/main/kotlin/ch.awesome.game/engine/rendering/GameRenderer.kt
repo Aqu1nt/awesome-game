@@ -88,9 +88,11 @@ class GameRenderer (canvas: HTMLCanvasElement) {
             if(i < lights.size) {
                 shader.uniformLightPos.load(gl, lights[i].position.x, lights[i].position.y, lights[i].position.z, i)
                 shader.uniformLightColor.load(gl, lights[i].color.x, lights[i].color.y, lights[i].color.z, i)
+                shader.uniformLightAttenuation.load(gl, lights[i].attenuation.x, lights[i].attenuation.y, lights[i].attenuation.z, i)
             } else {
                 shader.uniformLightPos.load(gl, 0.0f, 0.0f, 0.0f, i)
                 shader.uniformLightColor.load(gl, 0.0f, 0.0f, 0.0f, i)
+                shader.uniformLightAttenuation.load(gl, 1.0f, 1.0f, 1.0f, i)
             }
         }
 

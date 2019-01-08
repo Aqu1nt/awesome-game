@@ -47,8 +47,12 @@ class GameClient {
                         val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
                         state.update(tpf.toFloat())
 
-                        renderer.prepare(Light(Vector3f(10.0f, 5.0f, 10.0f), Vector3f(1.0f, 0.9f, 0.4f)),
-                                         Light(Vector3f(-10.0f, 5.0f, 10.0f), Vector3f(1.0f, 0.0f, 0.0f)))
+                        renderer.prepare(Light(Vector3f(10.0f, 5.0f, 10.0f),
+                                               Vector3f(1.0f, 0.9f, 0.4f),
+                                               Vector3f(1.0f, 0.01f, 0.002f)),
+                                         Light(Vector3f(-10.0f, 5.0f, 10.0f),
+                                               Vector3f(1.0f, 0.0f, 0.0f),
+                                               Vector3f(1.0f, 0.01f, 0.002f)))
                         state.render(renderer)
                         renderer.end()
 
