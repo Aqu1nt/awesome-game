@@ -11,11 +11,10 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
     private var name by StateProperty<String>()
 
     lateinit var model: TexturedModel
-    lateinit var grass: TexturedModel
 
     override fun initModels(gl: WebGL2RenderingContext) {
-        val texture = ModelCreator.loadTexture(gl, TextureImageType.BOULDER)
-        model = TexturedModel(OBJModelLoader.getModel(ModelType.BOULDER), texture)
+        val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.BUNNY), 1.0f, 20.0f)
+        model = TexturedModel(OBJModelLoader.getModel(ModelType.BUNNY), texture)
     }
 
     override fun render(renderer: GameRenderer) {

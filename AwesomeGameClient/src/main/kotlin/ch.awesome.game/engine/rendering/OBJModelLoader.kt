@@ -7,7 +7,8 @@ import kotlin.browser.window
 import kotlin.js.Promise
 
 enum class ModelType(val fileName: String) {
-    BOULDER("boulder.obj")
+    BOULDER("boulder.obj"),
+    BUNNY("bunny.obj")
 }
 
 object OBJModelLoader {
@@ -39,12 +40,16 @@ object OBJModelLoader {
 
     fun convertToModel(gl: WebGL2RenderingContext, data: String): Model {
 
+        console.log("loading model")
+
         val vertices = arrayListOf<Vector3f>()
         val textureCoords = arrayListOf<Vector2f>()
         val normals = arrayListOf<Vector3f>()
         val indices = arrayListOf<Int>()
 
         val lines = data.split("\n")
+
+        console.log("splitted lines")
 
         for (line in lines) {
             val linesplit = line.split(" ")
@@ -57,6 +62,8 @@ object OBJModelLoader {
                 normals.add(Vector3f(linesplit[1].toFloat(), linesplit[2].toFloat(), linesplit[3].toFloat()))
             }
         }
+
+        console.log("finished loading vertices, texture coords and normals")
 
         val vertexArray = FloatArray(vertices.size * 3).toTypedArray()
         val textureCoordsArray = FloatArray(vertices.size * 2).toTypedArray()
@@ -77,6 +84,8 @@ object OBJModelLoader {
             }
         }
 
+        console.log("finished loading faces")
+
         var vertexPointer = 0;
         for(vertex in vertices) {
             vertexArray[vertexPointer ++] = vertex.x
@@ -88,6 +97,8 @@ object OBJModelLoader {
         for(index in indices) {
             indicesArray[indexPointer ++] = index
         }
+
+        console.log("loaded and stored all data")
 
         return ModelCreator.loadModel(gl, vertexArray, textureCoordsArray, normalsArray, indicesArray)
     }
