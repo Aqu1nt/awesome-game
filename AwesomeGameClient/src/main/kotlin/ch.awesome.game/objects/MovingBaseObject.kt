@@ -17,7 +17,7 @@ open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject 
         localPosition.x += velocity.x * unitPerSecond * tpf
         localPosition.y += velocity.y * unitPerSecond * tpf
         localPosition.z += velocity.z * unitPerSecond * tpf
-        adjustVector3f(localPosition, position, 0.1f)
+        adjustVector3f(localPosition, position, 0.2f)
         super.update(tpf)
     }
 

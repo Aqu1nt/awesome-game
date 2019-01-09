@@ -28,6 +28,10 @@ open class SmartTreeItem(val id: String = UUID.randomUUID().toString()) {
         return children
     }
 
+    fun fireEvent(event: String) {
+        changes.add(SmartChange(id, event, SmartChangeType.EVENT))
+    }
+
     fun fetchAndResetChanges(changes: MutableList<SmartChange> = mutableListOf()): List<SmartChange> {
         synchronized(children) {
             changes.addAll(this.changes)

@@ -1,9 +1,10 @@
 package ch.awesome.game.state
 
 import ch.awesome.game.objects.IBaseObject
+import ch.awesome.game.utils.IVector3f
 
 open class GameNode(val state: dynamic = null,
-                    override val id: String = state.id as String) : IBaseObject {
+                    override val id: String = state.id as String) : IBaseObject<IVector3f> {
 
     companion object {
         private val allNodes = mutableMapOf<String, GameNode>()
@@ -12,6 +13,10 @@ open class GameNode(val state: dynamic = null,
             return allNodes.values
         }
     }
+
+    override var position: IVector3f by StateProperty()
+    override var scale: IVector3f by StateProperty()
+    override var rotation: IVector3f by StateProperty()
 
     protected val children = mutableListOf<GameNode>()
 

@@ -1,14 +1,8 @@
 package ch.awesome.game.engine.rendering
 
-import ch.awesome.game.engine.rendering.shader.ShaderProgram
 import ch.awesome.game.engine.rendering.shader.model.ModelShader
-import ch.awesome.game.engine.rendering.shader.model.modelFragmentShaderSource
-import ch.awesome.game.engine.rendering.shader.model.modelVertexShaderSource
-import ch.awesome.game.lib.glmatrix.GLMatrix
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
-import ch.awesome.game.utils.Vector3f
 import org.khronos.webgl.WebGLRenderingContext
-import org.khronos.webgl.WebGLUniformLocation
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
 import kotlin.math.cos

@@ -18,7 +18,9 @@ val smartProperties = WeakHashMap<Any, MutableSet<SmartProperty<*>>>()
 /**
  *
  */
-class SmartProperty<T>(initialValue: T) {
+class SmartProperty<T>(initialValue: T,
+                       val set: ((T) -> T)? = null,
+                       val get: (() -> T)? = null) {
 
     var value: T = initialValue
         private set
@@ -54,7 +56,8 @@ class SmartProperty<T>(initialValue: T) {
         if (value != this.value) {
             dirty = true
         }
-        this.value = value
+
+        this.value = set?.invoke(value) ?: value
     }
 
     private fun register(thisRef: Any) {

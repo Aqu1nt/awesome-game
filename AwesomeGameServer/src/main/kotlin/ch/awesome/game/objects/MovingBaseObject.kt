@@ -5,7 +5,6 @@ import ch.awesome.game.utils.Vector3f
 
 open class MovingBaseObject(unitsPerSecond: Float = 1.0f): BaseObject() {
 
-    var position: Vector3f by SmartProperty(Vector3f())
     var velocity: Vector3f by SmartProperty(Vector3f())
     var unitPerSecond: Float by SmartProperty(unitsPerSecond)
 
