@@ -1,7 +1,7 @@
 package ch.awesome.game.server.objects
 
 import ch.awesome.game.server.utils.SmartProperty
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Vector3f
 
 open class MovingBaseObject(unitsPerSecond: Float = 1.0f): BaseObject() {
 

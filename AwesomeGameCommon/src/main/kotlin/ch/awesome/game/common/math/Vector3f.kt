@@ -1,4 +1,4 @@
-package ch.awesome.game.common.utils
+package ch.awesome.game.common.math
 
 import kotlin.math.sqrt
 

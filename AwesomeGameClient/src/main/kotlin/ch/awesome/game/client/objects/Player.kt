@@ -4,7 +4,8 @@ import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Matrix4f
+import ch.awesome.game.common.math.Vector3f
 
 class Player(state: dynamic): MovingBaseObject(state), Renderable {
 

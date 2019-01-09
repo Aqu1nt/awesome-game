@@ -2,6 +2,7 @@ package ch.awesome.game.client.rendering
 
 import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.common.math.Matrix4f
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window

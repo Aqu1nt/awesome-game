@@ -6,8 +6,9 @@ import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
-import ch.awesome.game.common.utils.IVector3f
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Matrix4f
+import ch.awesome.game.common.math.IVector3f
+import ch.awesome.game.common.math.Vector3f
 
 class Lamp(state: dynamic): GameNode(state), Renderable, LightSource {
 

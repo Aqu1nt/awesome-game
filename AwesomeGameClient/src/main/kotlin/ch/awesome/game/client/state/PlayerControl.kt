@@ -3,7 +3,7 @@ package ch.awesome.game.client.state
 import ch.awesome.game.common.network.events.PlayerDirectionChange
 import ch.awesome.game.common.network.events.PlayerDirectionChangeNetworkEvent
 import ch.awesome.game.client.networking.NetworkClient
-import ch.awesome.game.common.utils.IVector3f
+import ch.awesome.game.common.math.IVector3f
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.serializer
 import org.w3c.dom.events.Event

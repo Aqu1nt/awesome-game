@@ -1,6 +1,6 @@
 package ch.awesome.game.client.rendering.shader
 
-import ch.awesome.game.client.rendering.Matrix4f
+import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 
 class UniformMatrix4f(name: String): ShaderUniform(name) {

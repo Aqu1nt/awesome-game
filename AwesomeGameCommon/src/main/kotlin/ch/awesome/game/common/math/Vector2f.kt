@@ -1,4 +1,4 @@
-package ch.awesome.game.common.utils
+package ch.awesome.game.common.math
 
 interface IVector2f {
     var x: Float

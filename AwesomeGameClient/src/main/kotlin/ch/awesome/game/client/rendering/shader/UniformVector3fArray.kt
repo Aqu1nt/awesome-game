@@ -1,7 +1,7 @@
 package ch.awesome.game.client.rendering.shader
 
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Vector3f
 
 class UniformVector3fArray(name: String, val size: Int): ShaderUniform(name) {
 

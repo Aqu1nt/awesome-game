@@ -1,8 +1,8 @@
 package ch.awesome.game.client.rendering
 
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
-import ch.awesome.game.common.utils.Vector2f
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Vector2f
+import ch.awesome.game.common.math.Vector3f
 import kotlin.browser.window
 import kotlin.js.Promise
 

@@ -3,7 +3,7 @@ package ch.awesome.game.server.instance
 import ch.awesome.game.server.objects.Lamp
 import ch.awesome.game.server.objects.Player
 import ch.awesome.game.server.objects.World
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Vector3f
 import java.util.concurrent.CompletableFuture
 
 val GAME = StandardGame().apply {

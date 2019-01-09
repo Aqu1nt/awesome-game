@@ -4,7 +4,7 @@ import ch.awesome.game.common.objects.IBaseObject
 import ch.awesome.game.server.instance.Updateable
 import ch.awesome.game.server.utils.SmartProperty
 import ch.awesome.game.server.utils.SmartTreeItem
-import ch.awesome.game.common.utils.Vector3f
+import ch.awesome.game.common.math.Vector3f
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 

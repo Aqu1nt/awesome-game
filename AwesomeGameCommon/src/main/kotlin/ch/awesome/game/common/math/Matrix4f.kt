@@ -1,7 +1,5 @@
-package ch.awesome.game.client.rendering
+package ch.awesome.game.common.math
 
-import ch.awesome.game.common.utils.IVector3f
-import ch.awesome.game.common.utils.Vector3f
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

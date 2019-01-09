@@ -1,7 +1,7 @@
 package ch.awesome.game.client.state
 
 import ch.awesome.game.common.objects.IBaseObject
-import ch.awesome.game.common.utils.IVector3f
+import ch.awesome.game.common.math.IVector3f
 
 open class GameNode(val state: dynamic = null,
                     override val id: String = state.id as String) : IBaseObject<IVector3f> {
