@@ -1,7 +1,9 @@
 package ch.awesome.game.instance
 
+import ch.awesome.game.objects.Lamp
 import ch.awesome.game.objects.Player
 import ch.awesome.game.objects.World
+import ch.awesome.game.utils.Vector3f
 import java.util.concurrent.CompletableFuture
 
 val GAME = StandardGame().apply {
@@ -12,6 +14,11 @@ class StandardGame: Updateable {
 
     val world = World()
     val loop = GameLoop(mutableListOf(this), 100)
+
+    init {
+        world.addChild(Lamp().apply { position = Vector3f(-10.0f, 0.0f, 10.0f); color = Vector3f(1.0f, 0.9f, 0.4f)})
+        world.addChild(Lamp().apply { position = Vector3f(10.0f, 0.0f, 10.0f); color = Vector3f(1.0f, 0.0f, 0.0f)})
+    }
 
     fun join(): CompletableFuture<Player> {
         val player = Player()

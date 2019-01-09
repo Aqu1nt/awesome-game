@@ -10,7 +10,7 @@ import java.util.*
 open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(id), Updateable, IBaseObject<Vector3f> {
 
     override var position: Vector3f by SmartProperty(Vector3f())
-    override var scale: Vector3f by SmartProperty(Vector3f())
+    override var scale: Vector3f by SmartProperty(Vector3f(1.0f, 1.0f, 1.0f))
     override var rotation: Vector3f by SmartProperty(Vector3f())
 
     val worldPosition: Vector3f

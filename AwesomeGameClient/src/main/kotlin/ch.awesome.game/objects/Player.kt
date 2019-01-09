@@ -12,19 +12,14 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
     private var name by StateProperty<String>()
 
     lateinit var model: TexturedModel
-    lateinit var lamp: TexturedModel
 
     var modelMatrix = Matrix4f()
-    var lampModelMatrix = Matrix4f()
 
     var yaw = 0.0f
 
     override fun initModels(gl: WebGL2RenderingContext) {
         val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.BUNNY), 1.0f, 20.0f)
         model = TexturedModel(OBJModelLoader.getModel(ModelType.BUNNY), texture)
-
-        val lampTexture = Texture(ModelCreator.loadTexture(gl, TextureImageType.BUNNY), 1.0f, 20.0f)
-        lamp = TexturedModel(OBJModelLoader.getModel(ModelType.LAMP), lampTexture)
     }
 
     override fun update(tpf: Float) {
@@ -38,13 +33,5 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
     override fun render(renderer: GameRenderer) {
         Matrix4f.modelMatrix(modelMatrix, localPosition, Vector3f(0.0f, yaw, 0.0f), Vector3f(0.5f, 0.5f, 0.5f))
         renderer.render(model, modelMatrix)
-
-        Matrix4f.modelMatrix(lampModelMatrix, Vector3f(-10.0f, 0.0f, 10.0f), Vector3f(0.0f, 0.0f, 0.0f),
-                Vector3f(1.0f, 1.0f, 1.0f))
-        renderer.render(lamp, lampModelMatrix)
-
-        Matrix4f.modelMatrix(lampModelMatrix, Vector3f(10.0f, 0.0f, 10.0f), Vector3f(0.0f, 0.0f, 0.0f),
-                Vector3f(1.0f, 1.0f, 1.0f))
-        renderer.render(lamp, lampModelMatrix)
     }
 }

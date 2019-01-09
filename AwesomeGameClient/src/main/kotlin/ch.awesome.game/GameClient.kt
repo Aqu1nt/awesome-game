@@ -47,14 +47,11 @@ class GameClient {
                         state.update(tpf.toFloat())
 
                         camera.position.x = state.player?.localPosition?.x ?: 0.0f
-                        camera.position.y = 25.0f
-                        camera.position.z = state.player?.localPosition?.z?.plus(30.0f) ?: 30.0f
-                        camera.pitch = 40.0f
+                        camera.position.y = state.player?.localPosition?.y?.plus(40.0f) ?: 40.0f
+                        camera.position.z = state.player?.localPosition?.z ?: 0.0f
+                        camera.pitch = 90.0f
 
-                        renderer.prepare(camera, Light(Vector3f(10.0f, 7.0f, 10.0f), Vector3f(1.0f, 0.9f, 0.4f),
-                                                         Vector3f(1.0f, 0.01f, 0.002f)),
-                                                 Light(Vector3f(-10.0f, 7.0f, 10.0f), Vector3f(1.0f, 0.0f, 0.0f),
-                                                         Vector3f(1.0f, 0.01f, 0.002f)))
+                        renderer.prepare(camera, *state.getLightSources())
                         state.render(renderer)
                         renderer.end()
 

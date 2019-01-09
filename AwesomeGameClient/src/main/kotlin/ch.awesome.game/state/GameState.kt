@@ -1,9 +1,11 @@
 package ch.awesome.game.state
 
 import ch.awesome.game.engine.rendering.GameRenderer
+import ch.awesome.game.engine.rendering.Light
 import ch.awesome.game.network.events.IGameStateNode
 import ch.awesome.game.objects.Player
 import ch.awesome.game.objects.World
+import ch.awesome.game.state.interfaces.LightSource
 import ch.awesome.game.state.interfaces.Renderable
 import ch.awesome.game.utils.ISmartChange
 import ch.awesome.game.utils.SmartChangeType
@@ -26,6 +28,13 @@ class GameState(
                 gameNode.render(renderer)
             }
         }
+    }
+
+    fun getLightSources(): Array<Light> {
+        return GameNode.allGameNodes().mapNotNull{
+            if (it is LightSource)it.getLight()
+            else null
+        }.toTypedArray()
     }
 
     fun update(tpf: Float) {
