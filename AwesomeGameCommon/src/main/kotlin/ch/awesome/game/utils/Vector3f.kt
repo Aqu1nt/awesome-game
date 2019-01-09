@@ -1,5 +1,7 @@
 package ch.awesome.game.utils
 
+import kotlin.math.sqrt
+
 interface IVector3f {
     var x: Float
     var y: Float
@@ -26,6 +28,19 @@ data class Vector3f (override var x: Float = 0f,
 
     operator fun div(other: Vector3f): Vector3f {
         return Vector3f(x / other.x, y / other.y, z / other.z)
+    }
+
+    fun length(): Float {
+        return sqrt(lengthSquared())
+    }
+
+    fun lengthSquared(): Float {
+        return x * x + y * y + z * z
+    }
+
+    fun normalize(): Vector3f {
+        val length = length()
+        return Vector3f(x / length, y / length, z / length)
     }
 
     fun toFloatArray(): Array<Float> {
