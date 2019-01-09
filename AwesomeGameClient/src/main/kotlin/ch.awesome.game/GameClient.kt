@@ -1,9 +1,6 @@
 package ch.awesome.game
 
-import ch.awesome.game.engine.rendering.GameRenderer
-import ch.awesome.game.engine.rendering.Light
-import ch.awesome.game.engine.rendering.OBJModelLoader
-import ch.awesome.game.engine.rendering.TextureImageLoader
+import ch.awesome.game.engine.rendering.*
 import ch.awesome.game.networking.NetworkClient
 import ch.awesome.game.state.GameState
 import ch.awesome.game.state.PlayerControl
@@ -18,6 +15,7 @@ import kotlin.js.Date
 class GameClient {
 
     private lateinit var renderer: GameRenderer
+    private lateinit var camera: Camera
 
     private val state = GameState(
         afterNodeCreate = { gameNode ->
@@ -39,6 +37,7 @@ class GameClient {
             val canvas = document.getElementById("game-canvas") as HTMLCanvasElement?
             if (canvas != null) {
                 renderer = GameRenderer(canvas)
+                camera = Camera()
 
                 OBJModelLoader.loadAllModels(renderer.gl).then {
                     var loop: (Double) -> Unit = {}
@@ -47,12 +46,15 @@ class GameClient {
                         val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
                         state.update(tpf.toFloat())
 
-                        renderer.prepare(Light(Vector3f(10.0f, 5.0f, 10.0f),
-                                               Vector3f(1.0f, 0.9f, 0.4f),
-                                               Vector3f(1.0f, 0.01f, 0.002f)),
-                                         Light(Vector3f(-10.0f, 5.0f, 10.0f),
-                                               Vector3f(1.0f, 0.0f, 0.0f),
-                                               Vector3f(1.0f, 0.01f, 0.002f)))
+                        camera.position.x = state.player?.localPosition?.x ?: 0.0f
+                        camera.position.y = 25.0f
+                        camera.position.z = state.player?.localPosition?.z?.plus(30.0f) ?: 30.0f
+                        camera.pitch = 40.0f
+
+                        renderer.prepare(camera, Light(Vector3f(10.0f, 7.0f, 10.0f), Vector3f(1.0f, 0.9f, 0.4f),
+                                                         Vector3f(1.0f, 0.01f, 0.002f)),
+                                                 Light(Vector3f(-10.0f, 7.0f, 10.0f), Vector3f(1.0f, 0.0f, 0.0f),
+                                                         Vector3f(1.0f, 0.01f, 0.002f)))
                         state.render(renderer)
                         renderer.end()
 

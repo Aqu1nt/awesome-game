@@ -6,6 +6,7 @@ import ch.awesome.game.engine.rendering.shader.model.modelFragmentShaderSource
 import ch.awesome.game.engine.rendering.shader.model.modelVertexShaderSource
 import ch.awesome.game.lib.glmatrix.GLMatrix
 import ch.awesome.game.lib.webgl2.WebGL2RenderingContext
+import ch.awesome.game.utils.Vector3f
 import org.khronos.webgl.WebGLRenderingContext
 import org.khronos.webgl.WebGLUniformLocation
 import org.w3c.dom.HTMLCanvasElement
@@ -21,6 +22,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
     var viewMatrix = Matrix4f()
     var projectionMatrix = Matrix4f()
 
+    lateinit var camera: Camera
     var lights = mutableListOf<Light>()
 
     val shader = ModelShader(gl)
@@ -52,24 +54,23 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         shader.stop()
     }
 
-    fun prepare(vararg lights: Light) {
+    fun prepare(camera: Camera, vararg lights: Light) {
         shader.start()
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
+        this.camera = camera
         this.lights.clear()
         for(l in lights) {
             this.lights.add(l)
         }
     }
 
-    fun render(model: TexturedModel, x: Float, y: Float, z: Float) {
+    fun render(model: TexturedModel, modelMatrix: Matrix4f) {
         gl.bindVertexArray(model.rawModel.vao)
         gl.enableVertexAttribArray(0)
         gl.enableVertexAttribArray(1)
         gl.enableVertexAttribArray(2)
 
-        Matrix4f.identity(modelMatrix)
-        Matrix4f.translate(modelMatrix, x, y, z)
         shader.uniformModelMatrix.load(gl, modelMatrix)
 
         val angle = 0f
@@ -78,10 +79,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         val posX = dirX * 30.0f
         val posZ = dirZ * 30.0f
 
-        Matrix4f.identity(viewMatrix)
-        GLMatrix.mat4.lookAt(viewMatrix.floatArray, arrayOf(posX, 30.0f, posZ), arrayOf(0.0f, 0.0f, 0.0f), arrayOf(0.0f, 1.0f, 0.0f))
-        //Matrix4f.translate(viewMatrix, 0.0f, 0.0f, 0.0f)
-        //Matrix4f.rotate(viewMatrix, window.performance.now().toFloat() / 100.0f, arrayOf(0.0f, 1.0f, 0.0f))
+        Matrix4f.viewMatrix(viewMatrix, camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
         shader.uniformViewMatrix.load(gl, viewMatrix)
 
         for(i in 0 until maxLights) {
@@ -95,6 +93,9 @@ class GameRenderer (canvas: HTMLCanvasElement) {
                 shader.uniformLightAttenuation.load(gl, 1.0f, 1.0f, 1.0f, i)
             }
         }
+
+        shader.uniformReflectivity.load(gl, model.texture.reflectivity)
+        shader.uniformShineDamper.load(gl, model.texture.shineDamper)
 
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)

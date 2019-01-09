@@ -1,5 +1,7 @@
 package ch.awesome.game.engine.rendering
 
+import ch.awesome.game.utils.IVector3f
+import ch.awesome.game.utils.Vector3f
 import org.khronos.webgl.Float32Array
 import org.khronos.webgl.get
 import org.khronos.webgl.set
@@ -47,26 +49,45 @@ class Matrix4f {
             return  matrix
         }
 
-        fun rotate(matrix: Matrix4f, angle: Float, axis: Array<Float>): Matrix4f {
+        fun scale(matrix: Matrix4f, x: Float, y: Float, z: Float): Matrix4f {
+            matrix.floatArray[0] *= x
+            matrix.floatArray[1] *= x
+            matrix.floatArray[2] *= x
+            matrix.floatArray[3] *= x
+
+            matrix.floatArray[4] *= y
+            matrix.floatArray[5] *= y
+            matrix.floatArray[6] *= y
+            matrix.floatArray[7] *= y
+
+            matrix.floatArray[8] *= z
+            matrix.floatArray[9] *= z
+            matrix.floatArray[10] *= z
+            matrix.floatArray[11] *= z
+
+            return matrix
+        }
+
+        fun rotate(matrix: Matrix4f, angle: Float, axis: IVector3f): Matrix4f {
             val sin = sin(toRadians(angle))
             val cos = cos(toRadians(angle))
             val oneMinusCos = 1.0f - cos
-            val xy = axis[0] * axis[1]
-            val xz = axis[0] * axis[2]
-            val yz = axis[1] * axis[2]
-            val xSin = axis[0] * sin
-            val ySin = axis[1] * sin
-            val zSin = axis[2] * sin
+            val xy = axis.x * axis.y
+            val xz = axis.x * axis.z
+            val yz = axis.y * axis.z
+            val xSin = axis.x * sin
+            val ySin = axis.y * sin
+            val zSin = axis.z * sin
 
-            val raw0 = axis[0] * axis[0] * oneMinusCos + cos
+            val raw0 = axis.x * axis.x * oneMinusCos + cos
             val raw1 = xy * oneMinusCos + zSin
             val raw2 = xz * oneMinusCos - ySin
             val raw4 = xy * oneMinusCos - zSin
-            val raw5 = axis[1] * axis[1] * oneMinusCos + cos
+            val raw5 = axis.y * axis.y * oneMinusCos + cos
             val raw6 = yz * oneMinusCos + xSin
             val raw8 = xz * oneMinusCos + ySin
             val raw9 = yz * oneMinusCos - xSin
-            val raw10 = axis[2] * axis[2] * oneMinusCos + cos
+            val raw10 = axis.z * axis.z * oneMinusCos + cos
 
             val final0 = matrix.floatArray[0] * raw0 + matrix.floatArray[4] * raw1 + matrix.floatArray[8] * raw2
             val final1 = matrix.floatArray[1] * raw0 + matrix.floatArray[5] * raw1 + matrix.floatArray[9] * raw2
@@ -77,6 +98,10 @@ class Matrix4f {
             val final6 = matrix.floatArray[2] * raw4 + matrix.floatArray[6] * raw5 + matrix.floatArray[10] * raw6
             val final7 = matrix.floatArray[3] * raw4 + matrix.floatArray[7] * raw5 + matrix.floatArray[11] * raw6
 
+            matrix.floatArray[8] = matrix.floatArray[0] * raw8 + matrix.floatArray[4] * raw9 + matrix.floatArray[8] * raw10
+            matrix.floatArray[9] = matrix.floatArray[1] * raw8 + matrix.floatArray[5] * raw9 + matrix.floatArray[9] * raw10
+            matrix.floatArray[10] = matrix.floatArray[2] * raw8 + matrix.floatArray[6] * raw9 + matrix.floatArray[10] * raw10
+            matrix.floatArray[11] = matrix.floatArray[3] * raw8 + matrix.floatArray[7] * raw9 + matrix.floatArray[11] * raw10
             matrix.floatArray[0] = final0
             matrix.floatArray[1] = final1
             matrix.floatArray[2] = final2
@@ -85,19 +110,36 @@ class Matrix4f {
             matrix.floatArray[5] = final5
             matrix.floatArray[6] = final6
             matrix.floatArray[7] = final7
-            matrix.floatArray[8] = matrix.floatArray[0] * raw8 + matrix.floatArray[4] * raw9 + matrix.floatArray[8] * raw10
-            matrix.floatArray[9] = matrix.floatArray[1] * raw8 + matrix.floatArray[5] * raw9 + matrix.floatArray[9] * raw10
-            matrix.floatArray[10] = matrix.floatArray[2] * raw8 + matrix.floatArray[6] * raw9 + matrix.floatArray[10] * raw10
-            matrix.floatArray[11] = matrix.floatArray[3] * raw8 + matrix.floatArray[7] * raw9 + matrix.floatArray[11] * raw10
 
             return matrix
         }
 
-        fun viewMatrix(matrix: Matrix4f, position: Array<Float>, rotation: Array<Float>): Matrix4f {
+        fun modelMatrix(matrix: Matrix4f, position: IVector3f, rotation: IVector3f, scale: IVector3f): Matrix4f {
+            Matrix4f.identity(matrix)
+
+            translate(matrix, position.x, position.y, position.z)
+            rotate(matrix, rotation.x, Vector3f(1.0f, 0.0f, 0.0f))
+            rotate(matrix, rotation.y, Vector3f(0.0f, 1.0f, 0.0f))
+            rotate(matrix, rotation.z, Vector3f(0.0f, 0.0f, 1.0f))
+            scale(matrix, scale.x, scale.y, scale.z)
+
+            return matrix
+        }
+
+        fun viewMatrix(matrix: Matrix4f, x: Float, y: Float, z: Float, pitch: Float, yaw: Float, roll: Float): Matrix4f {
+            identity(matrix)
+
+            rotate(matrix, pitch, Vector3f(1.0f, 0.0f, 0.0f))
+            rotate(matrix, yaw, Vector3f(0.0f, 1.0f, 0.0f))
+            rotate(matrix, roll, Vector3f(0.0f, 0.0f, 1.0f))
+            translate(matrix, -x, -y, -z)
+
             return  matrix
         }
 
         fun projectionMatrix(matrix: Matrix4f, fov: Float, cWidth: Int, cHeight: Int, nearPlane: Float, farPlane: Float): Matrix4f {
+            identity(matrix)
+
             val aspectRatio = cWidth.toFloat() / cHeight.toFloat()
             val yScale = (1.0f / tan(toRadians(fov / 2.0f)) * aspectRatio)
             val xScale = (yScale / aspectRatio)

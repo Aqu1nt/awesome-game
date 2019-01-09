@@ -18,8 +18,8 @@ uniform sampler2D modelTexture;
 uniform vec3 lightColor[${GameRenderer.maxLights}];
 uniform vec3 lightAttenuation[${GameRenderer.maxLights}];
 
-const float reflectivity = 1.0;
-const float shineDamper = 20.0;
+uniform float reflectivity;
+uniform float shineDamper;
 
 void main()
 {
