@@ -92,6 +92,8 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         shader.uniformReflectivity.load(gl, model.texture.reflectivity)
         shader.uniformShineDamper.load(gl, model.texture.shineDamper)
 
+        shader.uniformAmbientLight.load(gl, 0.3f)
+
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)
         gl.drawElements(WebGLRenderingContext.TRIANGLES, model.rawModel.vertexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
