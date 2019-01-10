@@ -16,6 +16,7 @@ class ModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, modelVertex
     val uniformLightColor= UniformVector3fArray("lightColor", GameRenderer.maxLights).apply { uniforms.add(this) }
     val uniformLightAttenuation=
             UniformVector3fArray("lightAttenuation", GameRenderer.maxLights).apply { uniforms.add(this) }
+    val uniformAmbientLight = UniformFloat("ambientLight").apply { uniforms.add(this) }
     val uniformReflectivity = UniformFloat("reflectivity").apply { uniforms.add(this) }
     val uniformShineDamper = UniformFloat("shineDamper").apply { uniforms.add(this) }
 }

@@ -70,12 +70,6 @@ class GameRenderer (canvas: HTMLCanvasElement) {
 
         shader.uniformModelMatrix.load(gl, modelMatrix)
 
-        val angle = 0f
-        val dirX = sin(toRadians(angle))
-        val dirZ = cos(toRadians(angle))
-        val posX = dirX * 30.0f
-        val posZ = dirZ * 30.0f
-
         Matrix4f.viewMatrix(viewMatrix, camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
         shader.uniformViewMatrix.load(gl, viewMatrix)
 

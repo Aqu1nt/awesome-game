@@ -8,4 +8,13 @@ class Camera {
     var pitch = 0.0f
     var yaw = 0.0f
     var roll = 0.0f
+
+    fun lookAt(x: Float, y: Float, z: Float, pitch: Float, yaw: Float, roll: Float) {
+        position.x = x
+        position.y = y
+        position.z = z
+        this.pitch = pitch
+        this.yaw = yaw
+        this.roll = roll
+    }
 }

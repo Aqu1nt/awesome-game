@@ -1,5 +1,7 @@
 package ch.awesome.game.client.rendering
 
+import ch.awesome.game.client.rendering.loading.TextureImageLoader
+import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import org.khronos.webgl.Float32Array
 import org.khronos.webgl.Uint16Array

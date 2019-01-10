@@ -1,6 +1,9 @@
 package ch.awesome.game.client.objects
 
 import ch.awesome.game.client.rendering.*
+import ch.awesome.game.client.rendering.loading.ModelType
+import ch.awesome.game.client.rendering.loading.OBJModelLoader
+import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
@@ -19,8 +22,8 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
     var yaw = 0.0f
 
     override fun initModels(gl: WebGL2RenderingContext) {
-        val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.BUNNY), 1.0f, 20.0f)
-        model = TexturedModel(OBJModelLoader.getModel(ModelType.BUNNY), texture)
+        val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.PLAYER), 1.0f, 20.0f)
+        model = TexturedModel(OBJModelLoader.getModel(ModelType.PLAYER), texture)
     }
 
     override fun update(tpf: Float) {
@@ -32,7 +35,7 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
     }
 
     override fun render(renderer: GameRenderer) {
-        Matrix4f.modelMatrix(modelMatrix, worldTranslation, Vector3f(0.0f, yaw, 0.0f), Vector3f(0.5f, 0.5f, 0.5f))
+        Matrix4f.modelMatrix(modelMatrix, worldTranslation, Vector3f(0.0f, yaw, 0.0f), Vector3f(1.0f, 1.0f, 1.0f))
         renderer.render(model, modelMatrix)
     }
 }

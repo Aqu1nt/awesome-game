@@ -17,6 +17,7 @@ out vec4 outColor;
 uniform sampler2D modelTexture;
 uniform vec3 lightColor[${GameRenderer.maxLights}];
 uniform vec3 lightAttenuation[${GameRenderer.maxLights}];
+uniform float ambientLight;
 
 uniform float reflectivity;
 uniform float shineDamper;
@@ -48,6 +49,8 @@ void main()
         diffuse += (brightness * lightColor[i]) / attenuation;
         specular += (dampedBrightness * lightColor[i]) / attenuation;
     }
+
+    diffuse = max(diffuse, ambientLight);
 
     outColor = vec4(diffuse, 1.0) * texture(modelTexture, passTextureCoords) + vec4(specular, 1.0);
 }
