@@ -3,12 +3,9 @@ package ch.awesome.game.client.rendering
 import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.Matrix4f
-import ch.awesome.game.common.math.toRadians
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
-import kotlin.math.cos
-import kotlin.math.sin
 
 class GameRenderer (canvas: HTMLCanvasElement) {
 
@@ -25,7 +22,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
 
     companion object {
         // is set to one in order test light selection
-        val maxLights = 1
+        val maxLights = 16
     }
 
     init {
