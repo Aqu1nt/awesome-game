@@ -2,13 +2,12 @@ package ch.awesome.game.client.objects
 
 import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.state.StateProperty
-import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 
-class LampLight(val lamp: Lamp): LightNode(), LightSource, Renderable {
+class LampLight(val lamp: Lamp): LightNode(), Renderable {
 
     lateinit var model: TexturedModel
 
