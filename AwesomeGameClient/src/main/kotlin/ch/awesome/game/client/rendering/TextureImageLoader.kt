@@ -11,7 +11,8 @@ enum class TextureImageType(val fileName: String) {
     CRATE("crate.png"),
     GRASS("grass.png"),
     BOULDER("boulder.png"),
-    BUNNY("bunny.png")
+    BUNNY("bunny.png"),
+    CUBE("cube.png")
 }
 
 object TextureImageLoader {

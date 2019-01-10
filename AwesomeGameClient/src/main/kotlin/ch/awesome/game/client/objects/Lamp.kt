@@ -1,7 +1,6 @@
 package ch.awesome.game.client.objects
 
 import ch.awesome.game.client.rendering.*
-import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.client.state.interfaces.Renderable
@@ -9,12 +8,16 @@ import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 
-class LampLight(val lamp: Lamp): GameNode(), LightSource, Renderable {
+class LampLight(val lamp: Lamp): LightNode(), LightSource, Renderable {
 
     lateinit var model: TexturedModel
 
+    init {
+        scale = Vector3f(3f, 3f, 3f)
+    }
+
     override fun initModels(gl: WebGL2RenderingContext) {
-        val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.BUNNY), 1.0f, 20.0f)
+        val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.CUBE), 1.0f, 20.0f)
         model = TexturedModel(OBJModelLoader.getModel(ModelType.CUBE), texture)
     }
 
@@ -22,8 +25,12 @@ class LampLight(val lamp: Lamp): GameNode(), LightSource, Renderable {
         renderer.render(model, worldMatrix)
     }
 
-    override fun getLight(): Light {
-        return Light(Vector3f(worldTranslation.x, worldTranslation.y + 7.0f, worldTranslation.z), Vector3f(lamp.color), Vector3f(1.0f, 0.01f, 0.002f))
+    override fun getLightColor(): IVector3f {
+        return lamp.color
+    }
+
+    override fun getLightPosition(): IVector3f {
+        return worldTranslation
     }
 }
 
