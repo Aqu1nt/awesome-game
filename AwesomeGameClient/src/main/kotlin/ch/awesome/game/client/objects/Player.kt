@@ -14,7 +14,7 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
 
     lateinit var model: TexturedModel
 
-    var modelMatrix = Matrix4f()
+    val modelMatrix = Matrix4f()
 
     var yaw = 0.0f
 
@@ -32,7 +32,7 @@ class Player(state: dynamic): MovingBaseObject(state), Renderable {
     }
 
     override fun render(renderer: GameRenderer) {
-        Matrix4f.modelMatrix(modelMatrix, localPosition, Vector3f(0.0f, yaw, 0.0f), Vector3f(0.5f, 0.5f, 0.5f))
+        Matrix4f.modelMatrix(modelMatrix, worldTranslation, Vector3f(0.0f, yaw, 0.0f), Vector3f(0.5f, 0.5f, 0.5f))
         renderer.render(model, modelMatrix)
     }
 }

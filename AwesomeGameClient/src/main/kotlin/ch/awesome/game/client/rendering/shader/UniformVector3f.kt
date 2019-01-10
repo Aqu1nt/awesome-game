@@ -9,7 +9,7 @@ class UniformVector3f(name: String): ShaderUniform(name) {
     var vec: IVector3f? = null
 
     fun load(gl: WebGL2RenderingContext, x: Float, y: Float, z: Float) {
-        if(vec?.x == x || vec?.y == y || vec?.z == z) return
+        if(vec?.x == x && vec?.y == y && vec?.z == z) return
         if(vec == null) vec = Vector3f(0.0f, 0.0f, 0.0f)
 
         vec?.x = x

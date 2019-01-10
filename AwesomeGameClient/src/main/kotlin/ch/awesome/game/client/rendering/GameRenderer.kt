@@ -3,6 +3,7 @@ package ch.awesome.game.client.rendering
 import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.Matrix4f
+import ch.awesome.game.common.math.toRadians
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
@@ -23,7 +24,8 @@ class GameRenderer (canvas: HTMLCanvasElement) {
     val shader = ModelShader(gl)
 
     companion object {
-        val maxLights = 16
+        // is set to one in order test light selection
+        val maxLights = 1
     }
 
     init {
@@ -69,19 +71,23 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         shader.uniformModelMatrix.load(gl, modelMatrix)
 
         val angle = 0f
-        val dirX = sin(Matrix4f.toRadians(angle))
-        val dirZ = cos(Matrix4f.toRadians(angle))
+        val dirX = sin(toRadians(angle))
+        val dirZ = cos(toRadians(angle))
         val posX = dirX * 30.0f
         val posZ = dirZ * 30.0f
 
         Matrix4f.viewMatrix(viewMatrix, camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
         shader.uniformViewMatrix.load(gl, viewMatrix)
 
+        val sortedLights = lights.sortedBy { light ->
+            light.position.distance(camera.position)
+        }
+
         for(i in 0 until maxLights) {
-            if(i < lights.size) {
-                shader.uniformLightPos.load(gl, lights[i].position.x, lights[i].position.y, lights[i].position.z, i)
-                shader.uniformLightColor.load(gl, lights[i].color.x, lights[i].color.y, lights[i].color.z, i)
-                shader.uniformLightAttenuation.load(gl, lights[i].attenuation.x, lights[i].attenuation.y, lights[i].attenuation.z, i)
+            if(i < sortedLights.size) {
+                shader.uniformLightPos.load(gl, sortedLights[i].position.x, sortedLights[i].position.y, sortedLights[i].position.z, i)
+                shader.uniformLightColor.load(gl, sortedLights[i].color.x, sortedLights[i].color.y, sortedLights[i].color.z, i)
+                shader.uniformLightAttenuation.load(gl, sortedLights[i].attenuation.x, sortedLights[i].attenuation.y, sortedLights[i].attenuation.z, i)
             } else {
                 shader.uniformLightPos.load(gl, 0.0f, 0.0f, 0.0f, i)
                 shader.uniformLightColor.load(gl, 0.0f, 0.0f, 0.0f, i)

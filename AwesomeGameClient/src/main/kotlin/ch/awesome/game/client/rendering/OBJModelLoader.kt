@@ -9,7 +9,8 @@ import kotlin.js.Promise
 enum class ModelType(val fileName: String) {
     BOULDER("boulder.obj"),
     BUNNY("bunny.obj"),
-    LAMP("lamp.obj")
+    LAMP("lamp.obj"),
+    CUBE("cube.obj")
 }
 
 object OBJModelLoader {

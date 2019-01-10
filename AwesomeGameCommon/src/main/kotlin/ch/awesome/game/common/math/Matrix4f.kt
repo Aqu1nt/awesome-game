@@ -1,17 +1,39 @@
 package ch.awesome.game.common.math
 
-import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
+import kotlin.math.sqrt
 import kotlin.math.tan
 
 class Matrix4f {
 
     var floatArray = Array(16) { 0.0f }
+        private set
+
+    var m00: Float get() { return floatArray[0] }  set(value) { floatArray[0] = value }
+    var m01: Float get() { return floatArray[1] }  set(value) { floatArray[1] = value }
+    var m02: Float get() { return floatArray[2] }  set(value) { floatArray[2] = value }
+    var m03: Float get() { return floatArray[3] }  set(value) { floatArray[3] = value }
+    var m10: Float get() { return floatArray[4] }  set(value) { floatArray[4] = value }
+    var m11: Float get() { return floatArray[5] }  set(value) { floatArray[5] = value }
+    var m12: Float get() { return floatArray[6] }  set(value) { floatArray[6] = value }
+    var m13: Float get() { return floatArray[7] }  set(value) { floatArray[7] = value }
+    var m20: Float get() { return floatArray[8] }  set(value) { floatArray[8] = value }
+    var m21: Float get() { return floatArray[9] }  set(value) { floatArray[9] = value }
+    var m22: Float get() { return floatArray[10] }  set(value) { floatArray[10] = value }
+    var m23: Float get() { return floatArray[11] }  set(value) { floatArray[11] = value }
+    var m30: Float get() { return floatArray[12] }  set(value) { floatArray[12] = value }
+    var m31: Float get() { return floatArray[13] }  set(value) { floatArray[13] = value }
+    var m32: Float get() { return floatArray[14] }  set(value) { floatArray[14] = value }
+    var m33: Float get() { return floatArray[15] }  set(value) { floatArray[15] = value }
 
     companion object {
 
-        fun identity(matrix: Matrix4f): Matrix4f {
+        val X_AXIS = Vector3f(1f, 0f, 0f)
+        val Y_AXIS = Vector3f(0f, 1f, 0f)
+        val Z_AXIS = Vector3f(0f, 0f, 1f)
+
+        fun identity(matrix: Matrix4f = Matrix4f()): Matrix4f {
             matrix.floatArray[0] = 1.0f
             matrix.floatArray[1] = 0.0f
             matrix.floatArray[2] = 0.0f
@@ -35,13 +57,21 @@ class Matrix4f {
             return matrix
         }
 
+        fun translate(matrix: Matrix4f, vec: IVector3f): Matrix4f {
+            return translate(matrix, vec.x, vec.y, vec.z)
+        }
+
         fun translate(matrix: Matrix4f, x: Float, y: Float, z: Float): Matrix4f {
             matrix.floatArray[12] += matrix.floatArray[0] * x + matrix.floatArray[4] * y + matrix.floatArray[8] * z
             matrix.floatArray[13] += matrix.floatArray[1] * x + matrix.floatArray[5] * y + matrix.floatArray[9] * z
             matrix.floatArray[14] += matrix.floatArray[2] * x + matrix.floatArray[6] * y + matrix.floatArray[10] * z
             matrix.floatArray[15] += matrix.floatArray[3] * x + matrix.floatArray[7] * y + matrix.floatArray[11] * z
 
-            return  matrix
+            return matrix
+        }
+
+        fun scale(matrix: Matrix4f, vec: IVector3f): Matrix4f {
+            return scale(matrix, vec.x, vec.y, vec.z)
         }
 
         fun scale(matrix: Matrix4f, x: Float, y: Float, z: Float): Matrix4f {
@@ -60,6 +90,13 @@ class Matrix4f {
             matrix.floatArray[10] *= z
             matrix.floatArray[11] *= z
 
+            return matrix
+        }
+
+        fun rotate(matrix: Matrix4f, vec: IVector3f): Matrix4f {
+            rotate(matrix, vec.x, X_AXIS)
+            rotate(matrix, vec.y, Y_AXIS)
+            rotate(matrix, vec.z, Z_AXIS)
             return matrix
         }
 
@@ -129,7 +166,7 @@ class Matrix4f {
             rotate(matrix, roll, Vector3f(0.0f, 0.0f, 1.0f))
             translate(matrix, -x, -y, -z)
 
-            return  matrix
+            return matrix
         }
 
         fun projectionMatrix(matrix: Matrix4f, fov: Float, cWidth: Int, cHeight: Int, nearPlane: Float, farPlane: Float): Matrix4f {
@@ -157,11 +194,86 @@ class Matrix4f {
             matrix.floatArray[14] = -((2.0f * nearPlane * farPlane) / frustumLength)
             matrix.floatArray[15] = 0.0f
 
-            return  matrix
+            return matrix
         }
 
-        fun toRadians(degrees: Float): Float {
-            return  degrees / 180.0f * PI.toFloat()
+        fun rotateVect(matrix: Matrix4f, vec: IVector3f): Matrix4f {
+            val vx = vec.x
+            val vy = vec.y
+            val vz = vec.z
+
+            vec.x = vx * matrix.floatArray[0] + vy * matrix.floatArray[1] + vz * matrix.floatArray[2]
+            vec.y = vx * matrix.floatArray[4] + vy * matrix.floatArray[5] + vz * matrix.floatArray[6]
+            vec.z = vx * matrix.floatArray[8] + vy * matrix.floatArray[9] + vz * matrix.floatArray[10]
+
+            return matrix
+        }
+
+        fun translateVect(matrix: Matrix4f, vec: IVector3f): Matrix4f {
+            vec.x += matrix.floatArray[3]
+            vec.y += matrix.floatArray[7]
+            vec.z += matrix.floatArray[11]
+
+            return matrix
+        }
+    }
+
+
+    fun toScaleVector(vector: IVector3f = Vector3f()): IVector3f {
+        val scaleX = sqrt((floatArray[0] * floatArray[0] + floatArray[4] * floatArray[4] + floatArray[8] * floatArray[8]).toDouble()).toFloat()
+        val scaleY = sqrt((floatArray[1] * floatArray[1] + floatArray[5] * floatArray[5] + floatArray[9] * floatArray[9]).toDouble()).toFloat()
+        val scaleZ = sqrt((floatArray[2] * floatArray[2] + floatArray[6] * floatArray[6] + floatArray[10] * floatArray[10]).toDouble()).toFloat()
+        vector.x = scaleX
+        vector.y = scaleY
+        vector.z = scaleZ
+        return vector
+    }
+
+    fun toTranslationVector(vector: IVector3f = Vector3f()): IVector3f {
+        vector.x = floatArray[3]
+        vector.y = floatArray[7]
+        vector.z = floatArray[11]
+        return vector
+    }
+
+    fun setRotationQuaternion(quat: Quaternion) {
+        quat.toRotationMatrix(this)
+    }
+
+    fun set(other: Matrix4f): Matrix4f {
+        other.floatArray.forEachIndexed { index, value -> floatArray[index] = value }
+        return this
+    }
+
+    fun setScale(vec: IVector3f) {
+        setScale(vec.x, vec.y, vec.z)
+    }
+
+    fun setScale(x: Float, y: Float, z: Float) {
+        val vect1 = Vector3f()
+
+        vect1.set(m00, m10, m20)
+        vect1.normalizeLocal().multLocal(x)
+        m00 = vect1.x
+        m10 = vect1.y
+        m20 = vect1.z
+
+        vect1.set(m01, m11, m21)
+        vect1.normalizeLocal().multLocal(y)
+        m01 = vect1.x
+        m11 = vect1.y
+        m21 = vect1.z
+
+        vect1.set(m02, m12, m22)
+        vect1.normalizeLocal().multLocal(z)
+        m02 = vect1.x
+        m12 = vect1.y
+        m22 = vect1.z
+    }
+
+    fun copy(): Matrix4f {
+        return Matrix4f().also {
+            it.floatArray = floatArray.copyOf()
         }
     }
 }

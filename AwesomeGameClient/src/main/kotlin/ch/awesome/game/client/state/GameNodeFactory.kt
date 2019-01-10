@@ -1,19 +1,17 @@
 package ch.awesome.game.client.state
 
-import ch.awesome.game.client.objects.Armor
-import ch.awesome.game.client.objects.Lamp
-import ch.awesome.game.client.objects.Player
-import ch.awesome.game.client.objects.World
+import ch.awesome.game.client.objects.*
 
 typealias GameNodeCreator = (state: dynamic) -> GameNode
 
 class GameNodeFactory {
 
     private val creators: Map<String, GameNodeCreator> = mapOf(
-            "World" to { _: dynamic -> World() },
+            "World" to ::World,
             "Player" to ::Player,
             "Armor" to ::Armor,
-            "Lamp" to ::Lamp
+            "Lamp" to ::Lamp,
+            "Group" to ::Group
     )
 
     fun createNode(type: String, state: dynamic): GameNode {
