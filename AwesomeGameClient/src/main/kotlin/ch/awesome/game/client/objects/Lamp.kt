@@ -27,10 +27,6 @@ class LampLight(val lamp: Lamp): LightNode(), Renderable {
     override fun getLightColor(): IVector3f {
         return lamp.color
     }
-
-    override fun getLightPosition(): IVector3f {
-        return worldTranslation
-    }
 }
 
 

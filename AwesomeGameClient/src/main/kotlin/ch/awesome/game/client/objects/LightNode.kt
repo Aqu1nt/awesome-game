@@ -6,7 +6,8 @@ import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 
-abstract class LightNode: GameNode(), LightSource {
+abstract class LightNode(val color: IVector3f? = null,
+                         val attenuation: IVector3f? = null): GameNode(), LightSource {
 
     companion object {
         private val DEFAULT_COLOR = Vector3f(1f, 1f, 1f)
@@ -22,13 +23,15 @@ abstract class LightNode: GameNode(), LightSource {
         return light
     }
 
-    abstract fun getLightPosition(): IVector3f
+    open fun getLightPosition(): IVector3f {
+        return worldTranslation
+    }
 
     open fun getLightColor(): IVector3f {
-        return DEFAULT_COLOR
+        return color ?: DEFAULT_COLOR
     }
 
     open fun getLightAttenuation(): IVector3f {
-        return DEFAULT_ATTENUATION
+        return attenuation ?: DEFAULT_ATTENUATION
     }
 }
