@@ -19,7 +19,6 @@ class Player(state: dynamic) : MovingBaseObject(state), IPlayer<IVector3f>, Rend
         if (velocity.x < 0.0f) actualRotation().y = 90.0f
         if (velocity.z > 0.0f) actualRotation().y = 0.0f
         if (velocity.z < 0.0f) actualRotation().y = 180.0f
-//        calculateWorldMatrix()
         super.update(tpf)
     }
 

@@ -27,10 +27,10 @@ class SimpleModelRenderer(private val gameNode: GameNode,
     override fun render(gameRenderer: GameRenderer) {
         val localModel = model
         if (localModel != null) {
-            gameRenderer.render(localModel, gameNode.worldMatrix)
+            gameRenderer.renderModel(localModel, gameNode.worldMatrix)
         }
         else {
-            throw IllegalStateException("Cannot render null model!")
+            throw IllegalStateException("Cannot renderModel null model!")
         }
     }
 }

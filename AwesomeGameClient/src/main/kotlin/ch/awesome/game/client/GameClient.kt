@@ -50,10 +50,8 @@ class GameClient {
                     state.update(tpf.toFloat())
                     state.calculateWorldMatrix()
 
-//                        camera.lookAt(state.player?.localPosition?.x ?: 0.0f, state.player?.localPosition?.y?.plus(40.0f) ?: 40.0f,
-//                                      state.player?.localPosition?.z ?: 0.0f, 90.0f, 0.0f, 0.0f)
                     camera.lookAt(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
-                            state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
+                            state.player?.worldTranslation?.z?.plus(40.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
 
 
                     renderer.prepare(*state.getLightSources())

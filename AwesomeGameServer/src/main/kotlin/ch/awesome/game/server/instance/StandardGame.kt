@@ -18,8 +18,8 @@ class StandardGame: Updateable {
 
     init {
         val group = MovingGroup().apply {
-            addChild(Lamp().apply { position = Vector3f(-10.0f, 0.0f, 10.0f); color = Vector3f(1.0f, 0.9f, 0.4f) })
-            addChild(Lamp().apply { position = Vector3f(10.0f, 0.0f, 10.0f); color = Vector3f(1.0f, 0.0f, 0.0f) })
+            addChild(Lamp().apply { position = Vector3f(-10.0f, 0.0f, 0.0f); color = Vector3f(1.0f, 0.9f, 0.4f) })
+            addChild(Lamp().apply { position = Vector3f(10.0f, 0.0f, 0.0f); color = Vector3f(1.0f, 0.0f, 0.0f) })
             rotationVelocity = Vector3f(0f, 30f, 0f)
         }
         world.addChild(group)

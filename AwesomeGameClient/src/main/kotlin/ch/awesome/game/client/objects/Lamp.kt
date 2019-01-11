@@ -15,7 +15,7 @@ import ch.awesome.game.common.objects.ILamp
 
 class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderer {
 
-    class LampLight(val lamp: Lamp) : LightNode(attenuation = Vector3f(1f, 0.01f, 0.00001f)) {
+    class LampLight(private val lamp: Lamp) : LightNode(attenuation = Vector3f(1f, 0.01f, 0.00001f)) {
         override fun getLightColor(): IVector3f {
             return lamp.color
         }
@@ -36,5 +36,6 @@ class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderer {
 
     override fun render(gameRenderer: GameRenderer) {
         renderer.render(gameRenderer)
+        gameRenderer.renderParticle()
     }
 }
