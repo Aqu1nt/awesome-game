@@ -33,7 +33,7 @@ object TextureImageLoader {
     }
 
     private fun load(fileName: String): Promise<ImageData> {
-        return Promise { resolve, reject ->
+        return Promise { resolve, _ ->
             val img = document.createElement("img") as HTMLImageElement
             img.onload = {
                 val canvas = document.createElement("canvas") as HTMLCanvasElement

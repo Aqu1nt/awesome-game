@@ -52,22 +52,27 @@ class GameLoop(private val updateables: MutableList<Updateable>,
             val tickStart = currentTimeMillis()
             val nextTick = tickStart + (1000.toDouble() / ticksPerSecond.toDouble()).toLong()
             val tpf = 1f / 1000f * (tickStart - lastTick)
-            synchronized(runOnTick) {
-                runOnTick.forEach { it() }
-                runOnTick.clear()
+            try {
+                synchronized(runOnTick) {
+                    runOnTick.forEach { it() }
+                    runOnTick.clear()
+                }
+                for (item in updateables) {
+                    item.beforeUpdate()
+                }
+                for (item in updateables) {
+                    item.update(tpf)
+                }
+                for (item in updateables) {
+                    item.afterUpdate()
+                }
+                synchronized(runOnTick) {
+                    runOnTick.forEach { it() }
+                    runOnTick.clear()
+                }
             }
-            for (item in updateables) {
-                item.beforeUpdate()
-            }
-            for (item in updateables) {
-                item.update(tpf)
-            }
-            for (item in updateables) {
-                item.afterUpdate()
-            }
-            synchronized(runOnTick) {
-                runOnTick.forEach { it() }
-                runOnTick.clear()
+            catch (e: Exception) {
+                e.printStackTrace()
             }
             val waitForNextTick = nextTick - currentTimeMillis()
             if (waitForNextTick > 0) {

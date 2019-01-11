@@ -32,7 +32,7 @@ object OBJModelLoader {
     }
 
     fun load(gl: WebGL2RenderingContext, fileName: String): Promise<Model> {
-        return Promise { resolve, reject ->
+        return Promise { resolve, _ ->
              window.fetch("res/$fileName").then { response ->
                 response.text().then { text ->
                     val model = convertToModel(gl, text)
@@ -149,14 +149,14 @@ object OBJModelLoader {
             }
 
             val position = vertex.position
-            val textureCoords = textureCoords[vertex.textureCoordsIndex]
+            val actualTextureCoords = textureCoords[vertex.textureCoordsIndex]
             val normal = normals[vertex.normalIndex]
 
             verticesArray[i * 3] = position.x
             verticesArray[i * 3 + 1] = position.y
             verticesArray[i * 3 + 2] = position.z
-            textureCoordsArray[i * 2] = textureCoords.x
-            textureCoordsArray[i * 2 + 1] = 1 - textureCoords.y
+            textureCoordsArray[i * 2] = actualTextureCoords.x
+            textureCoordsArray[i * 2 + 1] = 1 - actualTextureCoords.y
             normalsArray[i * 3] = normal.x
             normalsArray[i * 3 + 1] = normal.y
             normalsArray[i * 3 + 2] = normal.z
