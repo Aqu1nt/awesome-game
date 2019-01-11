@@ -8,12 +8,12 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 fun main(args: Array<String>) {
 
-    val matrix = Matrix4f.identity(Matrix4f())
-    Matrix4f.rotate(matrix, 90f, Vector3f(0f, 1f, 0f))
-    Matrix4f.rotate(matrix, 90f, Vector3f(1f, 0f, 0f))
+    val matrix = Matrix4f().identity()
+    matrix.rotate(90f, Vector3f(0f, 1f, 0f))
+    matrix.rotate(90f, Vector3f(1f, 0f, 0f))
 
     val position = Vector3f(10f, 0f, 10f)
-    Matrix4f.rotateVect(matrix, position)
+    matrix.rotateVect(position)
     println(position)
 }
 

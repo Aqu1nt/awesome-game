@@ -33,20 +33,20 @@ open class GameNode(val state: dynamic = ClientOnlyState(),
     final override var scale: IVector3f by StateProperty()
     final override var rotation: IVector3f by StateProperty()
 
-    var matrix: Matrix4f = Matrix4f.identity()
+    var matrix: Matrix4f = Matrix4f().identity()
         private set
         get() {
-            Matrix4f.identity(field)
-            Matrix4f.translate(field, actualPosition())
-            Matrix4f.rotate(field, actualRotation())
-            Matrix4f.scale(field, actualScale())
+            field.identity()
+            field.translate(actualPosition())
+            field.rotate(actualRotation())
+            field.scale(actualScale())
             return field
         }
 
     val worldScale = Vector3f()
     val worldRotation = Quaternion()
     val worldTranslation = Vector3f()
-    val worldMatrix = Matrix4f.identity()
+    val worldMatrix = Matrix4f().identity()
 
     protected val children = mutableListOf<GameNode>()
 
@@ -81,10 +81,10 @@ open class GameNode(val state: dynamic = ClientOnlyState(),
                     .addLocal(finalParent.worldTranslation)
         }
 
-        Matrix4f.identity(worldMatrix)
-        Matrix4f.translate(worldMatrix, worldTranslation)
+        worldMatrix.identity()
+        worldMatrix.translate(worldTranslation)
         worldRotation.inverse().toRotationMatrix(worldMatrix)
-        Matrix4f.scale(worldMatrix, worldScale)
+        worldMatrix.scale(worldScale)
 
         for (child in children) {
             child.calculateWorldMatrix()

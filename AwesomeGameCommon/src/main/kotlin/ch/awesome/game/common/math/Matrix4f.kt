@@ -28,201 +28,203 @@ class Matrix4f {
     var m33: Float get() { return floatArray[15] }  set(value) { floatArray[15] = value }
 
     companion object {
-
         val X_AXIS = Vector3f(1f, 0f, 0f)
         val Y_AXIS = Vector3f(0f, 1f, 0f)
         val Z_AXIS = Vector3f(0f, 0f, 1f)
-
-        fun identity(matrix: Matrix4f = Matrix4f()): Matrix4f {
-            matrix.floatArray[0] = 1.0f
-            matrix.floatArray[1] = 0.0f
-            matrix.floatArray[2] = 0.0f
-            matrix.floatArray[3] = 0.0f
-
-            matrix.floatArray[4] = 0.0f
-            matrix.floatArray[5] = 1.0f
-            matrix.floatArray[6] = 0.0f
-            matrix.floatArray[7] = 0.0f
-
-            matrix.floatArray[8] = 0.0f
-            matrix.floatArray[9] = 0.0f
-            matrix.floatArray[10] = 1.0f
-            matrix.floatArray[11] = 0.0f
-
-            matrix.floatArray[12] = 0.0f
-            matrix.floatArray[13] = 0.0f
-            matrix.floatArray[14] = 0.0f
-            matrix.floatArray[15] = 1.0f
-
-            return matrix
-        }
-
-        fun translate(matrix: Matrix4f, vec: IVector3f): Matrix4f {
-            return translate(matrix, vec.x, vec.y, vec.z)
-        }
-
-        fun translate(matrix: Matrix4f, x: Float, y: Float, z: Float): Matrix4f {
-            matrix.floatArray[12] += matrix.floatArray[0] * x + matrix.floatArray[4] * y + matrix.floatArray[8] * z
-            matrix.floatArray[13] += matrix.floatArray[1] * x + matrix.floatArray[5] * y + matrix.floatArray[9] * z
-            matrix.floatArray[14] += matrix.floatArray[2] * x + matrix.floatArray[6] * y + matrix.floatArray[10] * z
-            matrix.floatArray[15] += matrix.floatArray[3] * x + matrix.floatArray[7] * y + matrix.floatArray[11] * z
-
-            return matrix
-        }
-
-        fun scale(matrix: Matrix4f, vec: IVector3f): Matrix4f {
-            return scale(matrix, vec.x, vec.y, vec.z)
-        }
-
-        fun scale(matrix: Matrix4f, x: Float, y: Float, z: Float): Matrix4f {
-            matrix.floatArray[0] *= x
-            matrix.floatArray[1] *= x
-            matrix.floatArray[2] *= x
-            matrix.floatArray[3] *= x
-
-            matrix.floatArray[4] *= y
-            matrix.floatArray[5] *= y
-            matrix.floatArray[6] *= y
-            matrix.floatArray[7] *= y
-
-            matrix.floatArray[8] *= z
-            matrix.floatArray[9] *= z
-            matrix.floatArray[10] *= z
-            matrix.floatArray[11] *= z
-
-            return matrix
-        }
-
-        fun rotate(matrix: Matrix4f, vec: IVector3f): Matrix4f {
-            rotate(matrix, vec.x, X_AXIS)
-            rotate(matrix, vec.y, Y_AXIS)
-            rotate(matrix, vec.z, Z_AXIS)
-            return matrix
-        }
-
-        fun rotate(matrix: Matrix4f, angle: Float, axis: IVector3f): Matrix4f {
-            val sin = sin(toRadians(angle))
-            val cos = cos(toRadians(angle))
-            val oneMinusCos = 1.0f - cos
-            val xy = axis.x * axis.y
-            val xz = axis.x * axis.z
-            val yz = axis.y * axis.z
-            val xSin = axis.x * sin
-            val ySin = axis.y * sin
-            val zSin = axis.z * sin
-
-            val raw0 = axis.x * axis.x * oneMinusCos + cos
-            val raw1 = xy * oneMinusCos + zSin
-            val raw2 = xz * oneMinusCos - ySin
-            val raw4 = xy * oneMinusCos - zSin
-            val raw5 = axis.y * axis.y * oneMinusCos + cos
-            val raw6 = yz * oneMinusCos + xSin
-            val raw8 = xz * oneMinusCos + ySin
-            val raw9 = yz * oneMinusCos - xSin
-            val raw10 = axis.z * axis.z * oneMinusCos + cos
-
-            val final0 = matrix.floatArray[0] * raw0 + matrix.floatArray[4] * raw1 + matrix.floatArray[8] * raw2
-            val final1 = matrix.floatArray[1] * raw0 + matrix.floatArray[5] * raw1 + matrix.floatArray[9] * raw2
-            val final2 = matrix.floatArray[2] * raw0 + matrix.floatArray[6] * raw1 + matrix.floatArray[10] * raw2
-            val final3 = matrix.floatArray[3] * raw0 + matrix.floatArray[7] * raw1 + matrix.floatArray[11] * raw2
-            val final4 = matrix.floatArray[0] * raw4 + matrix.floatArray[4] * raw5 + matrix.floatArray[8] * raw6
-            val final5 = matrix.floatArray[1] * raw4 + matrix.floatArray[5] * raw5 + matrix.floatArray[9] * raw6
-            val final6 = matrix.floatArray[2] * raw4 + matrix.floatArray[6] * raw5 + matrix.floatArray[10] * raw6
-            val final7 = matrix.floatArray[3] * raw4 + matrix.floatArray[7] * raw5 + matrix.floatArray[11] * raw6
-
-            matrix.floatArray[8] = matrix.floatArray[0] * raw8 + matrix.floatArray[4] * raw9 + matrix.floatArray[8] * raw10
-            matrix.floatArray[9] = matrix.floatArray[1] * raw8 + matrix.floatArray[5] * raw9 + matrix.floatArray[9] * raw10
-            matrix.floatArray[10] = matrix.floatArray[2] * raw8 + matrix.floatArray[6] * raw9 + matrix.floatArray[10] * raw10
-            matrix.floatArray[11] = matrix.floatArray[3] * raw8 + matrix.floatArray[7] * raw9 + matrix.floatArray[11] * raw10
-            matrix.floatArray[0] = final0
-            matrix.floatArray[1] = final1
-            matrix.floatArray[2] = final2
-            matrix.floatArray[3] = final3
-            matrix.floatArray[4] = final4
-            matrix.floatArray[5] = final5
-            matrix.floatArray[6] = final6
-            matrix.floatArray[7] = final7
-
-            return matrix
-        }
-
-        fun modelMatrix(matrix: Matrix4f, position: IVector3f, rotation: IVector3f, scale: IVector3f): Matrix4f {
-            identity(matrix)
-
-            translate(matrix, position.x, position.y, position.z)
-            rotate(matrix, rotation.x, Vector3f(1.0f, 0.0f, 0.0f))
-            rotate(matrix, rotation.y, Vector3f(0.0f, 1.0f, 0.0f))
-            rotate(matrix, rotation.z, Vector3f(0.0f, 0.0f, 1.0f))
-            scale(matrix, scale.x, scale.y, scale.z)
-
-            return matrix
-        }
-
-        fun viewMatrix(matrix: Matrix4f, x: Float, y: Float, z: Float, pitch: Float, yaw: Float, roll: Float): Matrix4f {
-            identity(matrix)
-
-            rotate(matrix, pitch, Vector3f(1.0f, 0.0f, 0.0f))
-            rotate(matrix, yaw, Vector3f(0.0f, 1.0f, 0.0f))
-            rotate(matrix, roll, Vector3f(0.0f, 0.0f, 1.0f))
-            translate(matrix, -x, -y, -z)
-
-            return matrix
-        }
-
-        fun projectionMatrix(matrix: Matrix4f, fov: Float, cWidth: Int, cHeight: Int, nearPlane: Float, farPlane: Float): Matrix4f {
-            identity(matrix)
-
-            val aspectRatio = cWidth.toFloat() / cHeight.toFloat()
-            val yScale = (1.0f / tan(toRadians(fov / 2.0f)) * aspectRatio)
-            val xScale = (yScale / aspectRatio)
-            val frustumLength = farPlane - nearPlane
-
-            matrix.floatArray[0] = xScale
-            matrix.floatArray[1] = 0.0f
-            matrix.floatArray[2] = 0.0f
-            matrix.floatArray[3] = 0.0f
-            matrix.floatArray[4] = 0.0f
-            matrix.floatArray[5] = yScale
-            matrix.floatArray[6] = 0.0f
-            matrix.floatArray[7] = 0.0f
-            matrix.floatArray[8] = 0.0f
-            matrix.floatArray[9] = 0.0f
-            matrix.floatArray[10] = -((farPlane + nearPlane) / frustumLength)
-            matrix.floatArray[11] = -1.0f
-            matrix.floatArray[12] = 0.0f
-            matrix.floatArray[13] = 0.0f
-            matrix.floatArray[14] = -((2.0f * nearPlane * farPlane) / frustumLength)
-            matrix.floatArray[15] = 0.0f
-
-            return matrix
-        }
-
-        fun rotateVect(matrix: Matrix4f, vec: IVector3f): Matrix4f {
-            val vx = vec.x
-            val vy = vec.y
-            val vz = vec.z
-
-            vec.x = vx * matrix.floatArray[0] + vy * matrix.floatArray[1] + vz * matrix.floatArray[2]
-            vec.y = vx * matrix.floatArray[4] + vy * matrix.floatArray[5] + vz * matrix.floatArray[6]
-            vec.z = vx * matrix.floatArray[8] + vy * matrix.floatArray[9] + vz * matrix.floatArray[10]
-
-            return matrix
-        }
-
-        fun translateVect(matrix: Matrix4f, vec: IVector3f): Matrix4f {
-            vec.x += matrix.floatArray[3]
-            vec.y += matrix.floatArray[7]
-            vec.z += matrix.floatArray[11]
-
-            return matrix
-        }
     }
 
+    fun identity(): Matrix4f {
+        m00 = 1.0f
+        m01 = 0.0f
+        m02 = 0.0f
+        m03 = 0.0f
+
+        m10 = 0.0f
+        m11 = 1.0f
+        m12 = 0.0f
+        m13 = 0.0f
+
+        m20 = 0.0f
+        m21 = 0.0f
+        m22 = 1.0f
+        m23 = 0.0f
+
+        m30 = 0.0f
+        m31 = 0.0f
+        m32 = 0.0f
+        m33 = 1.0f
+        
+        return this
+    }
+
+    fun translate(vec: IVector3f): Matrix4f {
+        return translate(vec.x, vec.y, vec.z)
+    }
+
+    fun translate(x: Float, y: Float, z: Float): Matrix4f {
+        m30 += m00 * x + m10 * y + m20 * z
+        m31 += m01 * x + m11 * y + m21 * z
+        m32 += m02 * x + m12 * y + m22 * z
+        m33 += m03 * x + m13 * y + m23 * z
+
+        return this
+    }
+
+    fun scale(vec: IVector3f): Matrix4f {
+        return scale(vec.x, vec.y, vec.z)
+    }
+
+    fun scale(x: Float, y: Float, z: Float): Matrix4f {
+        m00 *= x
+        m01 *= x
+        m02 *= x
+        m03 *= x
+
+        m10 *= y
+        m11 *= y
+        m12 *= y
+        m13 *= y
+
+        m20 *= z
+        m21 *= z
+        m22 *= z
+        m23 *= z
+
+        return this
+    }
+
+    fun rotate(vec: IVector3f): Matrix4f {
+        rotate(vec.x, X_AXIS)
+        rotate(vec.y, Y_AXIS)
+        rotate(vec.z, Z_AXIS)
+        return this
+    }
+
+    fun rotate(angle: Float, axis: IVector3f): Matrix4f {
+        val sin = sin(toRadians(angle))
+        val cos = cos(toRadians(angle))
+        val oneMinusCos = 1.0f - cos
+        val xy = axis.x * axis.y
+        val xz = axis.x * axis.z
+        val yz = axis.y * axis.z
+        val xSin = axis.x * sin
+        val ySin = axis.y * sin
+        val zSin = axis.z * sin
+
+        val raw0 = axis.x * axis.x * oneMinusCos + cos
+        val raw1 = xy * oneMinusCos + zSin
+        val raw2 = xz * oneMinusCos - ySin
+        val raw4 = xy * oneMinusCos - zSin
+        val raw5 = axis.y * axis.y * oneMinusCos + cos
+        val raw6 = yz * oneMinusCos + xSin
+        val raw8 = xz * oneMinusCos + ySin
+        val raw9 = yz * oneMinusCos - xSin
+        val raw10 = axis.z * axis.z * oneMinusCos + cos
+
+        val final0 = m00 * raw0 + m10 * raw1 + m20 * raw2
+        val final1 = m01 * raw0 + m11 * raw1 + m21 * raw2
+        val final2 = m02 * raw0 + m12 * raw1 + m22 * raw2
+        val final3 = m03 * raw0 + m13 * raw1 + m23 * raw2
+        val final4 = m00 * raw4 + m10 * raw5 + m20 * raw6
+        val final5 = m01 * raw4 + m11 * raw5 + m21 * raw6
+        val final6 = m02 * raw4 + m12 * raw5 + m22 * raw6
+        val final7 = m03 * raw4 + m13 * raw5 + m23 * raw6
+
+        m20 = m00 * raw8 + m10 * raw9 + m20 * raw10
+        m21 = m01 * raw8 + m11 * raw9 + m21 * raw10
+        m22 = m02 * raw8 + m12 * raw9 + m22 * raw10
+        m23 = m03 * raw8 + m13 * raw9 + m23 * raw10
+        m00 = final0
+        m01 = final1
+        m02 = final2
+        m03 = final3
+        m10 = final4
+        m11 = final5
+        m12 = final6
+        m13 = final7
+
+        return this
+    }
+
+//    fun rotate(direction: Vector3f) {
+//
+//    }
+
+    fun modelMatrix(position: IVector3f, rotation: IVector3f, scale: IVector3f): Matrix4f {
+        identity()
+
+        translate(position.x, position.y, position.z)
+        rotate(rotation.x, Vector3f(1.0f, 0.0f, 0.0f))
+        rotate(rotation.y, Vector3f(0.0f, 1.0f, 0.0f))
+        rotate(rotation.z, Vector3f(0.0f, 0.0f, 1.0f))
+        scale(scale.x, scale.y, scale.z)
+
+        return this
+    }
+
+    fun viewMatrix(x: Float, y: Float, z: Float, pitch: Float, yaw: Float, roll: Float): Matrix4f {
+        identity()
+
+        rotate(pitch, Vector3f(1.0f, 0.0f, 0.0f))
+        rotate(yaw, Vector3f(0.0f, 1.0f, 0.0f))
+        rotate(roll, Vector3f(0.0f, 0.0f, 1.0f))
+        translate(-x, -y, -z)
+
+        return this
+    }
+
+    fun projectionMatrix(fov: Float, cWidth: Int, cHeight: Int, nearPlane: Float, farPlane: Float): Matrix4f {
+        identity()
+
+        val aspectRatio = cWidth.toFloat() / cHeight.toFloat()
+        val yScale = (1.0f / tan(toRadians(fov / 2.0f)) * aspectRatio)
+        val xScale = (yScale / aspectRatio)
+        val frustumLength = farPlane - nearPlane
+
+        m00 = xScale
+        m01 = 0.0f
+        m02 = 0.0f
+        m03 = 0.0f
+        m10 = 0.0f
+        m11 = yScale
+        m12 = 0.0f
+        m13 = 0.0f
+        m20 = 0.0f
+        m21 = 0.0f
+        m22 = -((farPlane + nearPlane) / frustumLength)
+        m23 = -1.0f
+        m30 = 0.0f
+        m31 = 0.0f
+        m32 = -((2.0f * nearPlane * farPlane) / frustumLength)
+        m33 = 0.0f
+
+        return this
+    }
+
+    fun rotateVect(vec: IVector3f): Matrix4f {
+        val vx = vec.x
+        val vy = vec.y
+        val vz = vec.z
+
+        vec.x = vx * m00 + vy * m01 + vz * m02
+        vec.y = vx * m10 + vy * m11 + vz * m12
+        vec.z = vx * m20 + vy * m21 + vz * m22
+
+        return this
+    }
+
+    fun translateVect(vec: IVector3f): Matrix4f {
+        vec.x += m03
+        vec.y += m13
+        vec.z += m23
+
+        return this
+    }
 
     fun toScaleVector(vector: IVector3f = Vector3f()): IVector3f {
-        val scaleX = sqrt((floatArray[0] * floatArray[0] + floatArray[4] * floatArray[4] + floatArray[8] * floatArray[8]).toDouble()).toFloat()
-        val scaleY = sqrt((floatArray[1] * floatArray[1] + floatArray[5] * floatArray[5] + floatArray[9] * floatArray[9]).toDouble()).toFloat()
-        val scaleZ = sqrt((floatArray[2] * floatArray[2] + floatArray[6] * floatArray[6] + floatArray[10] * floatArray[10]).toDouble()).toFloat()
+        val scaleX = sqrt((m00 * m00 + m10 * m10 + m20 * m20).toDouble()).toFloat()
+        val scaleY = sqrt((m01 * m01 + m11 * m11 + m21 * m21).toDouble()).toFloat()
+        val scaleZ = sqrt((m02 * m02 + m12 * m12 + m22 * m22).toDouble()).toFloat()
         vector.x = scaleX
         vector.y = scaleY
         vector.z = scaleZ
@@ -230,9 +232,9 @@ class Matrix4f {
     }
 
     fun toTranslationVector(vector: IVector3f = Vector3f()): IVector3f {
-        vector.x = floatArray[3]
-        vector.y = floatArray[7]
-        vector.z = floatArray[11]
+        vector.x = m03
+        vector.y = m13
+        vector.z = m23
         return vector
     }
 

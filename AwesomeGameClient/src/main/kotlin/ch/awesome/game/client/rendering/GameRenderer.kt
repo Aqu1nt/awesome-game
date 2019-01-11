@@ -40,9 +40,9 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
         shader.start()
 
-        Matrix4f.identity(modelMatrix)
-        Matrix4f.identity(viewMatrix)
-        Matrix4f.projectionMatrix(projectionMatrix, 70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
+        modelMatrix.identity()
+        viewMatrix.identity()
+        projectionMatrix.projectionMatrix(70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
 
         shader.findAllUniformLocations()
         shader.uniformProjectionMatrix.load(gl, projectionMatrix)
@@ -68,7 +68,7 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
         shader.uniformModelMatrix.load(gl, modelMatrix)
 
-        Matrix4f.viewMatrix(viewMatrix, camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
+        viewMatrix.viewMatrix(camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
         shader.uniformViewMatrix.load(gl, viewMatrix)
 
         val sortedLights = lights.sortedBy { light ->
