@@ -1,48 +1,40 @@
 package ch.awesome.game.client.objects
 
+import ch.awesome.game.client.objects.base.LightNode
 import ch.awesome.game.client.rendering.GameRenderer
-import ch.awesome.game.client.rendering.ModelCreator
-import ch.awesome.game.client.rendering.Texture
-import ch.awesome.game.client.rendering.TexturedModel
 import ch.awesome.game.client.rendering.loading.ModelType
-import ch.awesome.game.client.rendering.loading.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
+import ch.awesome.game.client.rendering.renderer.SimpleModelRenderer
+import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
-import ch.awesome.game.client.state.interfaces.Renderable
+import ch.awesome.game.client.state.interfaces.Renderer
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
+import ch.awesome.game.common.objects.ILamp
 
-class LampLight(val lamp: Lamp): LightNode() {
+class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderer {
 
-    lateinit var model: TexturedModel
-
-    override fun getLightColor(): IVector3f {
-        return lamp.color
-    }
-}
-
-
-class Lamp(state: dynamic): MovingBaseObject(state), Renderable {
-
-    val light = LampLight(this).apply {
-        position = Vector3f(0f, 15f, 0f)
+    class LampLight(val lamp: Lamp) : LightNode(attenuation = Vector3f(1f, 0.01f, 0.00001f)) {
+        override fun getLightColor(): IVector3f {
+            return lamp.color
+        }
     }
 
-    var color: IVector3f by StateProperty()
+    override var color: IVector3f by StateProperty()
 
-    lateinit var model: TexturedModel
+    private val light = LampLight(this).apply { position = Vector3f(0f, 14f, 0f) }
+    private val renderer = SimpleModelRenderer(this, ModelType.LAMP, TextureImageType.LAMP)
 
     init {
         addChild(light)
     }
 
     override fun initModels(gl: WebGL2RenderingContext) {
-        val texture = Texture(ModelCreator.loadTexture(gl, TextureImageType.LAMP), 1.0f, 20.0f)
-        model = TexturedModel(OBJModelLoader.getModel(ModelType.LAMP), texture)
+        renderer.initModels(gl)
     }
 
-    override fun render(renderer: GameRenderer) {
-        renderer.render(model, worldMatrix)
+    override fun render(gameRenderer: GameRenderer) {
+        renderer.render(gameRenderer)
     }
 }

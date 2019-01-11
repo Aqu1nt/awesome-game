@@ -1,12 +1,9 @@
 package ch.awesome.game.client.objects
 
-import ch.awesome.game.client.rendering.GameRenderer
-import ch.awesome.game.client.state.GameNode
-import ch.awesome.game.client.state.interfaces.Renderable
+import ch.awesome.game.client.objects.base.Scene
+import ch.awesome.game.common.math.IVector3f
+import ch.awesome.game.common.objects.IWorld
 
-class World(state: dynamic = null): GameNode(id = "WORLD", state = state), Renderable {
+class World(state: dynamic): Scene(state), IWorld<IVector3f> {
 
-    override fun render(renderer: GameRenderer) {
-
-    }
 }

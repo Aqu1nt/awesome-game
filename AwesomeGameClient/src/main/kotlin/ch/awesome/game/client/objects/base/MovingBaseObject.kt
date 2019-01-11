@@ -1,10 +1,10 @@
-package ch.awesome.game.client.objects
+package ch.awesome.game.client.objects.base
 
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
-import ch.awesome.game.common.objects.IMovingBaseObject
+import ch.awesome.game.common.objects.base.IMovingBaseObject
 
 open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<IVector3f> {
 

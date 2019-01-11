@@ -4,7 +4,7 @@ import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Quaternion
 import ch.awesome.game.common.math.Vector3f
-import ch.awesome.game.common.objects.IBaseObject
+import ch.awesome.game.common.objects.base.IBaseObject
 import kotlin.random.Random
 
 // Placeholder class to indicate a state not from server

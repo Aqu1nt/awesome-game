@@ -3,25 +3,26 @@ package ch.awesome.game.client
 import ch.awesome.game.client.networking.NetworkClient
 import ch.awesome.game.client.rendering.Camera
 import ch.awesome.game.client.rendering.GameRenderer
-import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.loading.OBJModelLoader
+import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.PlayerControl
-import ch.awesome.game.client.state.interfaces.Renderable
+import ch.awesome.game.client.state.interfaces.Renderer
 import kotlinx.serialization.ImplicitReflectionSerializer
 import org.w3c.dom.HTMLCanvasElement
-import kotlin.browser.document
 import kotlin.browser.window
 import kotlin.js.Date
+import kotlin.js.Promise
 
 class GameClient {
 
     private lateinit var renderer: GameRenderer
-    private lateinit var camera: Camera
+
+    private val camera: Camera = Camera()
 
     private val state = GameState(
             afterNodeCreate = { gameNode ->
-                if (gameNode is Renderable) {
+                if (gameNode is Renderer) {
                     gameNode.initModels(renderer.gl)
                 }
             }
@@ -33,43 +34,43 @@ class GameClient {
     @ImplicitReflectionSerializer
     private val playerControl = PlayerControl(state, networkClient)
 
+    @JsName("startGame")
     @ImplicitReflectionSerializer
-    fun startGame() {
-        TextureImageLoader.loadAllTextureImages().then {
-            val canvas = document.getElementById("game-canvas") as HTMLCanvasElement?
-            if (canvas != null) {
-                renderer = GameRenderer(canvas)
-                camera = Camera()
+    fun startGame(canvas: HTMLCanvasElement?) {
+        if (canvas != null) {
+            renderer = GameRenderer(canvas, camera, state)
+            Promise.all(arrayOf(
+                    OBJModelLoader.loadAllModels(renderer.gl),
+                    TextureImageLoader.loadAllTextureImages())).then {
 
-                OBJModelLoader.loadAllModels(renderer.gl).then {
-                    var loop: (Double) -> Unit = {}
-                    var lastUpdate = Date.now()
-                    loop = {
-                        val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
-                        state.update(tpf.toFloat())
+                var lastUpdate = Date.now()
+
+                fun gameLoop() {
+                    val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
+                    state.update(tpf.toFloat())
+                    state.calculateWorldMatrix()
 
 //                        camera.lookAt(state.player?.localPosition?.x ?: 0.0f, state.player?.localPosition?.y?.plus(40.0f) ?: 40.0f,
 //                                      state.player?.localPosition?.z ?: 0.0f, 90.0f, 0.0f, 0.0f)
-                        camera.lookAt(state.player?.localPosition?.x ?: 0.0f, 40.0f,
-                                      state.player?.localPosition?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
+                    camera.lookAt(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
+                            state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
 
-                        state.calculateWorldMatrix()
-                        renderer.prepare(camera, *state.getLightSources())
-                        state.render(renderer)
-                        renderer.end()
 
-                        lastUpdate = Date.now()
-                        window.requestAnimationFrame (loop)
-                    }
-                    window.requestAnimationFrame (loop)
+                    renderer.prepare(*state.getLightSources())
+                    state.render(renderer)
+                    renderer.end()
 
-                    networkClient.connect()
+                    lastUpdate = Date.now()
+                    window.requestAnimationFrame { gameLoop() }
                 }
 
+                window.requestAnimationFrame { gameLoop() }
+
+                networkClient.connect()
             }
-            else {
-                throw IllegalStateException("Game canvas not found!")
-            }
+        }
+        else {
+            throw IllegalStateException("Game canvas not found!")
         }
     }
 }

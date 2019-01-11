@@ -1,10 +1,10 @@
-package ch.awesome.game.server.objects
+package ch.awesome.game.server.objects.base
 
-import ch.awesome.game.common.objects.IBaseObject
+import ch.awesome.game.common.math.Vector3f
+import ch.awesome.game.common.objects.base.IBaseObject
 import ch.awesome.game.server.instance.Updateable
 import ch.awesome.game.server.utils.SmartProperty
 import ch.awesome.game.server.utils.SmartTreeItem
-import ch.awesome.game.common.math.Vector3f
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 

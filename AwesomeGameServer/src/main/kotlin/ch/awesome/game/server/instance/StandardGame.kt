@@ -1,8 +1,10 @@
 package ch.awesome.game.server.instance
 
-import ch.awesome.game.server.objects.Group
+import ch.awesome.game.common.math.Vector3f
+import ch.awesome.game.server.objects.Lamp
 import ch.awesome.game.server.objects.Player
 import ch.awesome.game.server.objects.World
+import ch.awesome.game.server.objects.base.MovingGroup
 import java.util.concurrent.CompletableFuture
 
 val GAME = StandardGame().apply {
@@ -15,7 +17,12 @@ class StandardGame: Updateable {
     val loop = GameLoop(mutableListOf(this), 100)
 
     init {
-        world.addChild(Group())
+        val group = MovingGroup().apply {
+            addChild(Lamp().apply { position = Vector3f(-10.0f, 0.0f, 10.0f); color = Vector3f(1.0f, 0.9f, 0.4f) })
+            addChild(Lamp().apply { position = Vector3f(10.0f, 0.0f, 10.0f); color = Vector3f(1.0f, 0.0f, 0.0f) })
+            rotationVelocity = Vector3f(0f, 30f, 0f)
+        }
+        world.addChild(group)
     }
 
     fun join(): CompletableFuture<Player> {

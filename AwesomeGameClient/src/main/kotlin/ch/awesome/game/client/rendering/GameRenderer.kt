@@ -1,13 +1,16 @@
 package ch.awesome.game.client.rendering
 
 import ch.awesome.game.client.rendering.shader.model.ModelShader
+import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.Matrix4f
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
 
-class GameRenderer (canvas: HTMLCanvasElement) {
+class GameRenderer (canvas: HTMLCanvasElement,
+                    private val camera: Camera,
+                    private val state: GameState) {
 
     val gl = canvas.getContext("webgl2") as WebGL2RenderingContext
 
@@ -15,7 +18,6 @@ class GameRenderer (canvas: HTMLCanvasElement) {
     var viewMatrix = Matrix4f()
     var projectionMatrix = Matrix4f()
 
-    lateinit var camera: Camera
     var lights = mutableListOf<Light>()
 
     val shader = ModelShader(gl)
@@ -30,7 +32,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         canvas.height = window.innerHeight
 
         gl.viewport(0, 0, canvas.width, canvas.height)
-        gl.clearColor(0.2f, 0.5f, 0.8f, 1.0f)
+        gl.clearColor(state.scene?.clearColor?.x ?: 0f, state.scene?.clearColor?.y ?: 0f, state.scene?.clearColor?.z ?: 0f, 1.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
         gl.enable(WebGLRenderingContext.DEPTH_TEST)
         gl.enable(WebGLRenderingContext.CULL_FACE)
@@ -48,11 +50,10 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         shader.stop()
     }
 
-    fun prepare(camera: Camera, vararg lights: Light) {
+    fun prepare(vararg lights: Light) {
         shader.start()
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
-        this.camera = camera
         this.lights.clear()
         for(l in lights) {
             this.lights.add(l)
@@ -89,7 +90,7 @@ class GameRenderer (canvas: HTMLCanvasElement) {
         shader.uniformReflectivity.load(gl, model.texture.reflectivity)
         shader.uniformShineDamper.load(gl, model.texture.shineDamper)
 
-        shader.uniformAmbientLight.load(gl, 0.3f)
+        shader.uniformAmbientLight.load(gl, state.scene?.ambientLight ?: 0f)
 
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)

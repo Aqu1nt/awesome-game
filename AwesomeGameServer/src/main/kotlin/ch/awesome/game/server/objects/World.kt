@@ -1,13 +1,15 @@
 package ch.awesome.game.server.objects
 
-import ch.awesome.game.server.instance.GAME
+import ch.awesome.game.common.math.Vector3f
 import ch.awesome.game.common.network.events.GameStateNode
 import ch.awesome.game.common.network.events.IGameStateNode
 import ch.awesome.game.common.network.events.StateChangesNetworkEvent
+import ch.awesome.game.common.objects.IWorld
+import ch.awesome.game.server.objects.base.Scene
 import ch.awesome.game.server.utils.SmartTreeItem
 import ch.awesome.game.server.utils.withSmartProperties
 
-class World: BaseObject("WORLD") {
+class World: Scene("WORLD"), IWorld<Vector3f> {
 
     companion object {
         const val SEND_CHANGES_INTERVAL = 50L
@@ -16,6 +18,7 @@ class World: BaseObject("WORLD") {
     private var lastSendChangesTimestamp = 0L
 
     init {
+        ambientLight = 0.3f
         withSmartProperties()
     }
 
@@ -34,7 +37,7 @@ class World: BaseObject("WORLD") {
 
         // Send state
         if (System.currentTimeMillis() > lastSendChangesTimestamp + SEND_CHANGES_INTERVAL) {
-            val changes = GAME.world.fetchAndResetChanges()
+            val changes = fetchAndResetChanges()
             if (changes.isNotEmpty()) {
                 val networkEvent = StateChangesNetworkEvent(changes)
                 for (child in children()) {
