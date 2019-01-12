@@ -47,6 +47,7 @@ class StandardGame: Updateable {
 
     override fun update(tpf: Float) {
         world.update(tpf)
+        world.calculateWorldMatrix()
     }
 
     override fun afterUpdate() {
