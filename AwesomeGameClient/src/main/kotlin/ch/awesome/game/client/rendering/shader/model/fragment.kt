@@ -72,6 +72,9 @@ void main()
     if (useLightMap > 0.5) {
         vec4 mapData = texture(lightMap, passTextureCoords);
         specular *= mapData.r;
+        if(mapData.y >= 0.5) {
+            diffuse = vec3(1.0);
+        }
     }
 
     outColor = vec4(diffuse, 1.0) * texture(modelTexture, passTextureCoords) + vec4(specular, 1.0);

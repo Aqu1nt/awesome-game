@@ -10,23 +10,23 @@ import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 
-class SimpleModelRenderer(private val gameNode: GameNode,
-                          private val modelType: ModelType,
-                          private val textureImageType: TextureImageType,
-                          private val reflectivity: Float = 1f,
-                          private val shineDamper: Float = 20f,
-                          private val lightMapType: TextureImageType?= null) : ModelRenderer {
+class SimpleModelData(private val gameNode: GameNode,
+                      private val modelType: ModelType,
+                      private val textureImageType: TextureImageType,
+                      private val reflectivity: Float = 1f,
+                      private val shineDamper: Float = 20f,
+                      private val lightMapType: TextureImageType?= null) {
 
-    override var model: TexturedModel? = null
+    var model: TexturedModel? = null
         private set
 
-    override fun initModels(gl: WebGL2RenderingContext) {
+    fun initModels(gl: WebGL2RenderingContext) {
         val lightMap = lightMapType ?.let { ModelCreator.loadTexture(gl, lightMapType) }
         val texture = Texture(ModelCreator.loadTexture(gl, textureImageType), reflectivity, shineDamper, lightMap)
         model = TexturedModel(OBJModelLoader.getModel(modelType), texture)
     }
 
-    override fun render(gameRenderer: GameRenderer) {
+    fun render(gameRenderer: GameRenderer) {
         val localModel = model
         if (localModel != null) {
             gameRenderer.renderModel(localModel, gameNode.worldMatrix)

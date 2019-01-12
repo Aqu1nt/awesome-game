@@ -6,9 +6,10 @@ import ch.awesome.game.client.rendering.GameRenderer
 import ch.awesome.game.client.rendering.Light
 import ch.awesome.game.client.rendering.loading.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
+import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.PlayerControl
-import ch.awesome.game.client.state.interfaces.Renderer
+import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.common.math.Vector3f
 import kotlinx.serialization.ImplicitReflectionSerializer
 import org.w3c.dom.HTMLCanvasElement
@@ -24,7 +25,7 @@ class GameClient {
 
     private val state = GameState(
             afterNodeCreate = { gameNode ->
-                if (gameNode is Renderer) {
+                if (gameNode is Renderable) {
                     gameNode.initModels(renderer.gl)
                 }
             }
@@ -58,15 +59,15 @@ class GameClient {
 
 //                        camera.lookAt(state.player?.localPosition?.x ?: 0.0f, state.player?.localPosition?.y?.plus(40.0f) ?: 40.0f,
 //                                      state.player?.localPosition?.z ?: 0.0f, 90.0f, 0.0f, 0.0f)
-                    camera.lookAt(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
-                            state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
+//                    camera.lookAt(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
+//                            state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
 
-                    camera.set(state.player?.worldTranslation?.x ?: 0.0f, 20.0f,
-                                  state.player?.worldTranslation?.z?.plus(30.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
+                    camera.set(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
+                                  state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
 
 
                     renderer.prepare(*state.getLightSources(), sun)
-                    state.render(renderer)
+                    renderer.renderGameNodes(GameNode.allGameNodes())
                     renderer.end()
 
                     lastUpdate = Date.now()

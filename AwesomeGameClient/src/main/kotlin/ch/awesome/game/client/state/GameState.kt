@@ -2,10 +2,8 @@ package ch.awesome.game.client.state
 
 import ch.awesome.game.client.objects.Player
 import ch.awesome.game.client.objects.base.Scene
-import ch.awesome.game.client.rendering.GameRenderer
 import ch.awesome.game.client.rendering.Light
 import ch.awesome.game.client.state.interfaces.LightSource
-import ch.awesome.game.client.state.interfaces.Renderer
 import ch.awesome.game.common.network.events.IGameStateNode
 import ch.awesome.game.common.utils.ISmartChange
 import ch.awesome.game.common.utils.SmartChangeType
@@ -13,7 +11,7 @@ import ch.awesome.game.common.utils.SmartChangeType
 class GameState(
         private val afterNodeCreate: (GameNode) -> Unit = {},
         private val afterNodeDestroy: (GameNode) -> Unit = {}
-): Renderer {
+) {
 
     var playerId: String? = null
     val player: Player? get() = playerId?.let { playerId -> scene?.find(playerId) as Player? }
@@ -22,17 +20,8 @@ class GameState(
 
     private val factory = GameNodeFactory()
 
-
     fun calculateWorldMatrix() {
         scene?.calculateWorldMatrix()
-    }
-
-    override fun render(gameRenderer: GameRenderer) {
-        for (gameNode in GameNode.allGameNodes()) {
-            if (gameNode is Renderer) {
-                gameNode.render(gameRenderer)
-            }
-        }
     }
 
     fun getLightSources(): Array<Light> {
