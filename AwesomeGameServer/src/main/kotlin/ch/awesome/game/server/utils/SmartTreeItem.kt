@@ -4,21 +4,22 @@ import ch.awesome.game.common.utils.SmartChange
 import ch.awesome.game.common.utils.SmartChangeType
 import java.util.*
 
-open class SmartTreeItem(val id: String = UUID.randomUUID().toString()) {
+@Suppress("UNCHECKED_CAST")
+open class SmartTreeItem<T: SmartTreeItem<T>>(val id: String = UUID.randomUUID().toString()) {
 
-    protected var parent: SmartTreeItem? = null
+    protected var parent: T? = null
     protected var changes: MutableList<SmartChange> = mutableListOf()
-    protected var children: MutableList<SmartTreeItem> = mutableListOf()
+    protected var children: MutableList<T> = mutableListOf()
 
-    fun addChild(child: SmartTreeItem) {
+    fun addChild(child: T) {
         synchronized(children) {
-            child.parent = this
+            child.parent = this as T
             children.add(child)
             changes.add(SmartChange(id, child, SmartChangeType.CHILDREN_ADD))
         }
     }
 
-    fun removeChild(child: SmartTreeItem) {
+    fun removeChild(child: T) {
         synchronized(children) {
             child.parent = null
             children.remove(child)
@@ -26,8 +27,12 @@ open class SmartTreeItem(val id: String = UUID.randomUUID().toString()) {
         }
     }
 
-    fun children(): List<SmartTreeItem> {
+    fun children(): List<T> {
         return children
+    }
+
+    fun root(): T {
+        return parent?.root() ?: this as T
     }
 
     fun fireEvent(event: String) {

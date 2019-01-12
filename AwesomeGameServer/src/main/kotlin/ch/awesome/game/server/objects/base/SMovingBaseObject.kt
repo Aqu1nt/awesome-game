@@ -4,9 +4,9 @@ import ch.awesome.game.common.math.Vector3f
 import ch.awesome.game.common.objects.base.IMovingBaseObject
 import ch.awesome.game.server.utils.SmartProperty
 
-open class MovingBaseObject(unitsPerSecond: Float = 1f,
-                            rotationUnitsPerSecond: Float = 1f,
-                            scaleUnitsPerSecond: Float = 1f) : BaseObject(), IMovingBaseObject<Vector3f> {
+open class SMovingBaseObject(unitsPerSecond: Float = 1f,
+                             rotationUnitsPerSecond: Float = 1f,
+                             scaleUnitsPerSecond: Float = 1f) : SBaseObject(), IMovingBaseObject<Vector3f> {
 
     // Translation
     override var velocity: Vector3f by SmartProperty(Vector3f())

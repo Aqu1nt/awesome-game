@@ -6,8 +6,8 @@ import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 
-abstract class LightNode(val color: IVector3f? = null,
-                         val attenuation: IVector3f? = null): GameNode(), LightSource {
+abstract class CLightNode(val color: IVector3f? = null,
+                          val attenuation: IVector3f? = null): GameNode(), LightSource {
 
     companion object {
         private val DEFAULT_COLOR = Vector3f(1f, 1f, 1f)

@@ -5,13 +5,11 @@ import ch.awesome.game.common.network.NetworkEvent
 import ch.awesome.game.common.objects.IPlayer
 import ch.awesome.game.server.instance.GAME
 import ch.awesome.game.server.network.GameWebSocketHandler
-import ch.awesome.game.server.objects.base.MovingBaseObject
+import ch.awesome.game.server.objects.base.SMovingBaseObject
 import ch.awesome.game.server.utils.withSmartProperties
 import com.fasterxml.jackson.annotation.JsonIgnore
-import kotlin.math.cos
-import kotlin.math.sin
 
-class Player: MovingBaseObject(20f), IPlayer<Vector3f> {
+class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
 
     var health = 50.0f
 
@@ -38,7 +36,7 @@ class Player: MovingBaseObject(20f), IPlayer<Vector3f> {
     }
 
     fun shoot() {
-        val b = Bullet(this)
+        val b = SBullet(this)
         b.position = worldTranslation
 
         b.velocity = when(rotation.y) {

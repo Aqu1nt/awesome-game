@@ -5,7 +5,7 @@ import ch.awesome.game.common.network.NetworkEvent
 import ch.awesome.game.common.network.NetworkEventType
 import ch.awesome.game.common.network.events.*
 import ch.awesome.game.server.instance.GAME
-import ch.awesome.game.server.objects.Player
+import ch.awesome.game.server.objects.SPlayer
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.web.socket.CloseStatus
@@ -18,7 +18,7 @@ class GameWebSocketHandler : TextWebSocketHandler() {
 
     private val sendExecutor = Executors.newSingleThreadExecutor()
     private var session: WebSocketSession? = null
-    private var player: Player? = null
+    private var player: SPlayer? = null
 
     companion object {
         private val objectMapper = jacksonObjectMapper()

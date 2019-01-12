@@ -6,7 +6,7 @@ import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 import ch.awesome.game.common.objects.base.IMovingBaseObject
 
-open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<IVector3f> {
+open class CMovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<IVector3f> {
 
     var simulateTranslation: Boolean = true
         set(value) {

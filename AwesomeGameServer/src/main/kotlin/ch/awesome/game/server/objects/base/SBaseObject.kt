@@ -10,7 +10,7 @@ import ch.awesome.game.server.utils.SmartTreeItem
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
-open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(id), Updateable, IBaseObject<Vector3f> {
+open class SBaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem<SBaseObject>(id), Updateable, IBaseObject<Vector3f> {
 
     override var position: Vector3f by SmartProperty(Vector3f())
     override var scale: Vector3f by SmartProperty(Vector3f(1.0f, 1.0f, 1.0f))
@@ -28,7 +28,7 @@ open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(
         worldTranslation.set(position)
         worldRotation.fromAngles(rotation).inverseLocal()
 
-        if (finalParent != null && finalParent is BaseObject) {
+        if (finalParent != null) {
             worldScale.multLocal(finalParent.worldScale)
             finalParent.worldRotation.mult(worldRotation, worldRotation)
             worldTranslation.multLocal(finalParent.worldScale)
@@ -43,9 +43,7 @@ open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(
         worldMatrix.scale(worldScale)
 
         for (child in children) {
-            if (child is BaseObject) {
-                child.calculateWorldMatrix()
-            }
+            child.calculateWorldMatrix()
         }
     }
 
@@ -56,25 +54,19 @@ open class BaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem(
 
     override fun beforeUpdate() {
         for (child in children) {
-            if (child is Updateable) {
-                child.beforeUpdate()
-            }
+            child.beforeUpdate()
         }
     }
 
     override fun update(tpf: Float) {
         for (child in children) {
-            if (child is Updateable) {
-                child.update(tpf)
-            }
+            child.update(tpf)
         }
     }
 
     override fun afterUpdate() {
         for (child in children) {
-            if (child is Updateable) {
-                child.afterUpdate()
-            }
+            child.afterUpdate()
         }
     }
 }

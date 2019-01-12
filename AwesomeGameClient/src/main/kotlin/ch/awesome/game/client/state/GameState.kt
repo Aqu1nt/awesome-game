@@ -1,7 +1,7 @@
 package ch.awesome.game.client.state
 
-import ch.awesome.game.client.objects.Player
-import ch.awesome.game.client.objects.base.Scene
+import ch.awesome.game.client.objects.CPlayer
+import ch.awesome.game.client.objects.base.CScene
 import ch.awesome.game.client.rendering.Light
 import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.common.network.events.IGameStateNode
@@ -14,8 +14,8 @@ class GameState(
 ) {
 
     var playerId: String? = null
-    val player: Player? get() = playerId?.let { playerId -> scene?.find(playerId) as Player? }
-    var scene: Scene? = null
+    val player: CPlayer? get() = playerId?.let { playerId -> scene?.find(playerId) as CPlayer? }
+    var scene: CScene? = null
         private set
 
     private val factory = GameNodeFactory()
@@ -36,7 +36,7 @@ class GameState(
     }
 
     fun replaceState(state: IGameStateNode) {
-        scene = factory.createNode(state.data.asDynamic().type as String, state.data) as Scene
+        scene = factory.createNode(state.data.asDynamic().type as String, state.data) as CScene
         afterNodeCreate(scene!!)
 
         fun addStateToNode(parent: GameNode, childState: IGameStateNode) {

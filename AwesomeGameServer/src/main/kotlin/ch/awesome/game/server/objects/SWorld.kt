@@ -5,11 +5,11 @@ import ch.awesome.game.common.network.events.GameStateNode
 import ch.awesome.game.common.network.events.IGameStateNode
 import ch.awesome.game.common.network.events.StateChangesNetworkEvent
 import ch.awesome.game.common.objects.IWorld
-import ch.awesome.game.server.objects.base.Scene
-import ch.awesome.game.server.utils.SmartTreeItem
+import ch.awesome.game.server.objects.base.SBaseObject
+import ch.awesome.game.server.objects.base.SScene
 import ch.awesome.game.server.utils.withSmartProperties
 
-class World: Scene("WORLD"), IWorld<Vector3f> {
+class SWorld: SScene("WORLD"), IWorld<Vector3f> {
 
     companion object {
         const val SEND_CHANGES_INTERVAL = 50L
@@ -23,7 +23,7 @@ class World: Scene("WORLD"), IWorld<Vector3f> {
     }
 
     fun state(): IGameStateNode {
-        fun convertItem(item: SmartTreeItem): IGameStateNode {
+        fun convertItem(item: SBaseObject): IGameStateNode {
             return GameStateNode(
                     id = item.id,
                     data = item,
@@ -41,7 +41,7 @@ class World: Scene("WORLD"), IWorld<Vector3f> {
             if (changes.isNotEmpty()) {
                 val networkEvent = StateChangesNetworkEvent(changes)
                 for (child in children()) {
-                    if (child is Player) {
+                    if (child is SPlayer) {
                         child.sendEvent(networkEvent)
                     }
                 }

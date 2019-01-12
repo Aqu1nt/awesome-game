@@ -1,10 +1,10 @@
 package ch.awesome.game.server.objects
 
 import ch.awesome.game.server.instance.GAME
-import ch.awesome.game.server.objects.base.MovingBaseObject
+import ch.awesome.game.server.objects.base.SMovingBaseObject
 import ch.awesome.game.server.utils.withSmartProperties
 
-class Bullet(val player: Player): MovingBaseObject() {
+class SBullet(val player: SPlayer): SMovingBaseObject() {
 
     init {
         withSmartProperties()
@@ -22,7 +22,7 @@ class Bullet(val player: Player): MovingBaseObject() {
 
     override fun afterUpdate() {
         for(n in GAME.world.children()) {
-            if(n is Player && n != player && worldTranslation.distance(n.worldTranslation) <= 4.0f * n.worldScale.x) {
+            if(n is SPlayer && n != player && worldTranslation.distance(n.worldTranslation) <= 4.0f * n.worldScale.x) {
                 GAME.loop.run {
                     n.health -= 1.0f
                     parent?.removeChild(this)
