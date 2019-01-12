@@ -8,12 +8,14 @@ import ch.awesome.game.server.objects.base.MovingBaseObject
 import ch.awesome.game.server.utils.withSmartProperties
 import com.fasterxml.jackson.annotation.JsonIgnore
 
-class Player: MovingBaseObject(10f), IPlayer<Vector3f> {
+class Player: MovingBaseObject(20f), IPlayer<Vector3f> {
 
     @JsonIgnore
     var webSocketHandler: GameWebSocketHandler? = null
 
-    init { withSmartProperties() }
+    init {
+        withSmartProperties()
+    }
 
     fun sendEvent(event: NetworkEvent<*>) {
         webSocketHandler?.sendEvent(event)

@@ -1,5 +1,7 @@
-package ch.awesome.game.client.rendering.shader
+package ch.awesome.game.client.rendering.shader.uniforms
 
+import ch.awesome.game.client.rendering.shader.ShaderProgram
+import ch.awesome.game.client.rendering.shader.ShaderUniform
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 
 class UniformFloat(name: String): ShaderUniform(name) {

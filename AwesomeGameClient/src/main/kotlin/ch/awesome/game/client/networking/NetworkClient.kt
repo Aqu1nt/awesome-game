@@ -1,12 +1,12 @@
 package ch.awesome.game.client.networking
 
+import ch.awesome.game.client.state.GameState
 import ch.awesome.game.common.network.INetworkEvent
 import ch.awesome.game.common.network.NetworkEventType
 import ch.awesome.game.common.network.events.IStateChangesNetworkEvent
 import ch.awesome.game.common.network.events.IStateNetworkEvent
 import ch.awesome.game.common.network.events.PingNetworkEvent
 import ch.awesome.game.common.network.events.PlayerJoinedGameNetworkEvent
-import ch.awesome.game.client.state.GameState
 import ch.awesome.game.common.utils.ISmartChange
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.KSerializer
@@ -76,6 +76,8 @@ class NetworkClient(private val state: GameState) {
     }
 
     private fun sendPing() {
-        sendEvent(PingNetworkEvent().apply { payload = Date.now().toLong() }, PingNetworkEvent::class.serializer())
+        if (webSocket?.readyState == WebSocket.OPEN) {
+            sendEvent(PingNetworkEvent().apply { payload = Date.now().toLong() }, PingNetworkEvent::class.serializer())
+        }
     }
 }

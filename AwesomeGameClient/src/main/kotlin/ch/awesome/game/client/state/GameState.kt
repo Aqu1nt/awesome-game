@@ -37,7 +37,7 @@ class GameState(
 
     fun getLightSources(): Array<Light> {
         return GameNode.allGameNodes().mapNotNull{
-            if (it is LightSource)it.getLight()
+            if (it is LightSource) it.getLight()
             else null
         }.toTypedArray()
     }

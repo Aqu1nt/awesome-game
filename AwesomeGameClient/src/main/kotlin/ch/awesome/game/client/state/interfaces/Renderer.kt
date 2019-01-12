@@ -6,5 +6,5 @@ import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 interface Renderer {
 
     fun initModels(gl: WebGL2RenderingContext) { }
-    fun render(gameRenderer: GameRenderer)
+    fun render(gameRenderer: GameRenderer) { }
 }

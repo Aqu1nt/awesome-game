@@ -5,7 +5,9 @@ import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.client.rendering.shader.particle.ParticleShader
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.common.math.IVector4f
 import ch.awesome.game.common.math.Matrix4f
+import ch.awesome.game.common.math.Vector4f
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
@@ -16,7 +18,6 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
     val gl = canvas.getContext("webgl2") as WebGL2RenderingContext
 
-    private var modelMatrix = Matrix4f()
     private var viewMatrix = Matrix4f()
     private var projectionMatrix = Matrix4f()
 
@@ -36,14 +37,16 @@ class GameRenderer (canvas: HTMLCanvasElement,
         canvas.height = window.innerHeight
 
         gl.viewport(0, 0, canvas.width, canvas.height)
-        gl.clearColor(state.scene?.clearColor?.x ?: 0f, state.scene?.clearColor?.y ?: 0f, state.scene?.clearColor?.z ?: 0f, 1.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
         gl.enable(WebGLRenderingContext.DEPTH_TEST)
-        gl.enable(WebGLRenderingContext.CULL_FACE)
+
+        gl.enable(WebGLRenderingContext.BLEND)
+        gl.blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA)
+
+        gl.disable(WebGLRenderingContext.CULL_FACE) // TODO: change to enable when particles are fixed
         gl.cullFace(WebGLRenderingContext.BACK)
 
 
-        modelMatrix.identity()
         viewMatrix.identity()
         projectionMatrix.projectionMatrix(70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
 
@@ -61,6 +64,7 @@ class GameRenderer (canvas: HTMLCanvasElement,
     }
 
     fun prepare(vararg lights: Light) {
+        gl.clearColor(state.scene?.clearColor?.x ?: 1f, state.scene?.clearColor?.y ?: 1f, state.scene?.clearColor?.z ?: 1f, 1.0f)
         gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
         val sortedLights = lights.sortedBy { light ->
@@ -71,8 +75,32 @@ class GameRenderer (canvas: HTMLCanvasElement,
         this.lights.addAll(sortedLights)
     }
 
-    fun renderParticle() {
+    fun renderParticle(model: TexturedModel, modelMatrix: Matrix4f, color: IVector4f = Vector4f(1f, 1f, 1f, 1f)) {
         useShader(particleShader)
+
+        particleShader.uniformColor.load(gl, Vector4f(1f, 0f, 1f, 1f))
+
+        gl.disable(WebGLRenderingContext.DEPTH_TEST)
+        gl.blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE)
+        gl.bindVertexArray(model.rawModel.vao)
+        gl.enableVertexAttribArray(0)
+        gl.enableVertexAttribArray(1)
+
+        particleShader.uniformColor.load(gl, color)
+        particleShader.uniformModelMatrix.load(gl, modelMatrix)
+
+        viewMatrix.viewMatrix(camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
+        particleShader.uniformViewMatrix.load(gl, viewMatrix)
+
+        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
+        gl.activeTexture(WebGLRenderingContext.TEXTURE0)
+        gl.drawElements(WebGLRenderingContext.TRIANGLES, model.rawModel.vertexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
+
+        gl.disableVertexAttribArray(0)
+        gl.disableVertexAttribArray(1)
+        gl.bindVertexArray(null)
+        gl.blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE_MINUS_SRC_ALPHA)
+        gl.enable(WebGLRenderingContext.DEPTH_TEST)
     }
 
     fun renderModel(model: TexturedModel, modelMatrix: Matrix4f) {
@@ -102,7 +130,6 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
         modelShader.uniformReflectivity.load(gl, model.texture.reflectivity)
         modelShader.uniformShineDamper.load(gl, model.texture.shineDamper)
-
         modelShader.uniformAmbientLight.load(gl, state.scene?.ambientLight ?: 0f)
 
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
@@ -115,7 +142,7 @@ class GameRenderer (canvas: HTMLCanvasElement,
         gl.bindVertexArray(null)
     }
 
-    fun useShader(shader: ShaderProgram) {
+    private fun useShader(shader: ShaderProgram) {
         if (activeShader != shader) {
             activeShader?.stop()
         }

@@ -1,12 +1,14 @@
-package ch.awesome.game.client.rendering.shader
+package ch.awesome.game.client.rendering.shader.uniforms
 
+import ch.awesome.game.client.rendering.shader.ShaderProgram
+import ch.awesome.game.client.rendering.shader.ShaderUniform
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 
 class UniformVector3f(name: String): ShaderUniform(name) {
 
-    var vec: IVector3f? = null
+    private var vec: IVector3f? = null
 
     fun load(gl: WebGL2RenderingContext, x: Float, y: Float, z: Float) {
         if(vec?.x == x && vec?.y == y && vec?.z == z) return

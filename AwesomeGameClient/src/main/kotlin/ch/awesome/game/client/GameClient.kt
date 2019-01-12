@@ -45,7 +45,7 @@ class GameClient {
 
                 var lastUpdate = Date.now()
 
-                fun gameLoop() {
+                fun gameLoop(double: Double) {
                     val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
                     state.update(tpf.toFloat())
                     state.calculateWorldMatrix()
@@ -59,10 +59,10 @@ class GameClient {
                     renderer.end()
 
                     lastUpdate = Date.now()
-                    window.requestAnimationFrame { gameLoop() }
+                    window.requestAnimationFrame(::gameLoop)
                 }
 
-                window.requestAnimationFrame { gameLoop() }
+                window.requestAnimationFrame(::gameLoop)
 
                 networkClient.connect()
             }

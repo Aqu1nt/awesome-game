@@ -13,7 +13,9 @@ enum class TextureImageType(val fileName: String) {
     BOULDER("boulder.png"),
     LAMP("lamp.png"),
     CUBE("cube.png"),
-    PLAYER("player.png")
+    PLAYER("player.png"),
+    FIRE_PARTICLE("fire_particle.png"),
+    LAMP_PARTICLE("lamp_particle.png")
 }
 
 object TextureImageLoader {

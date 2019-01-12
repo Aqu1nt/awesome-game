@@ -5,14 +5,15 @@ val particleFragmentShaderSource = """
 #version 300 es
 precision mediump float;
 
-in vec2 TexCoords;
-in vec4 ParticleColor;
-out vec4 color;
+in vec2 passTextureCoords;
 
-uniform sampler2D sprite;
+out vec4 outColor;
+
+uniform vec4 color;
+uniform sampler2D modelTexture;
 
 void main()
 {
-    color = (texture(sprite, TexCoords) * ParticleColor);
+    outColor = color * texture(modelTexture, passTextureCoords);
 }
 """.trimIndent()

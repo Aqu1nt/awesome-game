@@ -1,14 +1,11 @@
 package ch.awesome.game.client.rendering.shader.model
 
 import ch.awesome.game.client.rendering.GameRenderer
-import ch.awesome.game.client.rendering.Light
-import ch.awesome.game.client.rendering.TexturedModel
 import ch.awesome.game.client.rendering.shader.ShaderProgram
-import ch.awesome.game.client.rendering.shader.UniformFloat
-import ch.awesome.game.client.rendering.shader.UniformMatrix4f
-import ch.awesome.game.client.rendering.shader.UniformVector3fArray
+import ch.awesome.game.client.rendering.shader.uniforms.UniformFloat
+import ch.awesome.game.client.rendering.shader.uniforms.UniformMatrix4f
+import ch.awesome.game.client.rendering.shader.uniforms.UniformVector3fArray
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
-import ch.awesome.game.common.math.Matrix4f
 
 class ModelShader(val gl: WebGL2RenderingContext) : ShaderProgram(gl, modelVertexShaderSource, modelFragmentShaderSource) {
 
