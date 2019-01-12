@@ -30,13 +30,17 @@ repositories {
 }
 
 dependencies {
+
+    compile group: 'javax.vecmath', name: 'vecmath', version: '1.5.2'
+    compile group: 'net.sf.sociaal', name: 'jbullet', version: '3.0.0.20130526'
+
     compile "org.jetbrains.kotlin:kotlin-reflect"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.9.1"
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.8'
     compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.9.8'
-    compile group: 'org.jmonkeyengine', name: 'jme3-bullet', version: '3.2.1-stable'
+    compile group: 'org.jmonkeyengine', name: 'jme3-bullet-native', version: '3.2.2-stable'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.1.RELEASE'
 
     expectedBy project(":AwesomeGameCommon")

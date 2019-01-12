@@ -132,4 +132,8 @@ data class Vector3f (override var x: Float = 0f,
         this.y = y
         this.z = z
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Vector3f && other.x == x && other.y == y && other.z == z
+    }
 }

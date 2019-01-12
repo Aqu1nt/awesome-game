@@ -27,7 +27,7 @@ class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
         }
 
         override fun initModels(gl: WebGL2RenderingContext) {
-            val size = 6f
+            val size = 10f
             particleModel = TexturedModel(
                     ModelCreator.loadModel(gl,
                             vertices = arrayOf(
@@ -42,12 +42,7 @@ class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
                                     1f, 0f, // top right corner
                                     1f, 1f // bottom right corner
                             ),
-                            normals = arrayOf(
-                                    0f, 0f, -1f, // bottom left corner
-                                    0f, 0f, -1f, // top left corner
-                                    0f, 0f, -1f, // top right corner
-                                    0f, 0f, -1f // bottom right corner
-                            ),
+                            normals = arrayOf(),
                             indices = arrayOf(0, 1, 2, 0, 2, 3)),
                     Texture(ModelCreator.loadTexture(gl, TextureImageType.FIRE_PARTICLE))
             )
@@ -57,9 +52,9 @@ class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
             lightMatrix.set(worldMatrix)
             val dir = camera.position - Vector3f(lightMatrix.m30, lightMatrix.m31, lightMatrix.m32)
             dir.normalizeLocal()
-            lightMatrix.m30 += dir.x * 2.0f * worldScale.x
-            lightMatrix.m31 += dir.y * 2.0f * worldScale.y
-            lightMatrix.m32 += dir.z * 2.0f * worldScale.z
+            lightMatrix.m30 += dir.x * 3.0f * worldScale.x
+            lightMatrix.m31 += dir.y * 3.0f * worldScale.y
+            lightMatrix.m32 += dir.z * 3.0f * worldScale.z
 
             gameRenderer.renderParticle(particleModel, lightMatrix, Vector4f(lamp.color, 0.5f))
         }
