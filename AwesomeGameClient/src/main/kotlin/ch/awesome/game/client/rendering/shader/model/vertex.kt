@@ -13,7 +13,8 @@ in vec3 normal;
 
 out vec2 passTextureCoords;
 out vec3 worldNormal;
-out vec3 toLightVector[${GameRenderer.maxLights}];
+out vec3 vecToLight[${GameRenderer.maxLights}];
+out vec3 vecToDirLight;
 out vec3 vecToCam;
 
 uniform mat4 modelMatrix;
@@ -21,6 +22,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 uniform vec3 lightPos[${GameRenderer.maxLights}];
+uniform vec3 directionalLightPos;
 
 void main()
 {
@@ -31,8 +33,10 @@ void main()
     worldNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
 
     for(int i = 0; i < ${GameRenderer.maxLights}; i++) {
-        toLightVector[i] = lightPos[i] - worldPosition.xyz;
+        vecToLight[i] = lightPos[i] - worldPosition.xyz;
     }
+
+    vecToDirLight = directionalLightPos - position.xyz;
 
     vecToCam = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 }

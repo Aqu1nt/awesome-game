@@ -12,7 +12,10 @@ import ch.awesome.game.common.objects.IPlayer
 
 class Player(state: dynamic) : MovingBaseObject(state), IPlayer<IVector3f>, Renderer {
 
-    private val renderer = SimpleModelRenderer(this, ModelType.PLAYER, TextureImageType.PLAYER)
+    private val renderer = SimpleModelRenderer(gameNode = this,
+                                               modelType = ModelType.PLAYER,
+                                               textureImageType = TextureImageType.PLAYER,
+                                               lightMapType = TextureImageType.PLAYER_LIGHTMAP)
 
     override fun update(tpf: Float) {
         if (velocity.x > 0.0f) actualRotation().y = -90.0f

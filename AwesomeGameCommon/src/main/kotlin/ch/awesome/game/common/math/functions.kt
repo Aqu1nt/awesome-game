@@ -10,3 +10,7 @@ fun invSqrt(fValue: Float): Float {
 fun toRadians(degrees: Float): Float {
     return degrees / 180.0f * PI.toFloat()
 }
+
+fun toDegrees(radians: Float): Float {
+    return radians * 180.0f / PI.toFloat()
+}

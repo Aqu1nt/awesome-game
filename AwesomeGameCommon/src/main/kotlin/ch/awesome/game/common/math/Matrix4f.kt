@@ -146,9 +146,27 @@ class Matrix4f {
         return this
     }
 
-//    fun rotate(direction: Vector3f) {
-//
-//    }
+    fun rotate(direction: Vector3f): Matrix4f {
+        val xAxis = Vector3f(0.0f, 1.0f, 0.0f).cross(direction)
+        xAxis.normalize()
+
+        val yAxis = direction.cross(xAxis)
+        yAxis.normalize()
+
+        m00 = xAxis.x
+        m10 = yAxis.x
+        m20 = direction.x
+
+        m01 = xAxis.y
+        m11 = yAxis.y
+        m21 = direction.y
+
+        m02 = xAxis.z
+        m12 = yAxis.z
+        m22 = direction.z
+
+        return this
+    }
 
     fun modelMatrix(position: IVector3f, rotation: IVector3f, scale: IVector3f): Matrix4f {
         identity()
@@ -168,6 +186,15 @@ class Matrix4f {
         rotate(pitch, Vector3f(1.0f, 0.0f, 0.0f))
         rotate(yaw, Vector3f(0.0f, 1.0f, 0.0f))
         rotate(roll, Vector3f(0.0f, 0.0f, 1.0f))
+        translate(-x, -y, -z)
+
+        return this
+    }
+
+    fun viewMatrix(x: Float, y: Float, z: Float, dir: Vector3f): Matrix4f {
+        identity()
+
+        rotate(dir)
         translate(-x, -y, -z)
 
         return this

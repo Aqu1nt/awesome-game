@@ -46,20 +46,22 @@ class GameRenderer (canvas: HTMLCanvasElement,
         gl.disable(WebGLRenderingContext.CULL_FACE) // TODO: change to enable when particles are fixed
         gl.cullFace(WebGLRenderingContext.BACK)
 
-
         viewMatrix.identity()
         projectionMatrix.projectionMatrix(70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
 
         // Init model shader
-        modelShader.start()
         modelShader.findAllUniformLocations()
+        modelShader.start()
         modelShader.uniformProjectionMatrix.load(gl, projectionMatrix)
+        modelShader.uniformModelTexture.load(gl, 0)
+        modelShader.uniformLightMap.load(gl, 1)
         modelShader.stop()
 
         // Init particle shader
         particleShader.start()
         particleShader.findAllUniformLocations()
         particleShader.uniformProjectionMatrix.load(gl, projectionMatrix)
+        particleShader.uniformModelTexture.load(gl, 0)
         particleShader.stop()
     }
 
@@ -92,8 +94,8 @@ class GameRenderer (canvas: HTMLCanvasElement,
         viewMatrix.viewMatrix(camera.position.x, camera.position.y, camera.position.z, camera.pitch, camera.yaw, camera.roll)
         particleShader.uniformViewMatrix.load(gl, viewMatrix)
 
-        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)
+        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.modelTexture)
         gl.drawElements(WebGLRenderingContext.TRIANGLES, model.rawModel.vertexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
 
         gl.disableVertexAttribArray(0)
@@ -130,10 +132,21 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
         modelShader.uniformReflectivity.load(gl, model.texture.reflectivity)
         modelShader.uniformShineDamper.load(gl, model.texture.shineDamper)
-        modelShader.uniformAmbientLight.load(gl, state.scene?.ambientLight ?: 0f)
 
-        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.texture)
+        modelShader.uniformAmbientLight.load(gl, state.scene?.ambientLight ?: 0f)
+        modelShader.uniformDirectionalLightPos.load(gl, 0.0f, 1.0f, 1.0f)
+        modelShader.uniformDirectionalLightColor.load(gl, 1.0f, 0.0f, 0.0f)
+
+        modelShader.uniformUseLightMap.load(gl, model.texture.lightMap != null)
+
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)
+        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.modelTexture)
+
+        if(model.texture.lightMap != null) {
+            gl.activeTexture(WebGLRenderingContext.TEXTURE1)
+            gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.lightMap)
+        }
+
         gl.drawElements(WebGLRenderingContext.TRIANGLES, model.rawModel.vertexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
 
         gl.disableVertexAttribArray(0)

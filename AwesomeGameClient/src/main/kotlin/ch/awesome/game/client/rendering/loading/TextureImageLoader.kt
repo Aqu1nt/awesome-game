@@ -14,6 +14,7 @@ enum class TextureImageType(val fileName: String) {
     LAMP("lamp.png"),
     CUBE("cube.png"),
     PLAYER("player.png"),
+    PLAYER_LIGHTMAP("player_lightmap.png"),
     FIRE_PARTICLE("fire_particle.png"),
     LAMP_PARTICLE("lamp_particle.png")
 }

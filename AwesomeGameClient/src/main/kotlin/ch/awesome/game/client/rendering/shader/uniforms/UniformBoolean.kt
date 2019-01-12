@@ -4,15 +4,15 @@ import ch.awesome.game.client.rendering.shader.ShaderProgram
 import ch.awesome.game.client.rendering.shader.ShaderUniform
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 
-class UniformFloat(name: String): ShaderUniform(name) {
+class UniformBoolean(name: String): ShaderUniform(name) {
 
-    var value: Float? = null
+    var value: Boolean? = null
 
-    fun load(gl: WebGL2RenderingContext, value: Float) {
+    fun load(gl: WebGL2RenderingContext, value: Boolean) {
         if(this.value == value) return
 
         this.value = value
-        gl.uniform1f(location, value)
+        gl.uniform1f(location, if(value) 1.0f else 0.0f)
     }
 
     override fun findLocation(gl: WebGL2RenderingContext, shader: ShaderProgram) {

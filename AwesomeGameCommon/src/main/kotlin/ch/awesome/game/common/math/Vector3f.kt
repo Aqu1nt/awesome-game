@@ -75,9 +75,15 @@ data class Vector3f (override var x: Float = 0f,
         return x * x + y * y + z * z
     }
 
-//    fun cross(): Vector3f {
-//
-//    }
+    fun cross(vec: Vector3f): Vector3f {
+        val result = Vector3f()
+
+        result.x = y * vec.z - z * vec.y
+        result.y = vec.x * z - vec.z * x
+        result.z = x * vec.y - y * vec.x
+
+        return result
+    }
 
     fun distanceSquared(v: Vector3f): Float {
         val dx = (x - v.x).toDouble()

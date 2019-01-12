@@ -18,7 +18,7 @@ class World: Scene("WORLD"), IWorld<Vector3f> {
     private var lastSendChangesTimestamp = 0L
 
     init {
-        ambientLight = 0.3f
+        ambientLight = 0.2f
         withSmartProperties()
     }
 

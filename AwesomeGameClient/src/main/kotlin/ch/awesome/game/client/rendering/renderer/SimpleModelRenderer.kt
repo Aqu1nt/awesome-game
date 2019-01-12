@@ -14,13 +14,15 @@ class SimpleModelRenderer(private val gameNode: GameNode,
                           private val modelType: ModelType,
                           private val textureImageType: TextureImageType,
                           private val reflectivity: Float = 1f,
-                          private val shineDamper: Float = 20f) : ModelRenderer {
+                          private val shineDamper: Float = 20f,
+                          private val lightMapType: TextureImageType?= null) : ModelRenderer {
 
     override var model: TexturedModel? = null
         private set
 
     override fun initModels(gl: WebGL2RenderingContext) {
-        val texture = Texture(ModelCreator.loadTexture(gl, textureImageType), reflectivity, shineDamper)
+        val lightMap = lightMapType ?.let { ModelCreator.loadTexture(gl, lightMapType) }
+        val texture = Texture(ModelCreator.loadTexture(gl, textureImageType), reflectivity, shineDamper, lightMap)
         model = TexturedModel(OBJModelLoader.getModel(modelType), texture)
     }
 
