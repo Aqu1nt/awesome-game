@@ -4,7 +4,7 @@ import ch.awesome.game.client.objects.base.LightNode
 import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.rendering.loading.ModelType
 import ch.awesome.game.client.rendering.loading.TextureImageType
-import ch.awesome.game.client.rendering.renderer.SimpleModelData
+import ch.awesome.game.client.rendering.SimpleModelData
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.Renderable
@@ -63,7 +63,10 @@ class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
     override var color: IVector3f by StateProperty()
 
     private val light = LampLight(this).apply { position = Vector3f(0f, 11f, 0f) }
-    private val renderer = SimpleModelData(this, ModelType.LAMP, TextureImageType.LAMP)
+
+    companion object {
+        private val renderer = SimpleModelData(ModelType.LAMP, TextureImageType.LAMP)
+    }
 
     init {
         addChild(light)
@@ -75,6 +78,6 @@ class Lamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
     }
 
     override fun render(gameRenderer: GameRenderer) {
-        renderer.render(gameRenderer)
+        renderer.render(gameRenderer, worldMatrix)
     }
 }

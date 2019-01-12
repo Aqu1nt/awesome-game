@@ -24,7 +24,7 @@ open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<
             field = value
         }
 
-    var simulateScale: Boolean = true
+    var simulateScale: Boolean = false
         set(value) {
             if (value) {
                 localScale = scale
@@ -66,6 +66,8 @@ open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<
             localPosition.y += velocity.y * unitPerSecond * tpf
             localPosition.z += velocity.z * unitPerSecond * tpf
             adjustVector3f(localPosition, position, 0.2f)
+        } else {
+            localPosition = position
         }
 
         // Update rotation
@@ -74,6 +76,8 @@ open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<
             localRotation.y += rotationVelocity.y * rotationUnitPerSecond * tpf
             localRotation.z += rotationVelocity.z * rotationUnitPerSecond * tpf
             adjustVector3f(localRotation, rotation, 0.2f)
+        } else {
+            localRotation = rotation
         }
 
         // Update scale
@@ -82,6 +86,8 @@ open class MovingBaseObject(state: dynamic): GameNode(state), IMovingBaseObject<
             localScale.y += scaleVelocity.y * scaleUnitPerSecond * tpf
             localScale.z += scaleVelocity.z * scaleUnitPerSecond * tpf
             adjustVector3f(localScale, localRotation, 0.2f)
+        } else {
+            localScale = scale
         }
 
         super.update(tpf)

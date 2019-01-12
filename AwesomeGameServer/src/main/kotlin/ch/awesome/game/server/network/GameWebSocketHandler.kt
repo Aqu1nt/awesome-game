@@ -39,9 +39,12 @@ class GameWebSocketHandler : TextWebSocketHandler() {
                     )
                 }
             }
-            NetworkEventType.PING                    -> {
+            NetworkEventType.PING -> {
                 val pingNetworkEvent = objectMapper.convertValue(event, PingNetworkEvent::class.java)
                 sendEvent(pingNetworkEvent)
+            }
+            NetworkEventType.PLAYER_SHOOT -> {
+                GAME.loop.run { player?.shoot() }
             }
         }
     }

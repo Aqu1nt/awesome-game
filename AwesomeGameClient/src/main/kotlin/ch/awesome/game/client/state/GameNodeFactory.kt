@@ -1,5 +1,6 @@
 package ch.awesome.game.client.state
 
+import ch.awesome.game.client.objects.Bullet
 import ch.awesome.game.client.objects.Lamp
 import ch.awesome.game.client.objects.Player
 import ch.awesome.game.client.objects.World
@@ -15,7 +16,8 @@ class GameNodeFactory {
             "Player" to { state: dynamic -> Player(state) },
             "Lamp" to { state: dynamic -> Lamp(state) },
             "Group" to { state: dynamic -> Group(state) },
-            "MovingGroup" to { state: dynamic -> MovingGroup(state) }
+            "MovingGroup" to { state: dynamic -> MovingGroup(state) },
+            "Bullet" to { state: dynamic -> Bullet(state) }
     )
 
     fun createNode(type: String, state: dynamic): GameNode {
