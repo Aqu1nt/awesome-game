@@ -62,8 +62,8 @@ class GameClient {
 //                    camera.lookAt(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
 //                            state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
 
-                    camera.set(state.player?.worldTranslation?.x ?: 0.0f, 7.5f * (state.player?.worldScale?.x ?: 1.0f),
-                               state.player?.worldTranslation?.z?.plus(10.0f * (state.player?.worldScale?.x ?: 1.0f)) ?: 30.0f, 40.0f, 0.0f, 0.0f)
+                    camera.set(state.player?.worldTranslation?.x ?: 0.0f, 25f,
+                               state.player?.worldTranslation?.z?.plus(40.0f) ?: 40.0f, 20.0f, 0.0f, 0.0f)
 
 
                     renderer.prepare(*state.getLightSources(), sun)

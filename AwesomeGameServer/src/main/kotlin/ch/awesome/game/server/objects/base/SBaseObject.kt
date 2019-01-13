@@ -4,6 +4,8 @@ import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Quaternion
 import ch.awesome.game.common.math.Vector3f
 import ch.awesome.game.common.objects.base.IBaseObject
+import ch.awesome.game.server.instance.GAME
+import ch.awesome.game.server.instance.StandardGame
 import ch.awesome.game.server.instance.Updateable
 import ch.awesome.game.server.utils.SmartProperty
 import ch.awesome.game.server.utils.SmartTreeItem
@@ -11,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.*
 
 open class SBaseObject(id: String = UUID.randomUUID().toString()): SmartTreeItem<SBaseObject>(id), Updateable, IBaseObject<Vector3f> {
+
+    protected val game: StandardGame = GAME
 
     override var position: Vector3f by SmartProperty(Vector3f())
     override var scale: Vector3f by SmartProperty(Vector3f(1.0f, 1.0f, 1.0f))

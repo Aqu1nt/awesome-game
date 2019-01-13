@@ -4,9 +4,9 @@ import java.lang.System.currentTimeMillis
 import java.lang.Thread.sleep
 
 interface Updateable {
-    fun beforeUpdate()
+    fun beforeUpdate() { }
     fun update(tpf: Float)
-    fun afterUpdate()
+    fun afterUpdate() { }
 }
 
 class GameLoop(private val updateables: MutableList<Updateable>,

@@ -7,7 +7,12 @@ import ch.awesome.game.server.instance.GAME
 import ch.awesome.game.server.network.GameWebSocketHandler
 import ch.awesome.game.server.objects.base.SMovingBaseObject
 import ch.awesome.game.server.utils.withSmartProperties
+import com.bulletphysics.collision.shapes.BoxShape
+import com.bulletphysics.dynamics.RigidBody
+import com.bulletphysics.linearmath.DefaultMotionState
+import com.bulletphysics.linearmath.Transform
 import com.fasterxml.jackson.annotation.JsonIgnore
+import javax.vecmath.Quat4f
 
 class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
 
@@ -16,8 +21,25 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
     @JsonIgnore
     var webSocketHandler: GameWebSocketHandler? = null
 
+    private var physicsBody: RigidBody? = null
+    private var physicsTransform = Transform()
+
     init {
         withSmartProperties()
+    }
+
+    override fun afterAdd() {
+        physicsBody = RigidBody(1f,
+                DefaultMotionState(physicsTransform),
+                BoxShape(javax.vecmath.Vector3f(0.75f, 0.75f, 1f))
+        )
+        physicsBody!!.setDamping(0f, 1f)
+        physicsBody!!.userPointer = this
+        game.physics.dynamicsWorld.addRigidBody(physicsBody)
+    }
+
+    override fun afterRemove() {
+        game.physics.dynamicsWorld.removeRigidBody(physicsBody)
     }
 
     fun sendEvent(event: NetworkEvent<*>) {
@@ -30,9 +52,17 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
         if (velocity.z > 0.0f) rotation.y = 0.0f
         if (velocity.z < 0.0f) rotation.y = 180.0f
 
-        scale = Vector3f(health, health, health) / 10.0f
-
         super.update(tpf)
+    }
+
+    override fun afterUpdate() {
+        physicsBody?.let { physicsBody ->
+            physicsBody.getWorldTransform(physicsTransform)
+            physicsTransform.setRotation(Quat4f(worldRotation.x, worldRotation.y, worldRotation.z, worldRotation.w))
+            physicsTransform.origin.set(worldTranslation.x, worldTranslation.y, worldTranslation.z)
+            physicsBody.setWorldTransform(physicsTransform)
+        }
+        super.afterUpdate()
     }
 
     fun shoot() {

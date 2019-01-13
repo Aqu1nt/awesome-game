@@ -16,6 +16,7 @@ open class SmartTreeItem<T: SmartTreeItem<T>>(val id: String = UUID.randomUUID()
             child.parent = this as T
             children.add(child)
             changes.add(SmartChange(id, child, SmartChangeType.CHILDREN_ADD))
+            child.afterAdd()
         }
     }
 
@@ -24,6 +25,7 @@ open class SmartTreeItem<T: SmartTreeItem<T>>(val id: String = UUID.randomUUID()
             child.parent = null
             children.remove(child)
             changes.add(SmartChange(id, child, SmartChangeType.CHILDREN_REMOVE))
+            child.afterRemove()
         }
     }
 
@@ -59,5 +61,13 @@ open class SmartTreeItem<T: SmartTreeItem<T>>(val id: String = UUID.randomUUID()
             }
         }
         return changes
+    }
+
+    open fun afterAdd() {
+
+    }
+
+    open fun afterRemove() {
+
     }
 }

@@ -12,7 +12,7 @@ import ch.awesome.game.server.utils.withSmartProperties
 class SWorld: SScene("WORLD"), IWorld<Vector3f> {
 
     companion object {
-        const val SEND_CHANGES_INTERVAL = 50L
+        const val SEND_CHANGES_INTERVAL = 25L
     }
 
     private var lastSendChangesTimestamp = 0L
@@ -32,9 +32,7 @@ class SWorld: SScene("WORLD"), IWorld<Vector3f> {
         return convertItem(this)
     }
 
-    override fun afterUpdate() {
-        super.afterUpdate()
-
+    fun sendChangesToClients() {
         // Send state
         if (System.currentTimeMillis() > lastSendChangesTimestamp + SEND_CHANGES_INTERVAL) {
             val changes = fetchAndResetChanges()
