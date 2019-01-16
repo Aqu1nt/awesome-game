@@ -2,7 +2,7 @@ package ch.awesome.game.client.objects
 
 import ch.awesome.game.client.objects.base.CLightNode
 import ch.awesome.game.client.rendering.*
-import ch.awesome.game.client.rendering.loading.ModelType
+import ch.awesome.game.client.rendering.loading.wavefront.ModelType
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
@@ -18,8 +18,8 @@ class CLamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
 
     class LampLight(private val lamp: CLamp) : CLightNode(attenuation = Vector3f(1f, 0.01f, 0.00001f)), Renderable {
 
-        var lightMatrix = Matrix4f().set(worldMatrix)
-        lateinit var particleModel: TexturedModel
+        private var lightMatrix = Matrix4f().set(worldMatrix)
+        private lateinit var particleModel: TexturedModel
 
         override fun getLightColor(): IVector3f {
             return lamp.color
@@ -43,7 +43,7 @@ class CLamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
                             ),
                             normals = arrayOf(),
                             indices = arrayOf(0, 1, 2, 0, 2, 3)),
-                    Texture(ModelCreator.loadTexture(gl, TextureImageType.FIRE_PARTICLE))
+                    Texture(ModelCreator.loadTexture(gl, TextureImageType.LAMP_GLOW))
             )
         }
 

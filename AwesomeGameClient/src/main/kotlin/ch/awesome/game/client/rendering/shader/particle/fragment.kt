@@ -12,8 +12,7 @@ out vec4 outColor;
 uniform vec4 color;
 uniform sampler2D modelTexture;
 
-void main()
-{
+void main() {
     outColor = color * texture(modelTexture, passTextureCoords);
 }
 """.trimIndent()

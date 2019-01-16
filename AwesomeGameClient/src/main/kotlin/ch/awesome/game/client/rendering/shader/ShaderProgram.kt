@@ -6,7 +6,7 @@ import org.khronos.webgl.WebGLRenderingContext
 
 @Suppress("LeakingThis")
 open class ShaderProgram(private val gl: WebGL2RenderingContext, private val vertexShaderSource: String,
-                         private val fragmentShaderSource: String) {
+                         private val fragmentShaderSource: String, private val attributes: Array<String>) {
 
     var program: WebGLProgram? = null
     protected val uniforms= mutableListOf<ShaderUniform>()
@@ -32,9 +32,9 @@ open class ShaderProgram(private val gl: WebGL2RenderingContext, private val ver
         gl.attachShader(program, vertexShader)
         gl.attachShader(program, fragmentShader)
 
-        gl.bindAttribLocation(program, 0, "position")
-        gl.bindAttribLocation(program, 1, "textureCoords")
-        gl.bindAttribLocation(program, 2, "normal")
+        for(i in 0 until attributes.size) {
+            gl.bindAttribLocation(program, i, attributes[i])
+        }
 
         gl.linkProgram(program)
         if (gl.getProgramParameter(program, WebGLRenderingContext.LINK_STATUS) == false) {

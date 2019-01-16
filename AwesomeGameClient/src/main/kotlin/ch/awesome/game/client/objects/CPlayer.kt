@@ -3,7 +3,7 @@ package ch.awesome.game.client.objects
 import ch.awesome.game.client.objects.base.CMovingBaseObject
 import ch.awesome.game.client.rendering.GameRenderer
 import ch.awesome.game.client.rendering.SimpleModelData
-import ch.awesome.game.client.rendering.loading.ModelType
+import ch.awesome.game.client.rendering.loading.wavefront.ModelType
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
@@ -19,10 +19,6 @@ class CPlayer(state: dynamic) : CMovingBaseObject(state), IPlayer<IVector3f>, Re
     }
 
     override fun update(tpf: Float) {
-        if (velocity.x > 0.0f) actualRotation().y = -90.0f
-        if (velocity.x < 0.0f) actualRotation().y = 90.0f
-        if (velocity.z > 0.0f) actualRotation().y = 0.0f
-        if (velocity.z < 0.0f) actualRotation().y = 180.0f
         super.update(tpf)
     }
 

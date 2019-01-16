@@ -5,6 +5,7 @@ enum class NetworkEventType {
     STATE_CHANGES,
     PLAYER_JOINED_GAME,
     PLAYER_DIRECTION_CHANGE,
+    PLAYER_SPEED_CHANGE,
     PING,
     PLAYER_SHOOT
 }

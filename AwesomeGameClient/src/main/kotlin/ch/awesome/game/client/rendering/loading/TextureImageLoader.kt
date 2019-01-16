@@ -15,9 +15,14 @@ enum class TextureImageType(val fileName: String) {
     CUBE("cube.png"),
     PLAYER("player.png"),
     PLAYER_LIGHTMAP("player_lightmap.png"),
-    FIRE_PARTICLE("fire_particle.png"),
-    LAMP_PARTICLE("lamp_particle.png"),
-    BULLET("bullet.png")
+    LAMP_GLOW("lamp_glow.png"),
+    BULLET("bullet.png"),
+    SKYBOX_RIGHT("skybox/right.png"),
+    SKYBOX_LEFT("skybox/left.png"),
+    SKYBOX_TOP("skybox/top.png"),
+    SKYBOX_BOTTOM("skybox/bottom.png"),
+    SKYBOX_BACK("skybox/back.png"),
+    SKYBOX_FRONT("skybox/front.png")
 }
 
 object TextureImageLoader {
@@ -49,7 +54,7 @@ object TextureImageLoader {
                 resolve(data)
             }
 
-            img.src = "res/$fileName"
+            img.src = "res/textures/$fileName"
         }
     }
 }

@@ -16,11 +16,12 @@ class ParticleRenderer(val gl: WebGL2RenderingContext, val shader: ParticleShade
         shader.start()
         gl.disable(WebGLRenderingContext.CULL_FACE)
         gl.depthMask(false)
+
+        gl.enable(WebGLRenderingContext.BLEND)
         gl.blendFunc(WebGLRenderingContext.SRC_ALPHA, WebGLRenderingContext.ONE)
     }
 
     fun renderParticle(model: TexturedModel, modelMatrix: Matrix4f, color: IVector4f = Vector4f(1f, 1f, 1f, 1f), viewMatrix: Matrix4f) {
-
         shader.uniformColor.load(gl, Vector4f(1f, 0f, 1f, 1f))
 
         gl.bindVertexArray(model.rawModel.vao)
@@ -48,6 +49,8 @@ class ParticleRenderer(val gl: WebGL2RenderingContext, val shader: ParticleShade
 
         gl.enable(WebGLRenderingContext.CULL_FACE)
         gl.cullFace(WebGLRenderingContext.BACK)
+
+        gl.disable(WebGLRenderingContext.BLEND)
 
         shader.stop()
     }

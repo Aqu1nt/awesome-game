@@ -1,15 +1,15 @@
 package ch.awesome.game.client
 
 import ch.awesome.game.client.networking.NetworkClient
-import ch.awesome.game.client.rendering.Camera
-import ch.awesome.game.client.rendering.GameRenderer
-import ch.awesome.game.client.rendering.Light
-import ch.awesome.game.client.rendering.loading.OBJModelLoader
+import ch.awesome.game.client.rendering.*
+import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
+import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.PlayerControl
 import ch.awesome.game.client.state.interfaces.Renderable
+import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector3f
 import kotlinx.serialization.ImplicitReflectionSerializer
 import org.w3c.dom.HTMLCanvasElement
@@ -52,15 +52,13 @@ class GameClient {
 
                 var lastUpdate = Date.now()
 
+                val gui = GUITexture(ModelCreator.loadTexture(renderer.gl, TextureImageType.GRASS))
+                val guiMat = Matrix4f().identity().translate(-0.5f, 0.5f, 0.0f).scale(0.25f, 0.25f, 1.0f)
+
                 fun gameLoop(double: Double) {
                     val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
                     state.update(tpf.toFloat())
                     state.calculateWorldMatrix()
-
-//                        camera.lookAt(state.player?.localPosition?.x ?: 0.0f, state.player?.localPosition?.y?.plus(40.0f) ?: 40.0f,
-//                                      state.player?.localPosition?.z ?: 0.0f, 90.0f, 0.0f, 0.0f)
-//                    camera.lookAt(state.player?.worldTranslation?.x ?: 0.0f, 40.0f,
-//                            state.player?.worldTranslation?.z?.plus(60.0f) ?: 30.0f, 40.0f, 0.0f, 0.0f)
 
                     camera.set(state.player?.worldTranslation?.x ?: 0.0f, 25f,
                                state.player?.worldTranslation?.z?.plus(40.0f) ?: 40.0f, 20.0f, 0.0f, 0.0f)
@@ -68,6 +66,7 @@ class GameClient {
 
                     renderer.prepare(*state.getLightSources(), sun)
                     renderer.renderGameNodes(GameNode.allGameNodes())
+                    renderer.renderGUI(gui, guiMat)
                     renderer.end()
 
                     lastUpdate = Date.now()

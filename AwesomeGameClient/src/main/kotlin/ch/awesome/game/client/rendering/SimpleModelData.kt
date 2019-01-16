@@ -1,7 +1,7 @@
 package ch.awesome.game.client.rendering
 
-import ch.awesome.game.client.rendering.loading.ModelType
-import ch.awesome.game.client.rendering.loading.OBJModelLoader
+import ch.awesome.game.client.rendering.loading.wavefront.ModelType
+import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.Matrix4f

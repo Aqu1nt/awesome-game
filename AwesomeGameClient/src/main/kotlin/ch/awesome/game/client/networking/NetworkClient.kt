@@ -3,10 +3,7 @@ package ch.awesome.game.client.networking
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.common.network.INetworkEvent
 import ch.awesome.game.common.network.NetworkEventType
-import ch.awesome.game.common.network.events.IStateChangesNetworkEvent
-import ch.awesome.game.common.network.events.IStateNetworkEvent
-import ch.awesome.game.common.network.events.PingNetworkEvent
-import ch.awesome.game.common.network.events.PlayerJoinedGameNetworkEvent
+import ch.awesome.game.common.network.events.*
 import ch.awesome.game.common.utils.ISmartChange
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.KSerializer
@@ -34,6 +31,10 @@ class NetworkClient(private val state: GameState) {
 
         activeWebSocket.onopen = {
             sendPing()
+            sendEvent(PlayerDirectionChangeNetworkEvent().apply { payload = PlayerDirectionChange(0.0f, 0.0f, 1.0f) },
+                    PlayerDirectionChangeNetworkEvent::class.serializer())
+            sendEvent(PlayerSpeedChangeNetworkEvent().apply { payload = PlayerSpeedChange(0.0f) },
+                    PlayerSpeedChangeNetworkEvent::class.serializer())
         }
 
         activeWebSocket.onmessage = { event ->

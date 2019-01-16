@@ -14,7 +14,7 @@ import com.bulletphysics.linearmath.Transform
 import com.fasterxml.jackson.annotation.JsonIgnore
 import javax.vecmath.Quat4f
 
-class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
+class SPlayer: SMovingBaseObject(0f), IPlayer<Vector3f> {
 
     var health = 50.0f
 
@@ -47,11 +47,7 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
     }
 
     override fun update(tpf: Float) {
-        if (velocity.x > 0.0f) rotation.y = -90.0f
-        if (velocity.x < 0.0f) rotation.y = 90.0f
-        if (velocity.z > 0.0f) rotation.y = 0.0f
-        if (velocity.z < 0.0f) rotation.y = 180.0f
-
+        super.velocity = Vector3f(0f, 0f, 1f)
         super.update(tpf)
     }
 
@@ -68,15 +64,7 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
     fun shoot() {
         val b = SBullet(this)
         b.position = worldTranslation
-
-        b.velocity = when(rotation.y) {
-            0.0f -> Vector3f(0.0f, 0.0f, 1.0f)
-            90.0f -> Vector3f(-1.0f, 0.0f, 0.0f)
-            180.0f -> Vector3f(0.0f, 0.0f, -1.0f)
-            -90.0f -> Vector3f(1.0f, 0.0f, 0.0f)
-            else -> Vector3f(0.0f, 0.0f, 0.0f)
-        }
-
+        b.velocity = Vector3f(1.0f, 0.0f, 0.0f)
         b.unitPerSecond = 40.0f
 
         GAME.world.addChild(b)

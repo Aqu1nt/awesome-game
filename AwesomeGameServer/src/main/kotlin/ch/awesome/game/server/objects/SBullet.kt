@@ -9,6 +9,7 @@ class SBullet(val player: SPlayer): SMovingBaseObject() {
     init {
         withSmartProperties()
         scale = player.worldScale
+        rotation = player.rotation
     }
 
     var lifeTime = 3.0f

@@ -1,7 +1,8 @@
-package ch.awesome.game.client.rendering.loading
+package ch.awesome.game.client.rendering.loading.wavefront
 
 import ch.awesome.game.client.rendering.Model
 import ch.awesome.game.client.rendering.ModelCreator
+import ch.awesome.game.client.rendering.loading.OBJModelLoaderVertex
 import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.Vector2f
 import ch.awesome.game.common.math.Vector3f
@@ -34,7 +35,7 @@ object OBJModelLoader {
 
     fun load(gl: WebGL2RenderingContext, fileName: String): Promise<Model> {
         return Promise { resolve, _ ->
-             window.fetch("res/$fileName").then { response ->
+             window.fetch("res/models/$fileName").then { response ->
                 response.text().then { text ->
                     val model = convertToModel(gl, text)
                     resolve(model)
@@ -112,7 +113,7 @@ object OBJModelLoader {
     }
 
     private fun alreadCreated(previous: OBJModelLoaderVertex, newTextureCoordsIndex: Int, newNormalIndex: Int,
-                      vertices: MutableList<OBJModelLoaderVertex>, indices: MutableList<Int>) {
+                              vertices: MutableList<OBJModelLoaderVertex>, indices: MutableList<Int>) {
         if (previous.same(newTextureCoordsIndex, newNormalIndex)) {
             indices.add(previous.index)
         } else {
@@ -140,8 +141,8 @@ object OBJModelLoader {
     }
 
     private fun convertDataToArrays(vertices: MutableList<OBJModelLoaderVertex>, textureCoords: MutableList<Vector2f>,
-                            normals: MutableList<Vector3f>, verticesArray: Array<Float>,
-                            textureCoordsArray: Array<Float>, normalsArray: Array<Float>) {
+                                    normals: MutableList<Vector3f>, verticesArray: Array<Float>,
+                                    textureCoordsArray: Array<Float>, normalsArray: Array<Float>) {
         var furthest = 0.0f
         for(i in 0 until vertices.size) {
             val vertex = vertices[i]

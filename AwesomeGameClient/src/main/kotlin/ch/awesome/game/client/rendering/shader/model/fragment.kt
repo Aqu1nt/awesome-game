@@ -27,8 +27,7 @@ uniform float reflectivity;
 uniform float shineDamper;
 uniform float useLightMap;
 
-void main()
-{
+void main() {
     vec3 unitNormal = normalize(worldNormal);
     vec3 unitVecToCam = normalize(vecToCam);
 

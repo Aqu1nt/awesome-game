@@ -1,10 +1,14 @@
 package ch.awesome.game.client.rendering
 
+import ch.awesome.game.client.rendering.renderer.GUIRenderer
 import ch.awesome.game.client.rendering.renderer.ModelRenderer
 import ch.awesome.game.client.rendering.renderer.ParticleRenderer
+import ch.awesome.game.client.rendering.renderer.SkyboxRenderer
 import ch.awesome.game.client.rendering.shader.ShaderProgram
+import ch.awesome.game.client.rendering.shader.gui.GUIShader
 import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.client.rendering.shader.particle.ParticleShader
+import ch.awesome.game.client.rendering.shader.skybox.SkyboxShader
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.interfaces.Renderable
@@ -34,6 +38,12 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
     private val particleShader = ParticleShader(gl)
     private val particleRenderer = ParticleRenderer(gl, particleShader, camera)
+
+    private val skyboxShader = SkyboxShader(gl)
+    private val skyboxRenderer by lazy { SkyboxRenderer(gl, skyboxShader, camera) }
+
+    private val guiShader = GUIShader(gl)
+    private val guiRenderer = GUIRenderer(gl, guiShader)
 
     companion object {
         // is set to one in order test light selection
@@ -69,8 +79,16 @@ class GameRenderer (canvas: HTMLCanvasElement,
         particleShader.start()
         particleShader.findAllUniformLocations()
         particleShader.uniformProjectionMatrix.load(gl, projectionMatrix)
-        particleShader.uniformModelTexture.load(gl, 0)
         particleShader.stop()
+
+        skyboxShader.start()
+        skyboxShader.findAllUniformLocations()
+        skyboxShader.uniformProjectionMatrix.load(gl, projectionMatrix)
+        skyboxShader.stop()
+
+        guiShader.start()
+        guiShader.findAllUniformLocations()
+        guiShader.stop()
     }
 
     fun renderGameNodes(nodes: Collection<GameNode>) {
@@ -89,6 +107,10 @@ class GameRenderer (canvas: HTMLCanvasElement,
             }
         }
         particleRenderer.end()
+
+        skyboxRenderer.prepare()
+        skyboxRenderer.render()
+        skyboxRenderer.end()
     }
 
     fun prepare(vararg lights: Light) {
@@ -111,6 +133,12 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
     fun renderParticle(model: TexturedModel, modelMatrix: Matrix4f, color: IVector4f = Vector4f(1f, 1f, 1f, 1f)) {
         particleRenderer.renderParticle(model, modelMatrix, color, viewMatrix)
+    }
+
+    fun renderGUI(gui: GUITexture, modelMatrix: Matrix4f) {
+        guiRenderer.prepare()
+        guiRenderer.render(gui, modelMatrix)
+        guiRenderer.end()
     }
 
     fun end() {
