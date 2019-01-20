@@ -19,6 +19,10 @@ import kotlin.js.Promise
 
 class GameClient {
 
+    companion object {
+        lateinit var instance: GameClient
+    }
+
     private lateinit var renderer: GameRenderer
 
     private val state = GameState(
@@ -30,10 +34,16 @@ class GameClient {
     )
 
     @ImplicitReflectionSerializer
-    private val networkClient = NetworkClient(state)
+    val networkClient = NetworkClient(state)
 
     @ImplicitReflectionSerializer
-    private val playerControl = PlayerControl(state, networkClient)
+    val playerControl = PlayerControl(state, networkClient)
+
+//    val physics = AmmoPhysics()
+
+    init {
+        instance = this
+    }
 
     @JsName("startGame")
     @ImplicitReflectionSerializer
@@ -63,6 +73,7 @@ class GameClient {
                     val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
                     state.update(tpf.toFloat())
                     state.calculateWorldMatrix()
+//                    physics.detectCollisions()
 
 //                    state.camera.set(state.player?.worldTranslation?.x ?: 0.0f, 45f,
 //                                     state.player?.worldTranslation?.z?.plus(10.0f) ?: 40.0f, 70.0f, 0.0f, 0.0f)

@@ -14,6 +14,27 @@
 
 <canvas id="game-canvas"></canvas>
 
+<!--<script>window['Module'] = {};</script>-->
+<!--<script src="lib/ammo.js"></script>-->
+<!--<script src="lib/ammo.asm.js"></script>-->
+<!--<script type='text/javascript'>-->
+    <!--fetch('lib/ammo.wasm')-->
+        <!--.then(response => response.arrayBuffer())-->
+        <!--.then(buffer => WebAssembly.instantiate(buffer))-->
+        <!--.then(instance => {-->
+            <!--console.log(instance);-->
+            <!--window['Module']['wasmInstance'] = instance;-->
+            <!--window['Module']['wasmJSMethod'] = null;-->
+            <!--window['Module']['wasmBinary'] = it;-->
+            <!--Ammo = AmmoLib(window['Module']);-->
+        <!--});-->
+<!--</script>-->
+<!--<script>-->
+<!--</script>-->
+
+<script>
+    window['Ammo'] = {};
+</script>
 <script src="js/kotlin.js"></script>
 <script src="js/kotlinx-serialization-runtime-js.js"></script>
 <script src="js/game-client.js"></script>

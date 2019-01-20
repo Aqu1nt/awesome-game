@@ -27,7 +27,7 @@ class NetworkClient(private val state: GameState) {
 
     fun connect() {
         webSocket?.close()
-        webSocket = WebSocket("ws://${window.location.hostname}:8080/game")
+        webSocket = WebSocket("ws://${window.location.hostname}:7080/game")
 
         activeWebSocket.onopen = {
             sendPing()

@@ -12,9 +12,8 @@ import com.bulletphysics.dynamics.RigidBody
 import com.bulletphysics.linearmath.DefaultMotionState
 import com.bulletphysics.linearmath.Transform
 import com.fasterxml.jackson.annotation.JsonIgnore
-import javax.vecmath.Quat4f
 
-class SPlayer: SMovingBaseObject(0f), IPlayer<Vector3f> {
+class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
 
     var health = 50.0f
 
@@ -33,7 +32,6 @@ class SPlayer: SMovingBaseObject(0f), IPlayer<Vector3f> {
                 DefaultMotionState(physicsTransform),
                 BoxShape(javax.vecmath.Vector3f(0.75f, 0.75f, 1f))
         )
-        physicsBody!!.setDamping(0f, 1f)
         physicsBody!!.userPointer = this
         game.physics.dynamicsWorld.addRigidBody(physicsBody)
     }
@@ -47,15 +45,13 @@ class SPlayer: SMovingBaseObject(0f), IPlayer<Vector3f> {
     }
 
     override fun update(tpf: Float) {
-        super.velocity = Vector3f(0f, 0f, 1f)
         super.update(tpf)
     }
 
     override fun afterUpdate() {
         physicsBody?.let { physicsBody ->
             physicsBody.getWorldTransform(physicsTransform)
-            physicsTransform.setRotation(Quat4f(worldRotation.x, worldRotation.y, worldRotation.z, worldRotation.w))
-            physicsTransform.origin.set(worldTranslation.x, worldTranslation.y, worldTranslation.z)
+            physicsTransform.setFromOpenGLMatrix(worldMatrix.floatArray.toFloatArray())
             physicsBody.setWorldTransform(physicsTransform)
         }
         super.afterUpdate()
@@ -64,7 +60,7 @@ class SPlayer: SMovingBaseObject(0f), IPlayer<Vector3f> {
     fun shoot() {
         val b = SBullet(this)
         b.position = worldTranslation
-        b.velocity = Vector3f(1.0f, 0.0f, 0.0f)
+        b.velocity = velocity
         b.unitPerSecond = 40.0f
 
         GAME.world.addChild(b)

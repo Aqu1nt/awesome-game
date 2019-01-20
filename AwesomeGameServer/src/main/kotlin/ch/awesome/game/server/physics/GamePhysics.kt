@@ -25,7 +25,7 @@ class GamePhysics {
 
     init {
         dynamicsWorld = DiscreteDynamicsWorld(dispatcher, broadPhase, solver, collisionConfiguration)
-        dynamicsWorld.setGravity(Vector3f(0f, -10f, 0f))
+        dynamicsWorld.setGravity(Vector3f(0f, -1f, 0f))
 
         dynamicsWorld.setInternalTickCallback(object : InternalTickCallback() {
             override fun internalTick(dynamicsWorld: DynamicsWorld, timeStep: Float) {

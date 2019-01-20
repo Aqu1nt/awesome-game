@@ -25,7 +25,6 @@ class SLamp: SBaseObject(), ILamp<Vector3f> {
                 DefaultMotionState(physicsTransform),
                 CylinderShape(javax.vecmath.Vector3f(0.75f, 7.5f, 0.75f))
         )
-        physicsBody!!.setDamping(0f, 1f)
         physicsBody!!.userPointer = this
         game.physics.dynamicsWorld.addRigidBody(physicsBody)
     }

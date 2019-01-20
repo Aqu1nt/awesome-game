@@ -35,7 +35,9 @@ class GameState(
     }
 
     fun update(tpf: Float) {
+        scene?.beforeUpdate()
         scene?.update(tpf)
+        scene?.afterUpdate()
     }
 
     fun replaceState(state: IGameStateNode) {

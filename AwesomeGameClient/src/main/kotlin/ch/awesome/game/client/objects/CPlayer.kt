@@ -36,4 +36,14 @@ class CPlayer(state: dynamic) : CMovingBaseObject(state), IPlayer<IVector3f>, Re
         renderer.render(gameRenderer, worldMatrix)
         armorRenderer.render(gameRenderer, worldMatrix)
     }
+
+    override fun afterAdd() {
+//        val physicsBody = BtRigidBody(1f,
+//                BtDefaultMotionState(BtTransform()),
+//                BtBoxShape(BtVector3f(0.75f, 0.75f, 1f))
+//        )
+//        physicsBody.userPointer = this
+//        game.physics.dynamicsWorld.addRigidBody(physicsBody)
+        super.afterAdd()
+    }
 }
