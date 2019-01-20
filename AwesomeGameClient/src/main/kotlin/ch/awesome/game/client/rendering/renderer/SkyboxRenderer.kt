@@ -76,7 +76,7 @@ class SkyboxRenderer(val gl: WebGL2RenderingContext, val shader: SkyboxShader, v
         viewMatrix.m30 = 0.0f
         viewMatrix.m31 = 0.0f
         viewMatrix.m32 = 0.0f
-        viewMatrix.rotate(window.performance.now().toFloat() / 500.0f, Matrix4f.Y_AXIS)
+        //viewMatrix.rotate(window.performance.now().toFloat() / 500.0f, Matrix4f.Y_AXIS)
         shader.uniformViewMatrix.load(gl, viewMatrix)
 
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)

@@ -9,6 +9,8 @@ import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.serializer
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.events.WheelEvent
 import kotlin.browser.window
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -19,6 +21,37 @@ class PlayerControl(state: GameState,
                     networkClient: NetworkClient) {
 
     init {
+        var mousePressed = false
+
+        var lastMouseX = 0
+        var lastMouseY = 0
+        val mouseMoveListener: (Event) -> Unit = { event ->
+            val mouseEvent = event as MouseEvent
+
+            val xDifference = mouseEvent.clientX - lastMouseX
+            val yDifference = mouseEvent.clientY - lastMouseY
+            lastMouseX = mouseEvent.clientX
+            lastMouseY = mouseEvent.clientY
+
+            if(mousePressed) {
+                state.camera.pitch += yDifference / 5
+                state.camera.angleAround -= xDifference / 5
+            }
+        }
+        window.addEventListener("mousemove", mouseMoveListener)
+
+        val mousePressListener: (Event) -> Unit = { event -> mousePressed = true }
+        window.addEventListener("mousedown", mousePressListener)
+
+        val mouseReleaseListener: (Event) -> Unit = { event -> mousePressed = false }
+        window.addEventListener("mouseup", mouseReleaseListener)
+
+        val mouseWheelListener: (Event) -> Unit = { event ->
+            val wheelEvent = event as WheelEvent
+            state.camera.distanceFromPlayer += wheelEvent.deltaY.toFloat() / 200.0f
+        }
+        window.addEventListener("wheel", mouseWheelListener)
+
         val eventListener: (Event) -> Unit = { event ->
             val keyEvent = event as KeyboardEvent
             val networkEvent = when (keyEvent.key) {

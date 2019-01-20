@@ -2,6 +2,7 @@ package ch.awesome.game.client.state
 
 import ch.awesome.game.client.objects.CPlayer
 import ch.awesome.game.client.objects.base.CScene
+import ch.awesome.game.client.rendering.Camera
 import ch.awesome.game.client.rendering.Light
 import ch.awesome.game.client.state.interfaces.LightSource
 import ch.awesome.game.common.network.events.IGameStateNode
@@ -17,6 +18,8 @@ class GameState(
     val player: CPlayer? get() = playerId?.let { playerId -> scene?.find(playerId) as CPlayer? }
     var scene: CScene? = null
         private set
+
+    var camera: Camera = Camera()
 
     private val factory = GameNodeFactory()
 

@@ -82,8 +82,9 @@ object ModelCreator {
         gl.texParameteri(WebGLRenderingContext.TEXTURE_CUBE_MAP,
                 WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE)
 
+        gl.generateMipmap(WebGLRenderingContext.TEXTURE_CUBE_MAP)
         gl.texParameteri(WebGLRenderingContext.TEXTURE_CUBE_MAP,
-                WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.NEAREST)
+                WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.NEAREST_MIPMAP_LINEAR)
         gl.texParameteri(WebGLRenderingContext.TEXTURE_CUBE_MAP,
                 WebGLRenderingContext.TEXTURE_MAG_FILTER, WebGLRenderingContext.NEAREST)
 

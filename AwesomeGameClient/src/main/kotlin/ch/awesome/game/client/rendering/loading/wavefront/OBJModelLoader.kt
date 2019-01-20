@@ -14,7 +14,8 @@ enum class ModelType(val fileName: String) {
     LAMP("lamp.obj"),
     CUBE("cube.obj"),
     PLAYER("player.obj"),
-    BULLET("bullet.obj")
+    BULLET("bullet.obj"),
+    PLAYER_ARMOR("player_armor.obj")
 }
 
 object OBJModelLoader {

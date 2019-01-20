@@ -16,6 +16,11 @@ class CPlayer(state: dynamic) : CMovingBaseObject(state), IPlayer<IVector3f>, Re
         private val renderer = SimpleModelData(modelType = ModelType.PLAYER,
                 textureImageType = TextureImageType.PLAYER,
                 lightMapType = TextureImageType.PLAYER_LIGHTMAP)
+
+        private val armorRenderer = SimpleModelData(modelType = ModelType.PLAYER_ARMOR,
+                textureImageType = TextureImageType.PLAYER_ARMOR,
+                reflectivity = 0.5f,
+                shineDamper = 10.0f)
     }
 
     override fun update(tpf: Float) {
@@ -24,9 +29,11 @@ class CPlayer(state: dynamic) : CMovingBaseObject(state), IPlayer<IVector3f>, Re
 
     override fun initModels(gl: WebGL2RenderingContext) {
         renderer.initModels(gl)
+        armorRenderer.initModels(gl)
     }
 
     override fun render(gameRenderer: GameRenderer) {
         renderer.render(gameRenderer, worldMatrix)
+        armorRenderer.render(gameRenderer, worldMatrix)
     }
 }

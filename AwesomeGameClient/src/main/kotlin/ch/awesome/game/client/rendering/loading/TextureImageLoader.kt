@@ -15,6 +15,8 @@ enum class TextureImageType(val fileName: String) {
     CUBE("cube.png"),
     PLAYER("player.png"),
     PLAYER_LIGHTMAP("player_lightmap.png"),
+    PLAYER_ARMOR("player_armor.png"),
+    PLAYER_ICON("playericon.png"),
     LAMP_GLOW("lamp_glow.png"),
     BULLET("bullet.png"),
     SKYBOX_RIGHT("skybox/right.png"),

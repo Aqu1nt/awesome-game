@@ -16,6 +16,7 @@ import ch.awesome.game.client.webgl2.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector4f
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector4f
+import ch.awesome.game.common.math.toRadians
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
@@ -65,9 +66,9 @@ class GameRenderer (canvas: HTMLCanvasElement,
         gl.cullFace(WebGLRenderingContext.BACK)
 
         viewMatrix.identity()
+
         projectionMatrix.projectionMatrix(70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
 
-        // Init model shader
         modelShader.findAllUniformLocations()
         modelShader.start()
         modelShader.uniformProjectionMatrix.load(gl, projectionMatrix)
@@ -75,7 +76,6 @@ class GameRenderer (canvas: HTMLCanvasElement,
         modelShader.uniformLightMap.load(gl, 1)
         modelShader.stop()
 
-        // Init particle shader
         particleShader.start()
         particleShader.findAllUniformLocations()
         particleShader.uniformProjectionMatrix.load(gl, projectionMatrix)
@@ -100,6 +100,10 @@ class GameRenderer (canvas: HTMLCanvasElement,
         }
         modelRenderer.end()
 
+        skyboxRenderer.prepare()
+        skyboxRenderer.render()
+        skyboxRenderer.end()
+
         particleRenderer.prepare()
         for(n in nodes) {
             if (n is Renderable) {
@@ -107,10 +111,6 @@ class GameRenderer (canvas: HTMLCanvasElement,
             }
         }
         particleRenderer.end()
-
-        skyboxRenderer.prepare()
-        skyboxRenderer.render()
-        skyboxRenderer.end()
     }
 
     fun prepare(vararg lights: Light) {
