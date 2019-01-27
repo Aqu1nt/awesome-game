@@ -4,10 +4,11 @@ import ch.awesome.game.client.objects.base.CLightNode
 import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.rendering.loading.wavefront.ModelType
 import ch.awesome.game.client.rendering.loading.TextureImageType
+import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.Renderable
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector3f
@@ -64,7 +65,8 @@ class CLamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
     private val light = LampLight(this).apply { position = Vector3f(0f, 11f, 0f) }
 
     companion object {
-        private val renderer = SimpleModelData(ModelType.LAMP, TextureImageType.LAMP)
+        private val renderer = SimpleModelData(modelType = ModelType.LAMP, textureImageType = TextureImageType.LAMP,
+                lightMapType = TextureImageType.LAMP_LIGHTMAP)
     }
 
     init {

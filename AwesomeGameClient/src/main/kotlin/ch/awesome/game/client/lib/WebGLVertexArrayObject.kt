@@ -1,4 +1,4 @@
-package ch.awesome.game.client.webgl2
+package ch.awesome.game.client.lib
 
 abstract external class WebGLVertexArrayObject {
 }

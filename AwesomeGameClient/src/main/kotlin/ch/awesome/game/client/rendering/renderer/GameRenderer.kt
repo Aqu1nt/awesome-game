@@ -1,9 +1,6 @@
-package ch.awesome.game.client.rendering
+package ch.awesome.game.client.rendering.renderer
 
-import ch.awesome.game.client.rendering.renderer.GUIRenderer
-import ch.awesome.game.client.rendering.renderer.ModelRenderer
-import ch.awesome.game.client.rendering.renderer.ParticleRenderer
-import ch.awesome.game.client.rendering.renderer.SkyboxRenderer
+import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.rendering.shader.ShaderProgram
 import ch.awesome.game.client.rendering.shader.gui.GUIShader
 import ch.awesome.game.client.rendering.shader.model.ModelShader
@@ -12,16 +9,16 @@ import ch.awesome.game.client.rendering.shader.skybox.SkyboxShader
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.interfaces.Renderable
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector4f
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector4f
-import ch.awesome.game.common.math.toRadians
+import ch.awesome.game.common.math.inScreenWidth
 import org.khronos.webgl.WebGLRenderingContext
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.browser.window
 
-class GameRenderer (canvas: HTMLCanvasElement,
+class GameRenderer (val canvas: HTMLCanvasElement,
                     private val camera: Camera,
                     private val state: GameState) {
 
@@ -44,7 +41,9 @@ class GameRenderer (canvas: HTMLCanvasElement,
     private val skyboxRenderer by lazy { SkyboxRenderer(gl, skyboxShader, camera) }
 
     private val guiShader = GUIShader(gl)
-    private val guiRenderer = GUIRenderer(gl, guiShader)
+    val guiRenderer = GUIRenderer(gl, guiShader)
+
+    private val fontRenderer = FontRenderer(this)
 
     companion object {
         // is set to one in order test light selection
@@ -115,7 +114,8 @@ class GameRenderer (canvas: HTMLCanvasElement,
 
     fun prepare(vararg lights: Light) {
         gl.clearColor(state.scene?.clearColor?.x ?: 1f, state.scene?.clearColor?.y ?: 1f, state.scene?.clearColor?.z ?: 1f, 1.0f)
-        gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT shl WebGLRenderingContext.DEPTH_BUFFER_BIT)
+        gl.clear(WebGLRenderingContext.COLOR_BUFFER_BIT)
+        gl.clear(WebGLRenderingContext.DEPTH_BUFFER_BIT)
 
         val sortedLights = lights.sortedBy { light ->
             light.position.distance(camera.position)
@@ -135,10 +135,16 @@ class GameRenderer (canvas: HTMLCanvasElement,
         particleRenderer.renderParticle(model, modelMatrix, color, viewMatrix)
     }
 
-    fun renderGUI(gui: GUITexture, modelMatrix: Matrix4f) {
-        guiRenderer.prepare()
-        guiRenderer.render(gui, modelMatrix)
-        guiRenderer.end()
+    fun renderGUI(gui: GUITexture, modelMatrix: Matrix4f, x: Float, y: Float, w: Float, h: Float) {
+        guiRenderer.render(gui, modelMatrix, x, y, x + w, y + h)
+    }
+
+    fun renderFont(text: String, x: Float, y: Float) {
+        val lines = text.split("/nl")
+
+        for(i in 0 until lines.size) {
+            fontRenderer.render(lines[i], x, y - inScreenWidth(i * 144.0f, canvas.width))
+        }
     }
 
     fun end() {

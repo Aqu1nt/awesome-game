@@ -1,6 +1,6 @@
 package ch.awesome.game.client.rendering.shader.model
 
-import ch.awesome.game.client.rendering.GameRenderer
+import ch.awesome.game.client.rendering.renderer.GameRenderer
 
 //language=GLSL
 val modelVertexShaderSource = """

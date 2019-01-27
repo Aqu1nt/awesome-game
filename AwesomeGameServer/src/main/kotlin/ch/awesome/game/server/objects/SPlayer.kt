@@ -6,6 +6,7 @@ import ch.awesome.game.common.objects.IPlayer
 import ch.awesome.game.server.instance.GAME
 import ch.awesome.game.server.network.GameWebSocketHandler
 import ch.awesome.game.server.objects.base.SMovingBaseObject
+import ch.awesome.game.server.utils.SmartProperty
 import ch.awesome.game.server.utils.withSmartProperties
 import com.bulletphysics.collision.shapes.BoxShape
 import com.bulletphysics.dynamics.RigidBody
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
 
-    var health = 50.0f
+    var health: Float by SmartProperty(50.0f)
 
     @JsonIgnore
     var webSocketHandler: GameWebSocketHandler? = null

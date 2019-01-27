@@ -12,6 +12,7 @@ enum class TextureImageType(val fileName: String) {
     GRASS("grass.png"),
     BOULDER("boulder.png"),
     LAMP("lamp.png"),
+    LAMP_LIGHTMAP("lamp_lightmap.png"),
     CUBE("cube.png"),
     PLAYER("player.png"),
     PLAYER_LIGHTMAP("player_lightmap.png"),
@@ -24,7 +25,9 @@ enum class TextureImageType(val fileName: String) {
     SKYBOX_TOP("skybox/top.png"),
     SKYBOX_BOTTOM("skybox/bottom.png"),
     SKYBOX_BACK("skybox/back.png"),
-    SKYBOX_FRONT("skybox/front.png")
+    SKYBOX_FRONT("skybox/front.png"),
+    HEALTH_BAR("guis/healthbar.png"),
+    FONT("guis/font.png")
 }
 
 object TextureImageLoader {

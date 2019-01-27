@@ -3,7 +3,7 @@ package ch.awesome.game.client.rendering.loading.wavefront
 import ch.awesome.game.client.rendering.Model
 import ch.awesome.game.client.rendering.ModelCreator
 import ch.awesome.game.client.rendering.loading.OBJModelLoaderVertex
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.Vector2f
 import ch.awesome.game.common.math.Vector3f
 import kotlin.browser.window
@@ -45,7 +45,7 @@ object OBJModelLoader {
         }
     }
 
-    fun convertToModel(gl: WebGL2RenderingContext, data: String): Model {
+    private fun convertToModel(gl: WebGL2RenderingContext, data: String): Model {
         val vertices = mutableListOf<OBJModelLoaderVertex>()
         val textureCoords = mutableListOf<Vector2f>()
         val normals = mutableListOf<Vector3f>()

@@ -1,10 +1,9 @@
 package ch.awesome.game.client.rendering.shader.particle
 
 import ch.awesome.game.client.rendering.shader.ShaderProgram
-import ch.awesome.game.client.rendering.shader.UniformInt
 import ch.awesome.game.client.rendering.shader.uniforms.UniformMatrix4f
 import ch.awesome.game.client.rendering.shader.uniforms.UniformVector4f
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 
 class ParticleShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, particleVertexShaderSource, particleFragmentShaderSource,
         arrayOf("position", "textureCoords")) {

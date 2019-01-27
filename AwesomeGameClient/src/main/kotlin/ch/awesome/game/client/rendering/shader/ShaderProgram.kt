@@ -1,6 +1,6 @@
 package ch.awesome.game.client.rendering.shader
 
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import org.khronos.webgl.WebGLProgram
 import org.khronos.webgl.WebGLRenderingContext
 

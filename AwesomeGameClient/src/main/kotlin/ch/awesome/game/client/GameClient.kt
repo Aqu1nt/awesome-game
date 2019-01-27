@@ -1,21 +1,26 @@
 package ch.awesome.game.client
 
+import ch.awesome.game.client.lib.GameCanvasElement
+import ch.awesome.game.client.lib.LockedMouseEvent
 import ch.awesome.game.client.networking.NetworkClient
 import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
+import ch.awesome.game.client.rendering.postprocessing.PostProcessor
+import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
-import ch.awesome.game.client.state.PlayerControl
+import ch.awesome.game.client.state.input.InputHandler
+import ch.awesome.game.client.state.input.PlayerControl
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.common.math.*
 import kotlinx.serialization.ImplicitReflectionSerializer
 import org.w3c.dom.HTMLCanvasElement
-import org.w3c.dom.svg.SVGCursorElement
 import kotlin.browser.window
 import kotlin.js.Date
 import kotlin.js.Promise
+import kotlin.math.floor
 
 class GameClient {
 
@@ -36,8 +41,10 @@ class GameClient {
     @ImplicitReflectionSerializer
     val networkClient = NetworkClient(state)
 
+    val inputHandler = InputHandler()
+
     @ImplicitReflectionSerializer
-    val playerControl = PlayerControl(state, networkClient)
+    val playerControl = PlayerControl(state, networkClient, inputHandler)
 
 //    val physics = AmmoPhysics()
 
@@ -49,7 +56,14 @@ class GameClient {
     @ImplicitReflectionSerializer
     fun startGame(canvas: HTMLCanvasElement?) {
         if (canvas != null) {
-            renderer = GameRenderer(canvas, state.camera, state)
+            val gameCanvas = canvas as GameCanvasElement
+            renderer = GameRenderer(gameCanvas, state.camera, state)
+
+            window.addEventListener("mousedown", { event ->
+                val mouseEvent = event as LockedMouseEvent
+                if(mouseEvent.button.toInt() == 0) gameCanvas.requestPointerLock()
+            })
+
             Promise.all(arrayOf(
                     OBJModelLoader.loadAllModels(renderer.gl),
                     TextureImageLoader.loadAllTextureImages())).then {
@@ -60,12 +74,21 @@ class GameClient {
 
                 var lastUpdate = Date.now()
 
-                val gui = GUITexture(ModelCreator.loadTexture(renderer.gl, TextureImageType.PLAYER_ICON))
+                val postProcessor = PostProcessor(renderer.gl, canvas.width, canvas.height)
 
-                val xScale = inScreenWidth(inPixelWidth(0.1f, canvas.width), canvas.width)
-                val yScale = inScreenHeight(inPixelWidth(0.1f, canvas.width), canvas.height)
-                val xPos = inScreenWidth(-canvas.width.toFloat(), canvas.width) + xScale
-                val yPos = inScreenHeight(canvas.height.toFloat(), canvas.height) - yScale
+//                val gui = GUITexture(ModelCreator.loadTexture(renderer.gl, TextureImageType.PLAYER_ICON))
+//                val xScale = inScreenWidth(inPixelWidth(0.1f, canvas.width), canvas.width)
+//                val yScale = inScreenHeight(inPixelWidth(0.1f, canvas.width), canvas.height)
+//                val xPos = inScreenWidth(-canvas.width.toFloat(), canvas.width) + xScale
+//                val yPos = inScreenHeight(canvas.height.toFloat(), canvas.height) - yScale
+//                val guiMat = Matrix4f().identity().translate(xPos, yPos, 0.0f).scale(xScale, yScale, 1.0f)
+
+                val gui = GUITexture(ModelCreator.loadTexture(renderer.gl, TextureImageType.HEALTH_BAR))
+
+                val xScale = inScreenWidth(256.0f, canvas.width)
+                val yScale = inScreenHeight(52.0f, canvas.height)
+                val xPos = inScreenWidth(-canvas.width.toFloat() + 32, canvas.width) + xScale
+                val yPos = inScreenHeight(canvas.height.toFloat() - 32, canvas.height) - yScale;
 
                 val guiMat = Matrix4f().identity().translate(xPos, yPos, 0.0f).scale(xScale, yScale, 1.0f)
 
@@ -75,23 +98,38 @@ class GameClient {
                     state.calculateWorldMatrix()
 //                    physics.detectCollisions()
 
-//                    state.camera.set(state.player?.worldTranslation?.x ?: 0.0f, 45f,
-//                                     state.player?.worldTranslation?.z?.plus(10.0f) ?: 40.0f, 70.0f, 0.0f, 0.0f)
+                    if (state.player != null) state.camera.update(state.player ?: throw IllegalStateException("no player created"))
 
-                   if (state.player != null) state.camera.update(state.player ?: throw IllegalStateException("no player created"))
+                    inputHandler.update()
+                    playerControl.update()
 
+                    val maxStages = 50.0
+                    var x = 0.0f
+                    var y = 0.0f
+                    if(state.player?.health != null) {
+                        val stage = maxStages - (maxStages / (50.0 / state.player?.health!!))
+                        y = floor(stage % 19).toFloat() * 13.0f
+                        x = floor(stage / 19.0f).toFloat() * 64.0f
+                    }
+
+                    postProcessor.beforeRendering()
                     renderer.prepare(*state.getLightSources(), sun)
                     renderer.renderGameNodes(GameNode.allGameNodes())
-                    renderer.renderGUI(gui, guiMat)
-                    renderer.end()
+                    postProcessor.process()
+
+                    renderer.guiRenderer.prepare()
+//                    renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), a, (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
+                    renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), 1.0f / (256.0f / y), (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
+                    renderer.renderFont("This text looks quite/nlnice but i have to/nlimprove still a lot!", 0.0f, 0.9f)
+                    renderer.guiRenderer.end()
 
                     lastUpdate = Date.now()
                     window.requestAnimationFrame(::gameLoop)
                 }
 
-                window.requestAnimationFrame(::gameLoop)
-
                 networkClient.connect()
+
+                window.requestAnimationFrame(::gameLoop)
             }
         }
         else {

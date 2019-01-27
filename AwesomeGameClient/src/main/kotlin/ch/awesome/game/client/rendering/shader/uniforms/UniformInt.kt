@@ -1,6 +1,8 @@
-package ch.awesome.game.client.rendering.shader
+package ch.awesome.game.client.rendering.shader.uniforms
 
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.rendering.shader.ShaderProgram
+import ch.awesome.game.client.rendering.shader.ShaderUniform
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 
 class UniformInt(name: String): ShaderUniform(name) {
 

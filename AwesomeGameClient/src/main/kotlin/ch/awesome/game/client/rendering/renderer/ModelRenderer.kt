@@ -1,12 +1,11 @@
 package ch.awesome.game.client.rendering.renderer
 
 import ch.awesome.game.client.rendering.Camera
-import ch.awesome.game.client.rendering.GameRenderer
 import ch.awesome.game.client.rendering.Light
 import ch.awesome.game.client.rendering.TexturedModel
 import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.client.state.GameState
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.Matrix4f
 import org.khronos.webgl.WebGLRenderingContext
 

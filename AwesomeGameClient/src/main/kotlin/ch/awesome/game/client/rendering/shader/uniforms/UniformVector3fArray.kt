@@ -2,7 +2,7 @@ package ch.awesome.game.client.rendering.shader.uniforms
 
 import ch.awesome.game.client.rendering.shader.ShaderProgram
 import ch.awesome.game.client.rendering.shader.ShaderUniform
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.Vector3f
 
 class UniformVector3fArray(name: String, val size: Int): ShaderUniform(name) {

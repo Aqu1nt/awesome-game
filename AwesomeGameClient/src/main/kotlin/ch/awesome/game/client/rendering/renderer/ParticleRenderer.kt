@@ -3,10 +3,9 @@ package ch.awesome.game.client.rendering.renderer
 import ch.awesome.game.client.rendering.Camera
 import ch.awesome.game.client.rendering.TexturedModel
 import ch.awesome.game.client.rendering.shader.particle.ParticleShader
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector4f
 import ch.awesome.game.common.math.Matrix4f
-import ch.awesome.game.common.math.Vector3f
 import ch.awesome.game.common.math.Vector4f
 import org.khronos.webgl.WebGLRenderingContext
 

@@ -2,7 +2,7 @@ package ch.awesome.game.client.rendering.loading.xml
 
 class XMLNode(val name: String) {
 
-    val data: String = ""
+    var data: String = ""
     val attributes = HashMap<String, String>()
     val children = HashMap<String, MutableList<XMLNode>>()
 

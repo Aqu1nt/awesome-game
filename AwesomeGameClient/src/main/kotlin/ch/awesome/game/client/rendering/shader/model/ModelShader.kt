@@ -1,9 +1,9 @@
 package ch.awesome.game.client.rendering.shader.model
 
-import ch.awesome.game.client.rendering.GameRenderer
+import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.rendering.shader.*
 import ch.awesome.game.client.rendering.shader.uniforms.*
-import ch.awesome.game.client.webgl2.WebGL2RenderingContext
+import ch.awesome.game.client.lib.WebGL2RenderingContext
 
 class ModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, modelVertexShaderSource, modelFragmentShaderSource,
         arrayOf("position", "textureCoords", "normal")) {
