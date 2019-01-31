@@ -4,12 +4,14 @@ import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.rendering.shader.skybox.SkyboxShader
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.state.GameState
 import ch.awesome.game.common.math.Matrix4f
+import ch.awesome.game.common.math.Vector3f
 import org.khronos.webgl.WebGLRenderingContext
 
 class SkyboxRenderer(val gl: WebGL2RenderingContext, val shader: SkyboxShader, val camera: Camera) {
 
-    val SIZE = 500.0f
+    val SIZE = 800.0f
     val vertices = arrayOf(
         -SIZE, SIZE, -SIZE,
         -SIZE, -SIZE, -SIZE,
@@ -64,7 +66,7 @@ class SkyboxRenderer(val gl: WebGL2RenderingContext, val shader: SkyboxShader, v
         shader.start()
     }
 
-    fun render() {
+    fun render(state: GameState) {
         gl.bindVertexArray(model.vao)
         gl.enableVertexAttribArray(0)
 
@@ -74,6 +76,8 @@ class SkyboxRenderer(val gl: WebGL2RenderingContext, val shader: SkyboxShader, v
         viewMatrix.m32 = 0.0f
         //viewMatrix.rotate(window.performance.now().toFloat() / 500.0f, Matrix4f.Y_AXIS)
         shader.uniformViewMatrix.load(gl, viewMatrix)
+
+        shader.uniformSkyColor.load(gl, state.scene?.skyColor ?: Vector3f(0.0f, 0.0f, 0.0f))
 
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)
         gl.bindTexture(WebGL2RenderingContext.TEXTURE_CUBE_MAP, texture)

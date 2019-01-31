@@ -10,4 +10,5 @@ open class CScene(state: dynamic, var clearColor: IVector3f = Vector3f(0f, 0f, 0
     : GameNode(state), IScene<IVector3f> {
 
     override var ambientLight: Float by StateProperty()
+    override var skyColor: Vector3f by StateProperty()
 }

@@ -5,6 +5,7 @@ import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.rendering.textures.Texture
 import ch.awesome.game.common.math.Matrix4f
 
 class SimpleModelData(private val modelType: ModelType,
@@ -14,7 +15,7 @@ class SimpleModelData(private val modelType: ModelType,
                       private val lightMapType: TextureImageType?= null) {
 
     var model: TexturedModel? = null
-        private set
+//        private set
 
     fun initModels(gl: WebGL2RenderingContext) {
         if(model != null) return

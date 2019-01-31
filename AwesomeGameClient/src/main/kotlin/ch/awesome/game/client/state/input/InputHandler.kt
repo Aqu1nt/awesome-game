@@ -21,6 +21,7 @@ class InputHandler {
         val KEY_S = 83
         val KEY_D = 68
         val KEY_P = 80
+        val KEY_SHIFT = 16
         val KEY_SPACE = 32
 
         val GAMEPAD_AXIS_MAIN_X = 0
@@ -135,6 +136,12 @@ class InputHandler {
 
     fun getGamepad(): Gamepad {
         return (window.navigator as GameNavigator).getGamepads()[0]
+    }
+
+    fun getGamepadAxis(axis: Int): Double {
+        val value = getGamepad().axes[axis]
+        if (value > 0.004 || value < -0.004) return value
+        else return 0.0
     }
 
     fun addInputListener(listener: InputListener) {

@@ -4,6 +4,7 @@ import ch.awesome.game.client.networking.NetworkClient
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
+import ch.awesome.game.common.math.toDegrees
 import ch.awesome.game.common.math.toRadians
 import ch.awesome.game.common.network.events.*
 import kotlinx.serialization.ImplicitReflectionSerializer
@@ -11,9 +12,8 @@ import kotlinx.serialization.serializer
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.window
-import kotlin.math.cos
-import kotlin.math.roundToInt
-import kotlin.math.sin
+import kotlin.js.Date
+import kotlin.math.*
 
 @ImplicitReflectionSerializer
 class PlayerControl(val state: GameState,
@@ -108,12 +108,12 @@ class PlayerControl(val state: GameState,
                         payload = PlayerDirectionChange(x = vec.x, y = vec.y, z = vec.z)
                     }
                 }
-                InputHandler.KEY_SPACE -> {
+                InputHandler.KEY_SHIFT -> {
                     PlayerSpeedChangeNetworkEvent().apply {
                         payload = PlayerSpeedChange(0.0f)
                     }
                 }
-                InputHandler.KEY_P -> {
+                InputHandler.KEY_SPACE -> {
                     PlayerShootNetworkEvent()
                 }
                 else -> {
@@ -145,22 +145,41 @@ class PlayerControl(val state: GameState,
         window.addEventListener("keydown", eventListener)
     }
 
+    val useGamepadTimer = Date.now()
+
     fun update() {
-        if (inputHandler.isGamepadConnected()) {
-            networkClient.sendEvent(PlayerDirectionChangeNetworkEvent().apply {
-                val angle = oldAngle + (inputHandler.getGamepad().axes[InputHandler.GAMEPAD_AXIS_MAIN_X].toFloat() * 2.0f)
-                oldAngle = angle
+        if (Date.now() >= useGamepadTimer + 1000 && inputHandler.isGamepadConnected()) {
+            val rawX = -inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_MAIN_X).toFloat()
+            val rawZ = -inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_MAIN_Y).toFloat()
 
-                val x = sin(toRadians(angle - 180.0f))
-                val z = -cos(toRadians(angle - 180.0f))
-                val vec = Vector3f(x, 0.0f, z)
+            if(rawX != 0.0f || rawZ != 0.0f) {
+                networkClient.sendEvent(PlayerDirectionChangeNetworkEvent().apply {
+                    val theta = atan2(rawZ, rawX) + (PI.toFloat() / 2.0f)
+                    var angle = toDegrees(theta)
+                    angle += state.camera.yaw - 180.0f
+                    if (angle < 0) angle += 360.0f
 
-                payload = PlayerDirectionChange(x = vec.x, y = vec.y, z = vec.z)
-            }, PlayerDirectionChangeNetworkEvent::class.serializer())
+                    var vec = Vector3f(sin(toRadians(angle)), 0.0f, -cos(toRadians(angle)))
+                    if (angle == 90.0f) vec = Vector3f(1.0f, 0.0f, 0.0f)
+                    else if (angle == 180.0f) vec = Vector3f(0.0f, 0.0f, 1.0f)
+                    else if (angle == 270.0f) vec = Vector3f(-1.0f, 0.0f, 0.0f)
+
+                    payload = PlayerDirectionChange(x = vec.x, y = vec.y, z = vec.z)
+                }, PlayerDirectionChangeNetworkEvent::class.serializer())
+            }
 
             networkClient.sendEvent(PlayerSpeedChangeNetworkEvent().apply {
-                payload = PlayerSpeedChange(-inputHandler.getGamepad().axes[InputHandler.GAMEPAD_AXIS_MAIN_Y].toFloat() * 20.0f)
+                console.log(inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_MAIN_X),
+                            inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_MAIN_Y))
+
+                var speed = 0.0f
+                if (inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_MAIN_X).toFloat() != 0.0f ||
+                    inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_MAIN_Y).toFloat() != 0.0f) speed = 20.0f
+                payload = PlayerSpeedChange(speed)
             }, PlayerSpeedChangeNetworkEvent::class.serializer())
+
+            state.camera.angleAround += inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_SECOND_X).toFloat()
+            state.camera.pitch -= inputHandler.getGamepadAxis(InputHandler.GAMEPAD_AXIS_SECOND_Y).toFloat()
         }
     }
 }

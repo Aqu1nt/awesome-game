@@ -1,15 +1,17 @@
 package ch.awesome.game.client.rendering.renderer
 
 import ch.awesome.game.client.rendering.*
-import ch.awesome.game.client.rendering.shader.ShaderProgram
 import ch.awesome.game.client.rendering.shader.gui.GUIShader
-import ch.awesome.game.client.rendering.shader.model.ModelShader
+import ch.awesome.game.client.rendering.shader.terrain.TerrainShader
 import ch.awesome.game.client.rendering.shader.particle.ParticleShader
 import ch.awesome.game.client.rendering.shader.skybox.SkyboxShader
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.objects.base.CTerrain
+import ch.awesome.game.client.rendering.shader.model.ModelShader
+import ch.awesome.game.client.rendering.textures.GUITexture
 import ch.awesome.game.common.math.IVector4f
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector4f
@@ -29,10 +31,11 @@ class GameRenderer (val canvas: HTMLCanvasElement,
 
     private var lights = mutableListOf<Light>()
 
-    private var activeShader: ShaderProgram? = null
-
     private val modelShader = ModelShader(gl)
     private val modelRenderer = ModelRenderer(gl, modelShader, camera)
+
+    private val terrainShader = TerrainShader(gl)
+    private val terrainRenderer = TerrainRenderer(gl, terrainShader, camera)
 
     private val particleShader = ParticleShader(gl)
     private val particleRenderer = ParticleRenderer(gl, particleShader, camera)
@@ -66,7 +69,7 @@ class GameRenderer (val canvas: HTMLCanvasElement,
 
         viewMatrix.identity()
 
-        projectionMatrix.projectionMatrix(70.0f, canvas.width, canvas.height, 0.1f, 1000.0f)
+        projectionMatrix.projectionMatrix(70.0f, canvas.width, canvas.height, 0.1f, 1600.0f)
 
         modelShader.findAllUniformLocations()
         modelShader.start()
@@ -74,6 +77,13 @@ class GameRenderer (val canvas: HTMLCanvasElement,
         modelShader.uniformModelTexture.load(gl, 0)
         modelShader.uniformLightMap.load(gl, 1)
         modelShader.stop()
+
+        terrainShader.findAllUniformLocations()
+        terrainShader.start()
+        terrainShader.uniformProjectionMatrix.load(gl, projectionMatrix)
+        terrainShader.uniformModelTexture.load(gl, 0)
+        terrainShader.uniformLightMap.load(gl, 1)
+        terrainShader.stop()
 
         particleShader.start()
         particleShader.findAllUniformLocations()
@@ -90,7 +100,7 @@ class GameRenderer (val canvas: HTMLCanvasElement,
         guiShader.stop()
     }
 
-    fun renderGameNodes(nodes: Collection<GameNode>) {
+    fun renderGameNodes(nodes: Collection<GameNode>, terrain: CTerrain, terrainMat: Matrix4f) {
         modelRenderer.prepare()
         for(n in nodes) {
             if (n is Renderable) {
@@ -99,8 +109,12 @@ class GameRenderer (val canvas: HTMLCanvasElement,
         }
         modelRenderer.end()
 
+        terrainRenderer.prepare()
+        renderTerrain(terrain, terrainMat)
+        terrainRenderer.end()
+
         skyboxRenderer.prepare()
-        skyboxRenderer.render()
+        skyboxRenderer.render(state)
         skyboxRenderer.end()
 
         particleRenderer.prepare()
@@ -129,6 +143,10 @@ class GameRenderer (val canvas: HTMLCanvasElement,
 
     fun renderModel(model: TexturedModel, modelMatrix: Matrix4f) {
         modelRenderer.render(model, modelMatrix, viewMatrix, state, lights)
+    }
+
+    fun renderTerrain(terrain: CTerrain, modelMatrix: Matrix4f) {
+        terrainRenderer.render(terrain, modelMatrix, viewMatrix, state, lights)
     }
 
     fun renderParticle(model: TexturedModel, modelMatrix: Matrix4f, color: IVector4f = Vector4f(1f, 1f, 1f, 1f)) {

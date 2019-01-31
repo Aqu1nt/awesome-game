@@ -43,7 +43,7 @@ class GameWebSocketHandler : TextWebSocketHandler() {
 
                     var theta = atan2(playerDirectionChangeEvent.payload!!.z, playerDirectionChangeEvent.payload!!.x)
                     theta -= PI.toFloat() / 2.0f
-                    val angle = toDegrees(theta)
+                    var angle = toDegrees(theta)
 
                     player.rotation = player.rotation.copy(y = angle)
                 }

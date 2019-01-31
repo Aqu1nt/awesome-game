@@ -1,10 +1,9 @@
 package ch.awesome.game.client.rendering.renderer
 
-import ch.awesome.game.client.rendering.GUITexture
+import ch.awesome.game.client.rendering.textures.GUITexture
 import ch.awesome.game.client.rendering.ModelCreator
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.common.math.Matrix4f
-import ch.awesome.game.common.math.inPixelWidth
 import ch.awesome.game.common.math.inScreenHeight
 import ch.awesome.game.common.math.inScreenWidth
 
@@ -74,16 +73,16 @@ class FontRenderer(private val renderer: GameRenderer) {
         chars['ü'] = CharInfo(324, 24, 12)
         chars['ö'] = CharInfo(336, 24, 12)
 
-        chars['0'] = CharInfo(0, 36, 12)
-        chars['1'] = CharInfo(12, 36, 12)
-        chars['2'] = CharInfo(24, 36, 12)
-        chars['3'] = CharInfo(36, 36, 12)
-        chars['4'] = CharInfo(48, 36, 12)
-        chars['5'] = CharInfo(60, 36, 12)
-        chars['6'] = CharInfo(72, 36, 12)
-        chars['7'] = CharInfo(84, 36, 12)
-        chars['8'] = CharInfo(96, 36, 12)
-        chars['9'] = CharInfo(108, 36, 12)
+        chars['0'] = CharInfo(0, 48, 12)
+        chars['1'] = CharInfo(12, 48, 12)
+        chars['2'] = CharInfo(24, 48, 12)
+        chars['3'] = CharInfo(36, 48, 12)
+        chars['4'] = CharInfo(48, 48, 12)
+        chars['5'] = CharInfo(60, 48, 12)
+        chars['6'] = CharInfo(72, 48, 12)
+        chars['7'] = CharInfo(84, 48, 12)
+        chars['8'] = CharInfo(96, 48, 12)
+        chars['9'] = CharInfo(108, 48, 12)
 
         chars['.'] = CharInfo(0, 72, 12)
         chars[','] = CharInfo(12, 72, 12)
@@ -122,7 +121,7 @@ class FontRenderer(private val renderer: GameRenderer) {
             var charX = x
 
             if(i != 0) {
-                charX = inScreenWidth(i * (chars[text[i - 1]]!!.width * 4.0f), renderer.canvas.width)
+                charX = x + inScreenWidth(i * (chars[text[i - 1]]!!.width * 4.0f), renderer.canvas.width)
             }
 
             val charWidth = inScreenWidth(info.width * 2.0f, renderer.canvas.width)

@@ -1,4 +1,4 @@
-package ch.awesome.game.client.rendering
+package ch.awesome.game.client.rendering.textures
 
 import org.khronos.webgl.WebGLTexture
 

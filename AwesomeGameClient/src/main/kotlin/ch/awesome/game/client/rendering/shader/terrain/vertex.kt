@@ -1,9 +1,9 @@
-package ch.awesome.game.client.rendering.shader.model
+package ch.awesome.game.client.rendering.shader.terrain
 
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 
 //language=GLSL
-val modelVertexShaderSource = """
+val terrainVertexShaderSource = """
 #version 300 es
 precision mediump float;
 
@@ -32,7 +32,7 @@ void main() {
     vec4 worldPosition = modelMatrix * vec4(position, 1.0);
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionRelativeToCam;
-    passTextureCoords = textureCoords;
+    passTextureCoords = textureCoords * 20.0f;
 
     worldNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
 

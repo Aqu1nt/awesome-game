@@ -1,11 +1,11 @@
-package ch.awesome.game.client.rendering.shader.model
+package ch.awesome.game.client.rendering.shader.terrain
 
-import ch.awesome.game.client.rendering.renderer.GameRenderer
-import ch.awesome.game.client.rendering.shader.*
-import ch.awesome.game.client.rendering.shader.uniforms.*
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.rendering.renderer.GameRenderer
+import ch.awesome.game.client.rendering.shader.ShaderProgram
+import ch.awesome.game.client.rendering.shader.uniforms.*
 
-class ModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, modelVertexShaderSource, modelFragmentShaderSource,
+class TerrainShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, terrainVertexShaderSource, terrainFragmentShaderSource,
         arrayOf("position", "textureCoords", "normal")) {
 
     val uniformModelMatrix = UniformMatrix4f("modelMatrix").apply { uniforms.add(this) }

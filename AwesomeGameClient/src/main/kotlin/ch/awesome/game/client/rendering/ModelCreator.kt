@@ -52,10 +52,10 @@ object ModelCreator {
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture)
 
         gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA,
-                WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(image))
+                WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(image).data)
 
-        gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE)
-        gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE)
+        gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.REPEAT)
+        gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.REPEAT)
 
         gl.generateMipmap(WebGLRenderingContext.TEXTURE_2D)
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.NEAREST_MIPMAP_LINEAR)
@@ -72,7 +72,7 @@ object ModelCreator {
         gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, texture)
 
         gl.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, WebGLRenderingContext.RGBA, WebGLRenderingContext.RGBA,
-                WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(image))
+                WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(image).data)
 
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE)
         gl.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE)
@@ -93,7 +93,7 @@ object ModelCreator {
 
         for(i in 0 until textures.size) {
             gl.texImage2D(WebGL2RenderingContext.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, WebGLRenderingContext.RGBA,
-                    WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(textures[i]))
+                    WebGLRenderingContext.RGBA, WebGLRenderingContext.UNSIGNED_BYTE, TextureImageLoader.getTextureImage(textures[i]).data)
         }
 
         gl.texParameteri(WebGLRenderingContext.TEXTURE_CUBE_MAP,

@@ -3,12 +3,14 @@ package ch.awesome.game.client
 import ch.awesome.game.client.lib.GameCanvasElement
 import ch.awesome.game.client.lib.LockedMouseEvent
 import ch.awesome.game.client.networking.NetworkClient
+import ch.awesome.game.client.objects.base.CTerrain
 import ch.awesome.game.client.rendering.*
 import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.rendering.postprocessing.PostProcessor
 import ch.awesome.game.client.rendering.renderer.GameRenderer
+import ch.awesome.game.client.rendering.textures.GUITexture
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.state.input.InputHandler
@@ -92,6 +94,11 @@ class GameClient {
 
                 val guiMat = Matrix4f().identity().translate(xPos, yPos, 0.0f).scale(xScale, yScale, 1.0f)
 
+                val terrain = CTerrain(renderer.gl)
+                terrain.x = -CTerrain.SIZE / 2
+                terrain.z = -CTerrain.SIZE / 2
+                val terrainMat = Matrix4f().identity().translate(terrain.x, -150.0f, terrain.z)
+
                 fun gameLoop(double: Double) {
                     val tpf = 1.0 / 1000.0 * (Date.now() - lastUpdate)
                     state.update(tpf.toFloat())
@@ -114,13 +121,14 @@ class GameClient {
 
                     postProcessor.beforeRendering()
                     renderer.prepare(*state.getLightSources(), sun)
-                    renderer.renderGameNodes(GameNode.allGameNodes())
+                    renderer.renderGameNodes(GameNode.allGameNodes(), terrain, terrainMat)
                     postProcessor.process()
 
                     renderer.guiRenderer.prepare()
 //                    renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), a, (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
                     renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), 1.0f / (256.0f / y), (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
-                    renderer.renderFont("This text looks quite/nlnice but i have to/nlimprove still a lot!", 0.0f, 0.9f)
+//                    renderer.renderFont("This text looks quite/nlnice but i have to/nlimprove still a lot!", 0.0f, 0.9f)
+                    renderer.renderFont("HP: " + state.player?.health, -0.95f, 0.725f)
                     renderer.guiRenderer.end()
 
                     lastUpdate = Date.now()

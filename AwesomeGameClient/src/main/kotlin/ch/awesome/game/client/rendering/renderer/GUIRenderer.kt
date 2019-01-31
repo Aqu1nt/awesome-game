@@ -1,6 +1,6 @@
 package ch.awesome.game.client.rendering.renderer
 
-import ch.awesome.game.client.rendering.GUITexture
+import ch.awesome.game.client.rendering.textures.GUITexture
 import ch.awesome.game.client.rendering.ModelCreator
 import ch.awesome.game.client.rendering.shader.gui.GUIShader
 import ch.awesome.game.client.lib.WebGL2RenderingContext

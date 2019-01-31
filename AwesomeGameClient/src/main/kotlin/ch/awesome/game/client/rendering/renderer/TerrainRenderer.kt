@@ -6,19 +6,20 @@ import ch.awesome.game.client.rendering.TexturedModel
 import ch.awesome.game.client.rendering.shader.terrain.TerrainShader
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.objects.base.CTerrain
 import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector3f
 import org.khronos.webgl.WebGLRenderingContext
 
-class ModelRenderer(val gl: WebGL2RenderingContext, val shader: ModelShader, val camera: Camera) {
+class TerrainRenderer(val gl: WebGL2RenderingContext, val shader: TerrainShader, val camera: Camera) {
 
     fun prepare() {
         shader.start()
     }
 
-    fun render(model: TexturedModel, modelMatrix: Matrix4f, viewMatrix: Matrix4f, state: GameState, lights: MutableList<Light>) {
-        gl.bindVertexArray(model.rawModel.vao)
+    fun render(terrain: CTerrain, modelMatrix: Matrix4f, viewMatrix: Matrix4f, state: GameState, lights: MutableList<Light>) {
+        gl.bindVertexArray(terrain.model.vao)
         gl.enableVertexAttribArray(0)
         gl.enableVertexAttribArray(1)
         gl.enableVertexAttribArray(2)
@@ -38,25 +39,25 @@ class ModelRenderer(val gl: WebGL2RenderingContext, val shader: ModelShader, val
             }
         }
 
-        shader.uniformReflectivity.load(gl, model.texture.reflectivity)
-        shader.uniformShineDamper.load(gl, model.texture.shineDamper)
+        shader.uniformReflectivity.load(gl, terrain.texture.reflectivity)
+        shader.uniformShineDamper.load(gl, terrain.texture.shineDamper)
 
         shader.uniformAmbientLight.load(gl, state.scene?.ambientLight ?: 0f)
         shader.uniformDirectionalLightPos.load(gl, 0.0f, 1.0f, 1.0f)
         shader.uniformDirectionalLightColor.load(gl, 1.0f, 0.0f, 0.0f)
         shader.uniformSkyColor.load(gl, state.scene?.skyColor ?: Vector3f(0.0f, 0.0f, 0.0f))
 
-        shader.uniformUseLightMap.load(gl, model.texture.lightMap != null)
+        shader.uniformUseLightMap.load(gl, terrain.texture.lightMap != null)
 
         gl.activeTexture(WebGLRenderingContext.TEXTURE0)
-        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.modelTexture)
+        gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, terrain.texture.modelTexture)
 
-        if(model.texture.lightMap != null) {
+        if(terrain.texture.lightMap != null) {
             gl.activeTexture(WebGLRenderingContext.TEXTURE1)
-            gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, model.texture.lightMap)
+            gl.bindTexture(WebGLRenderingContext.TEXTURE_2D, terrain.texture.lightMap)
         }
 
-        gl.drawElements(WebGLRenderingContext.TRIANGLES, model.rawModel.vertexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
+        gl.drawElements(WebGLRenderingContext.TRIANGLES, terrain.model.vertexCount, WebGLRenderingContext.UNSIGNED_SHORT, 0)
 
         gl.disableVertexAttribArray(0)
         gl.disableVertexAttribArray(1)

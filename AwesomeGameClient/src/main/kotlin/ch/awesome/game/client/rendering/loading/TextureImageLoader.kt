@@ -1,5 +1,7 @@
 package ch.awesome.game.client.rendering.loading
 
+import ch.awesome.game.client.rendering.textures.TextureData
+import org.khronos.webgl.get
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLImageElement
@@ -20,6 +22,9 @@ enum class TextureImageType(val fileName: String) {
     PLAYER_ICON("playericon.png"),
     LAMP_GLOW("lamp_glow.png"),
     BULLET("bullet.png"),
+    OCEAN_GROUND("ocean_ground.png"),
+    OCEAN_GROUND_LIGHTMAP("ocean_ground_lightmap.png"),
+    HEIGHTMAP("heightmap.png"),
     SKYBOX_RIGHT("skybox/right.png"),
     SKYBOX_LEFT("skybox/left.png"),
     SKYBOX_TOP("skybox/top.png"),
@@ -27,12 +32,12 @@ enum class TextureImageType(val fileName: String) {
     SKYBOX_BACK("skybox/back.png"),
     SKYBOX_FRONT("skybox/front.png"),
     HEALTH_BAR("guis/healthbar.png"),
-    FONT("guis/font.png")
+    FONT("guis/font.png"),
 }
 
 object TextureImageLoader {
 
-    private val textures = mutableMapOf<TextureImageType, ImageData>()
+    private val textures = mutableMapOf<TextureImageType, TextureData>()
 
     fun loadAllTextureImages(): Promise<Array<out Unit>> {
         return Promise.all(TextureImageType.values().map { textureImage ->
@@ -42,11 +47,11 @@ object TextureImageLoader {
         }.toTypedArray())
     }
 
-    fun getTextureImage(textureImage: TextureImageType): ImageData {
+    fun getTextureImage(textureImage: TextureImageType): TextureData {
         return textures[textureImage] ?: throw IllegalStateException("Did not find texture $textureImage!")
     }
 
-    private fun load(fileName: String): Promise<ImageData> {
+    private fun load(fileName: String): Promise<TextureData> {
         return Promise { resolve, _ ->
             val img = document.createElement("img") as HTMLImageElement
             img.onload = {
@@ -56,7 +61,7 @@ object TextureImageLoader {
                 canvas.height = img.height
                 context.drawImage(img, 0.0, 0.0)
                 val data = context.getImageData(0.0, 0.0, img.width.toDouble(), img.height.toDouble())
-                resolve(data)
+                resolve(TextureData(data, data.width, data.height))
             }
 
             img.src = "res/textures/$fileName"
