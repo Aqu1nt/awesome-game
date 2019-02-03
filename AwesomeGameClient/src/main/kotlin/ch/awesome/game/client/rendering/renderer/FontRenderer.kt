@@ -134,7 +134,7 @@ class FontRenderer(private val renderer: GameRenderer) {
             val textureX = (1.0f / 512.0f) * info.x
             val textureY = (1.0f / 512.0f) * info.y
             val textureWidth = (1.0f / 512.0f) * info.width
-            val textureHeight = (1.0f / 512.0f) * 27.0f
+            val textureHeight = (1.0f / 512.0f) * 28.0f
 
             renderer.renderGUI(sheet, mat, textureX, textureY, textureWidth, textureHeight)
         }

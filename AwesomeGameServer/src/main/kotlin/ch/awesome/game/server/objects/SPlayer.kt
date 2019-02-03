@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
 
     var health: Float by SmartProperty(50.0f)
+    var level: Float by SmartProperty(0.0f)
 
     @JsonIgnore
     var webSocketHandler: GameWebSocketHandler? = null

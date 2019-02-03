@@ -5,6 +5,7 @@ import ch.awesome.game.client.lib.LockedMouseEvent
 import ch.awesome.game.client.networking.NetworkClient
 import ch.awesome.game.client.objects.base.CTerrain
 import ch.awesome.game.client.rendering.*
+import ch.awesome.game.client.rendering.loading.ModelLoader
 import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
@@ -66,9 +67,7 @@ class GameClient {
                 if(mouseEvent.button.toInt() == 0) gameCanvas.requestPointerLock()
             })
 
-            Promise.all(arrayOf(
-                    OBJModelLoader.loadAllModels(renderer.gl),
-                    TextureImageLoader.loadAllTextureImages())).then {
+            Promise.all(arrayOf(ModelLoader.loadAllModels(renderer.gl), TextureImageLoader.loadAllTextureImages())).then {
 
                 val sun = Light(Vector3f(10000.0f, 15000.0f, 10000.0f),
                                 Vector3f(0.5f, 0.5f, 0.5f),
@@ -129,6 +128,7 @@ class GameClient {
                     renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), 1.0f / (256.0f / y), (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
 //                    renderer.renderFont("This text looks quite/nlnice but i have to/nlimprove still a lot!", 0.0f, 0.9f)
                     renderer.renderFont("HP: " + state.player?.health, -0.95f, 0.725f)
+                    renderer.renderFont("LVL: " + state.player?.level, -0.95f, 0.625f)
                     renderer.guiRenderer.end()
 
                     lastUpdate = Date.now()

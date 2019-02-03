@@ -53,7 +53,9 @@ class PlayerControl(val state: GameState,
             }
 
             override fun keyPressed(key: Int) {
-
+                if (key == InputHandler.KEY_SPACE) {
+                    networkClient.sendEvent(PlayerShootNetworkEvent(), PlayerShootNetworkEvent::class.serializer())
+                }
             }
 
             override fun keyReleased(key: Int) {
@@ -61,7 +63,7 @@ class PlayerControl(val state: GameState,
             }
 
             override fun gamepadButtonPressed(button: Int) {
-                if(button == 0) {
+                if (button == 0) {
                     networkClient.sendEvent(PlayerShootNetworkEvent(), PlayerShootNetworkEvent::class.serializer())
                 }
             }
@@ -112,9 +114,6 @@ class PlayerControl(val state: GameState,
                     PlayerSpeedChangeNetworkEvent().apply {
                         payload = PlayerSpeedChange(0.0f)
                     }
-                }
-                InputHandler.KEY_SPACE -> {
-                    PlayerShootNetworkEvent()
                 }
                 else -> {
                     null

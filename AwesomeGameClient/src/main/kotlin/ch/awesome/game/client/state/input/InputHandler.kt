@@ -131,7 +131,7 @@ class InputHandler {
     }
 
     fun isGamepadConnected(): Boolean {
-        return gamepadConnected
+        return gamepadConnected && getGamepad().connected
     }
 
     fun getGamepad(): Gamepad {

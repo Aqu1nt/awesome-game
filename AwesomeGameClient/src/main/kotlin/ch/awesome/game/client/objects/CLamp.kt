@@ -2,13 +2,14 @@ package ch.awesome.game.client.objects
 
 import ch.awesome.game.client.objects.base.CLightNode
 import ch.awesome.game.client.rendering.*
-import ch.awesome.game.client.rendering.loading.wavefront.ModelType
+import ch.awesome.game.client.rendering.loading.wavefront.OBJModelType
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.state.GameNode
 import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.rendering.loading.ModelType
 import ch.awesome.game.client.rendering.textures.Texture
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Matrix4f

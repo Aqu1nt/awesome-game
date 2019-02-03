@@ -27,6 +27,10 @@ class SBullet(val player: SPlayer): SMovingBaseObject() {
                 GAME.loop.run {
                     n.health -= 1.0f
                     parent?.removeChild(this)
+
+                    if (n.health == 0.0f) {
+                        player.level ++
+                    }
                 }
             }
         }

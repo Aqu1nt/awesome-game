@@ -9,28 +9,29 @@ import ch.awesome.game.common.math.Vector3f
 import kotlin.browser.window
 import kotlin.js.Promise
 
-enum class ModelType(val fileName: String) {
-    BOULDER("boulder.obj"),
-    LAMP("lamp.obj"),
-    CUBE("cube.obj"),
-    PLAYER("player.obj"),
-    BULLET("bullet.obj"),
-    PLAYER_ARMOR("player_armor.obj")
+enum class OBJModelType(val fileName: String) {
+//    BOULDER("boulder.obj"),
+//    LAMP("lamp.obj"),
+//    CUBE("cube.obj"),
+//    PLAYER("wavefront/player.obj"),
+//    JELLYFISH("jellyfish.obj"),
+//    BULLET("bullet.obj"),
+//    PLAYER_ARMOR("player_armor.obj")
 }
 
 object OBJModelLoader {
 
-    private val models = mutableMapOf<ModelType, Model>()
+    private val models = mutableMapOf<OBJModelType, Model>()
 
     fun loadAllModels(gl: WebGL2RenderingContext): Promise<Array<out Unit>> {
-        return Promise.all(ModelType.values().map { model ->
+        return Promise.all(OBJModelType.values().map { model ->
             load(gl, model.fileName).then { data ->
                 models[model] = data
             }
         }.toTypedArray())
     }
 
-    fun getModel(model: ModelType): Model {
+    fun getModel(model: OBJModelType): Model {
         return models[model] ?: throw IllegalStateException("Did not find model $model!")
     }
 
