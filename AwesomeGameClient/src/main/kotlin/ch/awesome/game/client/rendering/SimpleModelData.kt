@@ -1,12 +1,11 @@
 package ch.awesome.game.client.rendering
 
-import ch.awesome.game.client.rendering.loading.wavefront.OBJModelType
-import ch.awesome.game.client.rendering.loading.wavefront.OBJModelLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.client.rendering.loading.ModelLoader
 import ch.awesome.game.client.rendering.loading.ModelType
+import ch.awesome.game.client.rendering.models.TexturedModel
 import ch.awesome.game.client.rendering.textures.Texture
 import ch.awesome.game.common.math.Matrix4f
 
@@ -24,7 +23,7 @@ class SimpleModelData(private val modelType: ModelType,
 
         val lightMap = lightMapType ?.let { ModelCreator.loadTexture(gl, lightMapType) }
         val texture = Texture(ModelCreator.loadTexture(gl, textureImageType), reflectivity, shineDamper, lightMap)
-        model = TexturedModel(ModelLoader.getModel(modelType), texture)
+        model = ModelLoader.getModel(modelType).createTexturedModel(gl, texture)
     }
 
     fun render(gameRenderer: GameRenderer, modelMatrix: Matrix4f) {

@@ -1,11 +1,11 @@
-package ch.awesome.game.client.rendering.shader.model
+package ch.awesome.game.client.rendering.shader.animatedmodel
 
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.rendering.shader.*
 import ch.awesome.game.client.rendering.shader.uniforms.*
 import ch.awesome.game.client.lib.WebGL2RenderingContext
 
-class ModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, modelVertexShaderSource, modelFragmentShaderSource,
+class AnimatedModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, animatedModelVertexShaderSource, animatedModelFragmentShaderSource,
         arrayOf("position", "textureCoords", "normal")) {
 
     val uniformModelMatrix = UniformMatrix4f("modelMatrix").apply { uniforms.add(this) }
@@ -24,4 +24,5 @@ class ModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, modelVertex
     val uniformDirectionalLightColor = UniformVector3f("directionalLightColor").apply { uniforms.add(this) }
     val uniformUseLightMap = UniformBoolean("useLightMap").apply { uniforms.add(this) }
     val uniformSkyColor = UniformVector3f("skyColor").apply { uniforms.add(this) }
+    val uniformJointTransforms = UniformMatrix4fArray("jointTransforms", GameRenderer.MAX_JOINTS).apply { uniforms.add(this) }
 }

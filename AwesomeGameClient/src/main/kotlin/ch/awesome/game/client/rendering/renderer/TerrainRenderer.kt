@@ -2,12 +2,10 @@ package ch.awesome.game.client.rendering.renderer
 
 import ch.awesome.game.client.rendering.Camera
 import ch.awesome.game.client.rendering.Light
-import ch.awesome.game.client.rendering.TexturedModel
 import ch.awesome.game.client.rendering.shader.terrain.TerrainShader
 import ch.awesome.game.client.state.GameState
 import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.client.objects.base.CTerrain
-import ch.awesome.game.client.rendering.shader.model.ModelShader
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Vector3f
 import org.khronos.webgl.WebGLRenderingContext
@@ -27,7 +25,7 @@ class TerrainRenderer(val gl: WebGL2RenderingContext, val shader: TerrainShader,
         shader.uniformModelMatrix.load(gl, modelMatrix)
         shader.uniformViewMatrix.load(gl, viewMatrix)
 
-        for(i in 0 until GameRenderer.maxLights) {
+        for(i in 0 until GameRenderer.MAX_LIGHTS) {
             if(i < lights.size) {
                 shader.uniformLightPos.load(gl, lights[i].position.x, lights[i].position.y, lights[i].position.z, i)
                 shader.uniformLightColor.load(gl, lights[i].color.x, lights[i].color.y, lights[i].color.z, i)

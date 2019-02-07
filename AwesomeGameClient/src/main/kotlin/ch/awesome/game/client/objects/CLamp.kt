@@ -2,7 +2,6 @@ package ch.awesome.game.client.objects
 
 import ch.awesome.game.client.objects.base.CLightNode
 import ch.awesome.game.client.rendering.*
-import ch.awesome.game.client.rendering.loading.wavefront.OBJModelType
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.state.GameNode
@@ -10,6 +9,7 @@ import ch.awesome.game.client.state.StateProperty
 import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.client.rendering.loading.ModelType
+import ch.awesome.game.client.rendering.models.TexturedModel
 import ch.awesome.game.client.rendering.textures.Texture
 import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Matrix4f
@@ -19,7 +19,11 @@ import ch.awesome.game.common.objects.ILamp
 
 class CLamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
 
+    override val animated = false
+
     class LampLight(private val lamp: CLamp) : CLightNode(attenuation = Vector3f(1f, 0.01f, 0.00001f)), Renderable {
+
+        override val animated = false
 
         private var lightMatrix = Matrix4f().set(worldMatrix)
         private lateinit var particleModel: TexturedModel

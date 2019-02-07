@@ -3,10 +3,8 @@ package ch.awesome.game.client.rendering
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.loading.TextureImageType
 import ch.awesome.game.client.lib.WebGL2RenderingContext
-import org.khronos.webgl.Float32Array
-import org.khronos.webgl.Uint16Array
-import org.khronos.webgl.WebGLRenderingContext
-import org.khronos.webgl.WebGLTexture
+import ch.awesome.game.client.rendering.models.Model
+import org.khronos.webgl.*
 
 object ModelCreator {
 
@@ -18,6 +16,21 @@ object ModelCreator {
         storeDataInVBO(gl, 0, 3, vertices)
         storeDataInVBO(gl, 1, 2, textureCoords)
         storeDataInVBO(gl, 2, 3, normals)
+        storeDataInIndicesBuffer(gl, indices.map { it.toShort() }.toTypedArray())
+
+        return Model(vao, indices.size)
+    }
+
+    fun loadAnimatedModel(gl: WebGL2RenderingContext, vertices: Array<Float>, textureCoords: Array<Float>, normals: Array<Float>,
+                          indices: Array<Int>, jointIDs: Array<Int>, weights: Array<Float>): Model {
+        val vao = gl.createVertexArray()
+        gl.bindVertexArray(vao)
+
+        storeDataInVBO(gl, 0, 3, vertices)
+        storeDataInVBO(gl, 1, 2, textureCoords)
+        storeDataInVBO(gl, 2, 3, normals)
+        storeDataInVBO(gl, 3, 3, jointIDs)
+        storeDataInVBO(gl, 4, 3, weights)
         storeDataInIndicesBuffer(gl, indices.map { it.toShort() }.toTypedArray())
 
         return Model(vao, indices.size)
@@ -37,6 +50,14 @@ object ModelCreator {
         gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, Float32Array(data), WebGLRenderingContext.STATIC_DRAW)
         gl.vertexAttribPointer(attribute, coordSize, WebGLRenderingContext.FLOAT, false,
                          coordSize * Float32Array.BYTES_PER_ELEMENT, 0)
+        gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null)
+    }
+
+    private fun storeDataInVBO(gl: WebGL2RenderingContext, attribute: Int, coordSize: Int, data: Array<Int>) {
+        val vbo = gl.createBuffer()
+        gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, vbo)
+        gl.bufferData(WebGLRenderingContext.ARRAY_BUFFER, Int32Array(data), WebGLRenderingContext.STATIC_DRAW)
+        gl.vertexAttribIPointer(attribute, coordSize, WebGLRenderingContext.INT, 0, 0)
         gl.bindBuffer(WebGLRenderingContext.ARRAY_BUFFER, null)
     }
 

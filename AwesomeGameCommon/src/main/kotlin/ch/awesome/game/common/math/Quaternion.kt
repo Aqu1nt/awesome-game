@@ -1,7 +1,9 @@
 package ch.awesome.game.common.math
 
 import kotlin.math.cos
+import kotlin.math.max
 import kotlin.math.sin
+import kotlin.math.sqrt
 
 class Quaternion(var x: Float = 0f,
                  var y: Float = 0f,
@@ -58,6 +60,46 @@ class Quaternion(var x: Float = 0f,
         z = cosYXsinZ * cosX - sinYXcosZ * sinX
 
         normalizeLocal()
+        return this
+    }
+
+    fun fromMatrix(mat: Matrix4f): Quaternion {
+        var s = 0.0f;
+		var tr = mat.m00 + mat.m11 + mat.m22
+
+		if (tr >= 0.0) {
+			s = sqrt(tr + 1.0).toFloat()
+			w = s * 0.5f;
+			s = 0.5f / s;
+			x = (mat.m21 - mat.m12) * s;
+			y = (mat.m02 - mat.m20) * s;
+			z = (mat.m10 - mat.m01) * s;
+		} else {
+			val max = max(max(mat.m00, mat.m11), mat.m22);
+			if (max == mat.m00) {
+				s = sqrt(mat.m00 - (mat.m11 + mat.m22) + 1.0).toFloat()
+				x = s * 0.5f
+				s = 0.5f / s
+				y = (mat.m01 + mat.m10) * s;
+				z = (mat.m20 + mat.m02) * s;
+				w = (mat.m21 - mat.m12) * s;
+			} else if (max == mat.m11) {
+				s = sqrt(mat.m11 - (mat.m22 + mat.m00) + 1.0).toFloat()
+				y = s * 0.5f;
+				s = 0.5f / s;
+				z = (mat.m12 + mat.m21) * s;
+				x = (mat.m01 + mat.m10) * s;
+				w = (mat.m02 - mat.m20) * s;
+			} else {
+				s = sqrt(mat.m22 - (mat.m00 + mat.m11) + 1.0).toFloat()
+				z = s * 0.5f;
+				s = 0.5f / s;
+				x = (mat.m20 + mat.m02) * s;
+				y = (mat.m12 + mat.m21) * s;
+				w = (mat.m10 - mat.m01) * s;
+			}
+		}
+
         return this
     }
 
@@ -143,5 +185,28 @@ class Quaternion(var x: Float = 0f,
             return this
         }
         throw IllegalStateException()
+    }
+
+    fun interpolate(end: Quaternion, progression: Float): Quaternion {
+        val result = Quaternion(0.0f, 0.0f, 0.0f, 1.0f)
+
+        val dot = w * end.w + x * end.x + y * end.y + z * end.z
+        val oneMinusProgression = 1.0f - progression
+
+        if (dot < 0) {
+            result.w = oneMinusProgression * w + progression * -end.w
+            result.x = oneMinusProgression * x + progression * -end.x
+            result.y = oneMinusProgression * y + progression * -end.y
+            result.z = oneMinusProgression * z + progression * -end.z
+        } else {
+            result.w = oneMinusProgression * w + progression * end.w
+            result.x = oneMinusProgression * x + progression * end.x
+            result.y = oneMinusProgression * y + progression * end.y
+            result.z = oneMinusProgression * z + progression * end.z
+        }
+
+		result.norm()
+
+        return result
     }
 }

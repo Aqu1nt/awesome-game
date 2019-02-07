@@ -1,7 +1,7 @@
 package ch.awesome.game.client.objects.base
 
 import ch.awesome.game.client.lib.WebGL2RenderingContext
-import ch.awesome.game.client.rendering.Model
+import ch.awesome.game.client.rendering.models.Model
 import ch.awesome.game.client.rendering.ModelCreator
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.textures.Texture

@@ -9,6 +9,8 @@ abstract external class WebGL2RenderingContext: WebGLRenderingContext {
     fun isVertexArray(vao: WebGLVertexArrayObject): Boolean
     fun bindVertexArray(vao: WebGLVertexArrayObject?)
 
+    fun vertexAttribIPointer(index: Int, size: Int, type: Int, stride: Int, offset: Int)
+
     fun drawBuffers(buffers: Array<Int>)
     fun readBuffer(src: Int)
     fun blitFramebuffer(srcX0: Int, srcY0: Int, srcX1: Int, srcY1: Int, dstX0: Int, dstY0: Int, dstX1: Int, dstY1: Int, mask: Int, filter: Int)

@@ -119,6 +119,14 @@ data class Vector3f (override var x: Float = 0f,
         return this
     }
 
+    fun interpolate(end: Vector3f, progression: Float): Vector3f {
+        val x = x + (end.x - x) * progression
+        val y = y + (end.y - y) * progression
+        val z = z + (end.z - z) * progression
+
+        return Vector3f(x, y, z)
+    }
+
     fun toFloatArray(): Array<Float> {
         return arrayOf(x, y, z)
     }

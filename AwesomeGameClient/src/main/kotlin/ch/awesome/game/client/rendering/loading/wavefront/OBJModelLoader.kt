@@ -1,6 +1,6 @@
 package ch.awesome.game.client.rendering.loading.wavefront
 
-import ch.awesome.game.client.rendering.Model
+import ch.awesome.game.client.rendering.models.Model
 import ch.awesome.game.client.rendering.ModelCreator
 import ch.awesome.game.client.rendering.loading.OBJModelLoaderVertex
 import ch.awesome.game.client.lib.WebGL2RenderingContext

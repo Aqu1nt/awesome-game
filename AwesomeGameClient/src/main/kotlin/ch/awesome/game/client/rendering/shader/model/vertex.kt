@@ -13,7 +13,7 @@ in vec3 normal;
 
 out vec2 passTextureCoords;
 out vec3 worldNormal;
-out vec3 vecToLight[${GameRenderer.maxLights}];
+out vec3 vecToLight[${GameRenderer.MAX_LIGHTS}];
 out vec3 vecToDirLight;
 out vec3 vecToCam;
 out float visibility;
@@ -22,7 +22,7 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-uniform vec3 lightPos[${GameRenderer.maxLights}];
+uniform vec3 lightPos[${GameRenderer.MAX_LIGHTS}];
 uniform vec3 directionalLightPos;
 
 const float density = 0.003;
@@ -36,7 +36,7 @@ void main() {
 
     worldNormal = (modelMatrix * vec4(normal, 0.0)).xyz;
 
-    for(int i = 0; i < ${GameRenderer.maxLights}; i++) {
+    for(int i = 0; i < ${GameRenderer.MAX_LIGHTS}; i++) {
         vecToLight[i] = lightPos[i] - worldPosition.xyz;
     }
 

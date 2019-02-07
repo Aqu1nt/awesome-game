@@ -1,7 +1,7 @@
 package ch.awesome.game.client.rendering.renderer
 
 import ch.awesome.game.client.rendering.Camera
-import ch.awesome.game.client.rendering.TexturedModel
+import ch.awesome.game.client.rendering.models.TexturedModel
 import ch.awesome.game.client.rendering.shader.particle.ParticleShader
 import ch.awesome.game.client.lib.WebGL2RenderingContext
 import ch.awesome.game.common.math.IVector4f

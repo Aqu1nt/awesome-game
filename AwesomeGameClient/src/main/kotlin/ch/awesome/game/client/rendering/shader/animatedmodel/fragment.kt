@@ -1,9 +1,9 @@
-package ch.awesome.game.client.rendering.shader.terrain
+package ch.awesome.game.client.rendering.shader.animatedmodel
 
 import ch.awesome.game.client.rendering.renderer.GameRenderer
 
 //language=GLSL
-val terrainFragmentShaderSource = """
+val animatedModelFragmentShaderSource = """
 #version 300 es
 precision mediump float;
 

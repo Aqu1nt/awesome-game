@@ -9,7 +9,7 @@ precision mediump float;
 
 in vec2 passTextureCoords;
 in vec3 worldNormal;
-in vec3 vecToLight[${GameRenderer.maxLights}];
+in vec3 vecToLight[${GameRenderer.MAX_LIGHTS}];
 in vec3 vecToDirLight;
 in vec3 vecToCam;
 in float visibility;
@@ -19,8 +19,8 @@ out vec4 outColor;
 uniform sampler2D modelTexture;
 uniform sampler2D lightMap;
 
-uniform vec3 lightColor[${GameRenderer.maxLights}];
-uniform vec3 lightAttenuation[${GameRenderer.maxLights}];
+uniform vec3 lightColor[${GameRenderer.MAX_LIGHTS}];
+uniform vec3 lightAttenuation[${GameRenderer.MAX_LIGHTS}];
 uniform float ambientLight;
 uniform vec3 directionalLightColor;
 uniform vec3 skyColor;
@@ -36,7 +36,7 @@ void main() {
     vec3 diffuse = vec3(0.0);
     vec3 specular = vec3(0.0);
 
-    for(int i = 0; i < ${GameRenderer.maxLights}; i++) {
+    for(int i = 0; i < ${GameRenderer.MAX_LIGHTS}; i++) {
         float lightDistance = length(vecToLight[i]);
         float attenuation = lightAttenuation[i].x + (lightAttenuation[i].y * lightDistance) +
                             (lightAttenuation[i].z * lightDistance * lightDistance);

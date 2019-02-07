@@ -1,4 +1,4 @@
-package ch.awesome.game.client.rendering
+package ch.awesome.game.client.rendering.models
 
 import ch.awesome.game.client.lib.WebGLVertexArrayObject
 
