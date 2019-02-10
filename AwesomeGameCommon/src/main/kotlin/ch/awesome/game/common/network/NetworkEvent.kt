@@ -7,7 +7,8 @@ enum class NetworkEventType {
     PLAYER_DIRECTION_CHANGE,
     PLAYER_SPEED_CHANGE,
     PING,
-    PLAYER_SHOOT
+    PLAYER_SHOOT,
+    CHEAT
 }
 
 interface INetworkEvent<T> {

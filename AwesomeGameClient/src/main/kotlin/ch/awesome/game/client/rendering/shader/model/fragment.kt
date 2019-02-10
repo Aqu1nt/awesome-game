@@ -53,10 +53,14 @@ void main() {
         float dampedBrightness = pow(specularBrightness, shineDamper);
 
         diffuse += (brightness * lightColor[i]) / attenuation;
-        specular += (dampedBrightness * lightColor[i]) / attenuation;
+        specular += (dampedBrightness * reflectivity * lightColor[i]) / attenuation;
     }
 
     diffuse = max(diffuse, ambientLight);
+
+    if (reflectivity == 0.0f) {
+        specular = vec3(0.0f);
+    }
 
 //    vec3 unitvecToDirLight = normalize(vecToDirLight);
 //    float diffuseDot = dot(unitNormal, unitvecToDirLight);

@@ -8,6 +8,7 @@ import ch.awesome.game.common.network.events.*
 import ch.awesome.game.server.instance.GAME
 import ch.awesome.game.server.objects.SPlayer
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -60,6 +61,10 @@ class GameWebSocketHandler : TextWebSocketHandler() {
             }
             NetworkEventType.PLAYER_SHOOT -> {
                 GAME.loop.run { player?.shoot() }
+            }
+            NetworkEventType.CHEAT -> {
+                val cheatEvent = objectMapper.convertValue(event, CheatNetworkEvent::class.java)
+                GAME.loop.run { player?.cheat(cheatEvent.payload!!.name) }
             }
             else -> {
             }

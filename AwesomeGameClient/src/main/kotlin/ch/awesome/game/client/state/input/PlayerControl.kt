@@ -6,6 +6,7 @@ import ch.awesome.game.common.math.IVector3f
 import ch.awesome.game.common.math.Vector3f
 import ch.awesome.game.common.math.toDegrees
 import ch.awesome.game.common.math.toRadians
+import ch.awesome.game.common.network.NetworkEvent
 import ch.awesome.game.common.network.events.*
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlinx.serialization.serializer
@@ -22,17 +23,21 @@ class PlayerControl(val state: GameState,
 
     var oldAngle = 0.0f
 
+    var clicked = false
+
     init {
         inputHandler.addInputListener(object: InputListener {
             override fun mousePressed(button: Int) {
+                clicked = true
             }
 
             override fun mouseReleased(button: Int) {
             }
 
             override fun mouseMoved(x: Int, y: Int) {
+                state.camera.pitch += y / 5
+
                 if(inputHandler.isMouseButtonPressed(InputHandler.MOUSE_BUTTON_LEFT)) {
-                    state.camera.pitch += y / 5
                     state.camera.angleAround -= x / 5
                 } else {
                     networkClient.sendEvent(PlayerDirectionChangeNetworkEvent().apply {
@@ -53,13 +58,25 @@ class PlayerControl(val state: GameState,
             }
 
             override fun keyPressed(key: Int) {
-                if (key == InputHandler.KEY_SPACE) {
+                if (key == InputHandler.KEY_Q) {
                     networkClient.sendEvent(PlayerShootNetworkEvent(), PlayerShootNetworkEvent::class.serializer())
+                }
+
+                if (key == InputHandler.KEY_SHIFT) {
+                    val event = CheatNetworkEvent().apply {
+                        payload = Cheat("levelup")
+                    }
+                    networkClient.sendEvent(event, CheatNetworkEvent::class.serializer())
                 }
             }
 
             override fun keyReleased(key: Int) {
-
+                if (key == InputHandler.KEY_W || key == InputHandler.KEY_S) {
+                    val event = PlayerSpeedChangeNetworkEvent().apply {
+                        payload = PlayerSpeedChange(unitPerSec = 0.0f)
+                    }
+                    networkClient.sendEvent(event, PlayerSpeedChangeNetworkEvent::class.serializer())
+                }
             }
 
             override fun gamepadButtonPressed(button: Int) {
@@ -108,11 +125,6 @@ class PlayerControl(val state: GameState,
                         val vec = Vector3f(x, 0.0f, z)
 
                         payload = PlayerDirectionChange(x = vec.x, y = vec.y, z = vec.z)
-                    }
-                }
-                InputHandler.KEY_SHIFT -> {
-                    PlayerSpeedChangeNetworkEvent().apply {
-                        payload = PlayerSpeedChange(0.0f)
                     }
                 }
                 else -> {

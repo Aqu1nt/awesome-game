@@ -9,7 +9,7 @@ class UniformInt(name: String): ShaderUniform(name) {
     var value: Int? = null
 
     fun load(gl: WebGL2RenderingContext, value: Int) {
-        if(this.value == value) return
+//        if(this.value == value) return
 
         this.value = value
         gl.uniform1i(location, value)

@@ -16,8 +16,9 @@ enum class ModelType(val fileName: String) {
     BOULDER("boulder.evmdl"),
     LAMP("lamp.evmdl"),
     CUBE("cube.evmdl"),
-    PLAYER("running.evmdl"),
-    JELLYFISH("jellyfish.evmdl"),
+    PLAYER("player.evmdl"),
+    PLAYER_LV2("jellyfish.evmdl"),
+    PLAYER_LV3("player_lv3.evmdl"),
     BULLET("bullet.evmdl"),
     PLAYER_ARMOR("player_armor.evmdl")
 }

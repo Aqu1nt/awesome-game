@@ -44,8 +44,7 @@ class Camera {
 
         val horizontalDistance = distanceFromPlayer * cos(toRadians(pitch))
         val verticalDistance = distanceFromPlayer * sin(toRadians(pitch))
-//        val rotation = angleAround - player.actualRotation().y
-        val rotation = angleAround
+        val rotation = angleAround - player.actualRotation().y
 
         val xOffset = horizontalDistance * sin(toRadians(rotation))
         val zOffset = horizontalDistance * cos(toRadians(rotation))

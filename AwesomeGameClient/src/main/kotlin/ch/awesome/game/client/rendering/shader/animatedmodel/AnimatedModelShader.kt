@@ -4,8 +4,9 @@ import ch.awesome.game.client.rendering.renderer.GameRenderer
 import ch.awesome.game.client.rendering.shader.*
 import ch.awesome.game.client.rendering.shader.uniforms.*
 import ch.awesome.game.client.lib.WebGL2RenderingContext
+import ch.awesome.game.client.rendering.shader.model.modelFragmentShaderSource
 
-class AnimatedModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, animatedModelVertexShaderSource, animatedModelFragmentShaderSource,
+class AnimatedModelShader(val gl: WebGL2RenderingContext): ShaderProgram(gl, animatedModelVertexShaderSource, modelFragmentShaderSource,
         arrayOf("position", "textureCoords", "normal")) {
 
     val uniformModelMatrix = UniformMatrix4f("modelMatrix").apply { uniforms.add(this) }

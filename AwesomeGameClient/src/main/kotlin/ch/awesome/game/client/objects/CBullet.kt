@@ -11,7 +11,7 @@ import ch.awesome.game.client.rendering.loading.ModelType
 
 class CBullet(state: dynamic) : CMovingBaseObject(state), Renderable {
 
-    override val animated = false
+    override var animated = false
 
     companion object {
         private val renderer = SimpleModelData(ModelType.BULLET, TextureImageType.BULLET)

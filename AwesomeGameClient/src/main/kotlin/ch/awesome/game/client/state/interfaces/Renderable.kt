@@ -6,7 +6,7 @@ import ch.awesome.game.client.lib.WebGL2RenderingContext
 
 interface Renderable {
 
-    val animated: Boolean
+    var animated: Boolean
 
     fun initModels(gl: WebGL2RenderingContext) { }
     fun render(gameRenderer: GameRenderer) { }

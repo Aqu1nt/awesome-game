@@ -16,8 +16,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 
 class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
 
+    companion object {
+        private val GRAVITY = -30.0f
+    }
+
     var health: Float by SmartProperty(50.0f)
     var level: Float by SmartProperty(0.0f)
+    var animation: String by SmartProperty("idle")
+
+    private var upwardsSpeed = 0.0f
 
     @JsonIgnore
     var webSocketHandler: GameWebSocketHandler? = null
@@ -47,6 +54,23 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
     }
 
     override fun update(tpf: Float) {
+        animation = if (unitPerSecond == 0.0f) {
+            "idle"
+        } else {
+            "swimming"
+        }
+
+//        if (level >= 2.0f) {
+//            upwardsSpeed += GRAVITY * tpf
+//            position.y += upwardsSpeed * tpf
+//
+//            val terrainY = -10.0f
+//
+//            if (position.y <= terrainY) {
+//                upwardsSpeed = 0.0f
+//            }
+//        }
+
         super.update(tpf)
     }
 
@@ -56,6 +80,7 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
             physicsTransform.setFromOpenGLMatrix(worldMatrix.floatArray.toFloatArray())
             physicsBody.setWorldTransform(physicsTransform)
         }
+
         super.afterUpdate()
     }
 
@@ -66,5 +91,11 @@ class SPlayer: SMovingBaseObject(20f), IPlayer<Vector3f> {
         b.unitPerSecond = 40.0f
 
         GAME.world.addChild(b)
+    }
+
+    fun cheat(name: String) {
+        if (name == "levelup") {
+            level ++
+        }
     }
 }

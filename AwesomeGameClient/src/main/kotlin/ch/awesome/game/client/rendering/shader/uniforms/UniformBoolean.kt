@@ -9,7 +9,7 @@ class UniformBoolean(name: String): ShaderUniform(name) {
     var value: Boolean? = null
 
     fun load(gl: WebGL2RenderingContext, value: Boolean) {
-        if(this.value == value) return
+//        if(this.value == value) return
 
         this.value = value
         gl.uniform1f(location, if(value) 1.0f else 0.0f)

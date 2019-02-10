@@ -31,4 +31,21 @@ class Skeleton(val joints: MutableList<Joint>, val rootJoint: Joint) {
             addJointsToArray(child, jointMatrices)
         }
     }
+
+    fun clone(): Skeleton {
+        val cloneRootJoint = rootJoint.clone()
+        val cloneJoints = mutableListOf<Joint>()
+
+        addJointsToList(cloneRootJoint, cloneJoints)
+
+        return Skeleton(cloneJoints, cloneRootJoint)
+    }
+
+    private fun addJointsToList(joint: Joint, list: MutableList<Joint>) {
+        list.add(joint)
+
+        for (child in joint.children) {
+            addJointsToList(child, list)
+        }
+    }
 }

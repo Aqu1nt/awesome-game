@@ -9,7 +9,7 @@ class UniformFloat(name: String): ShaderUniform(name) {
     var value: Float? = null
 
     fun load(gl: WebGL2RenderingContext, value: Float) {
-        if(this.value == value) return
+//        if(this.value == value) return
 
         this.value = value
         gl.uniform1f(location, value)

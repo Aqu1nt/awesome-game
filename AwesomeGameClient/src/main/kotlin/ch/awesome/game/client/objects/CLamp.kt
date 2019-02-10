@@ -19,11 +19,11 @@ import ch.awesome.game.common.objects.ILamp
 
 class CLamp(state: dynamic) : GameNode(state), ILamp<IVector3f>, Renderable {
 
-    override val animated = false
+    override var animated = false
 
     class LampLight(private val lamp: CLamp) : CLightNode(attenuation = Vector3f(1f, 0.01f, 0.00001f)), Renderable {
 
-        override val animated = false
+        override var animated = false
 
         private var lightMatrix = Matrix4f().set(worldMatrix)
         private lateinit var particleModel: TexturedModel

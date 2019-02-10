@@ -93,7 +93,7 @@ class GameClient {
 
                 val guiMat = Matrix4f().identity().translate(xPos, yPos, 0.0f).scale(xScale, yScale, 1.0f)
 
-                val terrain = CTerrain(renderer.gl)
+                val terrain = CTerrain(renderer.gl, state)
                 terrain.x = -CTerrain.SIZE / 2
                 terrain.z = -CTerrain.SIZE / 2
                 val terrainMat = Matrix4f().identity().translate(terrain.x, -150.0f, terrain.z)
@@ -127,8 +127,9 @@ class GameClient {
 //                    renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), a, (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
                     renderer.renderGUI(gui, guiMat, 1.0f / (256.0f / x), 1.0f / (256.0f / y), (1.0f / 256.0f) * 64, (1.0f / 256.0f) * 13.0f)
 //                    renderer.renderFont("This text looks quite/nlnice but i have to/nlimprove still a lot!", 0.0f, 0.9f)
-                    renderer.renderFont("HP: " + state.player?.health, -0.95f, 0.725f)
-                    renderer.renderFont("LVL: " + state.player?.level, -0.95f, 0.625f)
+                    renderer.renderFont("HP: " + state.player?.health, -0.85f, 0.725f)
+                    renderer.renderFont("LVL: " + state.player?.level?.plus(1), -0.85f, 0.625f)
+                    if (!playerControl.clicked) renderer.renderFont("You should totally click to get an invisible cursor", 0.0f, 0.0f)
                     renderer.guiRenderer.end()
 
                     lastUpdate = Date.now()

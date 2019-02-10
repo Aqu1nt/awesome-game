@@ -20,6 +20,6 @@ class ModelData(val vertices: Array<Float>, val textureCoords: Array<Float>, val
 
     fun createAnimatedModel(gl: WebGL2RenderingContext, texture: Texture): AnimatedModel {
         val rawModel = ModelCreator.loadAnimatedModel(gl, vertices, textureCoords, normals, indices, jointIDs!!, weights!!)
-        return AnimatedModel(TexturedModel(rawModel, texture), skeleton!!, animations!!)
+        return AnimatedModel(TexturedModel(rawModel, texture), skeleton!!.clone(), animations!!)
     }
 }

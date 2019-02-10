@@ -114,6 +114,10 @@ class FontRenderer(private val renderer: GameRenderer) {
         chars[' '] = CharInfo(0, 96, 12)
     }
 
+    fun textWidth(text: String): Float {
+        return inScreenWidth(text.length * 48.0f, renderer.canvas.width)
+    }
+
     fun render(text: String, x: Float, y: Float) {
         for(i in 0 until text.length) {
             val info = chars[text[i]]!!
@@ -123,6 +127,8 @@ class FontRenderer(private val renderer: GameRenderer) {
             if(i != 0) {
                 charX = x + inScreenWidth(i * (chars[text[i - 1]]!!.width * 4.0f), renderer.canvas.width)
             }
+
+            charX -= textWidth(text) / 2.0f
 
             val charWidth = inScreenWidth(info.width * 2.0f, renderer.canvas.width)
             val charHeight = inScreenHeight(48.0f, renderer.canvas.height)

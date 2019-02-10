@@ -1,7 +1,6 @@
 package ch.awesome.game.client.rendering.animation
 
 import ch.awesome.game.client.rendering.models.AnimatedModel
-import ch.awesome.game.client.rendering.shader.particle.particleFragmentShaderSource
 import ch.awesome.game.common.math.Matrix4f
 import ch.awesome.game.common.math.Quaternion
 import ch.awesome.game.common.math.Vector3f
@@ -57,7 +56,7 @@ class Animator(val model: AnimatedModel) {
                 animationTime %= currentAnimation!!.length
             }
 
-            currentPose = currentPose()
+            currentPose = inAnimationPose()
             for (joint in model.skeleton.joints) {
                 joint.transform = currentPose[joint.name]!!
             }
@@ -84,7 +83,7 @@ class Animator(val model: AnimatedModel) {
         }
     }
 
-    private fun currentPose(): HashMap<String, JointTransform> {
+    private fun inAnimationPose(): HashMap<String, JointTransform> {
         val frames = previousAndNextKeyFrame()
         val progression = progression(frames[0], frames[1])
         return interpolatePoses(frames[0].pose, frames[1].pose, progression)

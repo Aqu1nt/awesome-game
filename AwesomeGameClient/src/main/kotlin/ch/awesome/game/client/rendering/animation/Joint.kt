@@ -39,4 +39,20 @@ class Joint(val id: Int, val name: String, val localBindTransform: Matrix4f) {
             child.calculateInverseBindTransform(bindTransform)
         }
     }
+
+    fun clone(): Joint {
+        val clone = Joint(id, name, localBindTransform)
+        clone.bindTransform = bindTransform.copy()
+        clone.inverseBindTransform = inverseBindTransform.copy()
+        clone.animated = animated
+
+        for (child in children) {
+            val cloneChild = child.clone()
+
+            clone.addChild(cloneChild)
+            cloneChild.parent = this
+        }
+
+        return clone
+    }
 }

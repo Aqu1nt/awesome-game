@@ -6,15 +6,20 @@ import ch.awesome.game.client.rendering.ModelCreator
 import ch.awesome.game.client.rendering.loading.TextureImageLoader
 import ch.awesome.game.client.rendering.textures.Texture
 import ch.awesome.game.client.rendering.loading.TextureImageType
+import ch.awesome.game.client.rendering.renderer.GameRenderer
+import ch.awesome.game.client.state.GameNode
+import ch.awesome.game.client.state.interfaces.Renderable
 import ch.awesome.game.common.math.Vector3f
 
-class CTerrain(val gl: WebGL2RenderingContext) {
+class CTerrain(val gl: WebGL2RenderingContext, state: dynamic): GameNode(state), Renderable {
 
     companion object {
         val SIZE = 800.0f
         val MAX_HEIGHT = 40.0f
         val MAX_PIXEL_COLOR = 256
     }
+
+    override var animated = false
 
     var x = 0.0f
     var z = 0.0f
@@ -92,4 +97,8 @@ class CTerrain(val gl: WebGL2RenderingContext) {
 
         return Vector3f(heightLeft - heightRight, 2.0f, heightBack - heightFront).normalize()
     }
+
+//    override fun render(gameRenderer: GameRenderer) {
+//        gameRenderer.renderTerrain(this, modelMatrix)
+//    }
 }

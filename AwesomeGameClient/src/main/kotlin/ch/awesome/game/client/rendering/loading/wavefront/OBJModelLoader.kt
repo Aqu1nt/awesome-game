@@ -14,7 +14,7 @@ enum class OBJModelType(val fileName: String) {
 //    LAMP("lamp.obj"),
 //    CUBE("cube.obj"),
 //    PLAYER("wavefront/player.obj"),
-//    JELLYFISH("jellyfish.obj"),
+//    PLAYER_LV2("jellyfish.obj"),
 //    BULLET("bullet.obj"),
 //    PLAYER_ARMOR("player_armor.obj")
 }
